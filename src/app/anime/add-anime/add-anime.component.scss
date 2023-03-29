@@ -1,0 +1,22 @@
+.wrapper {
+  max-width: 690px !important;
+  min-width: 400px !important;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+
+  &-title {
+    display: inline-block;
+    padding: 16px 0 0 0 16px !important;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 16px 16px 16px;
+}
