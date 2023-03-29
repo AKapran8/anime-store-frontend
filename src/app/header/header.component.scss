@@ -1,0 +1,18 @@
+
+.mat-toolbar-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list {
+  display: flex;
+  justify-content: space-between;
+
+  li {
+    margin-right: 16px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

@@ -13,6 +13,8 @@ import { AnimeTableDataComponent } from './anime/anime-table-data/anime-table-da
 import { HomeComponent } from './home/home.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { HeaderComponent } from './header/header.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
     AnimeComponent,
     AddAnimeComponent,
     AnimeTableDataComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
