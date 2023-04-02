@@ -1,17 +1,15 @@
 .wrapper {
-  max-width: 690px !important;
-  min-width: 400px !important;
+  max-width: 550px !important;
 }
 
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px;
+  padding-left: 10px;
 
-  &-title {
-    display: inline-block;
-    padding: 16px 0 0 0 16px !important;
+  & button {
+    margin-top: 12px;
   }
 }
 
@@ -19,4 +17,24 @@
   display: flex;
   justify-content: space-between;
   margin: 0px 16px 16px 16px;
+}
+
+.dialog-header-title {
+  padding: 12px 0px 0px 12px;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  mat-form-field {
+    width: 48%;
+  }
+
+  .full-width {
+    width: 100%;
+  }
 }

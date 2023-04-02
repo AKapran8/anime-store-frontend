@@ -15,6 +15,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { HeaderComponent } from './header/header.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +37,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatCardModule,
     MatDialogModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,16 +2,105 @@
   <div class="dialog-header">
     <h4 class="dialog-header-title">Add new Anime</h4>
 
-    <button mat-button>
+    <button mat-button mat-dialog-close>
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <div mat-dialog-content>
-    <p>Must be a form</p>
+    <div class="form">
+      <form *ngIf="form" [formGroup]="form" class="form">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" type="text" />
+          <mat-error *ngIf="form.get('name')?.hasError('required')"
+            >The name is required</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Another Name</mat-label>
+          <input matInput formControlName="nameUa" type="text" />
+          <mat-error *ngIf="form.get('nameUa')?.hasError('required')"
+            >The another name is required</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Stars</mat-label>
+          <input matInput formControlName="starsCount" type="number" />
+          <mat-error *ngIf="starsError">{{ starsError }}</mat-error>
+          <mat-error *ngIf="form.get('starsCount')?.hasError('required')"
+            >Start count is required</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="null">--NONE--</mat-option>
+            <mat-option *ngFor="let status of statusesList" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('status')?.hasError('required')"
+            >You must make a selection</mat-error
+          >
+          <mat-error *ngIf="form.get('status')?.hasError('min')"
+            >Must be more than 0</mat-error
+          >
+          <mat-error *ngIf="form.get('status')?.hasError('max')"
+            >Maximum stars count is 10</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Time</mat-label>
+          <input matInput formControlName="minutes" type="number" />
+          <mat-hint>In minutes</mat-hint>
+          <mat-error *ngIf="form.get('minutes')?.hasError('required')"
+            >The time is required</mat-error
+          >
+          <mat-error *ngIf="form.get('minutes')?.hasError('min')"
+            >Minutes must be more than 0</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Episodes</mat-label>
+          <input matInput formControlName="totalEpisodes" type="number" />
+          <mat-error *ngIf="form.get('totalEpisodes')?.hasError('required')"
+            >Episodes count is required</mat-error
+          >
+          <mat-error *ngIf="form.get('totalEpisodes')?.hasError('min')"
+            >Episodes count must be more than 0</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Genres</mat-label>
+          <textarea
+            matInput
+            formControlName="genres"
+            cols="5"
+            rows="2"
+          ></textarea>
+          <mat-hint>Without commas</mat-hint>
+          <mat-error *ngIf="form.get('genres')?.hasError('required')"
+            >The genre(s) is required</mat-error
+          >
+        </mat-form-field>
+      </form>
+    </div>
   </div>
   <div class="dialog-actions">
     <button mat-button mat-dialog-close>Cancel</button>
     <div class="spacer"></div>
-    <button mat-raised-button color="primary" (click)="save()">Primary</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="saveHandler()"
+    >
+      Save
+    </button>
   </div>
 </div>
