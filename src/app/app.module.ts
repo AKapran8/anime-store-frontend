@@ -7,13 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { AnimeComponent } from './anime/anime.component';
-import { AddAnimeComponent } from './anime/add-anime/add-anime.component';
-import { AnimeTableDataComponent } from './anime/anime-table-data/anime-table-data.component';
-import { HomeComponent } from './home/home.component';
+import { AnimeComponent } from './components/anime/anime.component';
+import { AddAnimeComponent } from './components/anime/add-anime/add-anime.component';
+import { AnimeTableDataComponent } from './components/anime/anime-table-data/anime-table-data.component';
+import { HomeComponent } from './components/home/home.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { HeaderComponent } from './header/header.component';
+import { HeaderComponent } from './components/header/header.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
