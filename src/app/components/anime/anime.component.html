@@ -23,13 +23,20 @@
     <mat-accordion multi [hideToggle]="true">
       <mat-expansion-panel *ngFor="let item of animeList">
         <mat-expansion-panel-header class="row">
-          <mat-icon>edit</mat-icon>
+          <mat-icon (click)="stopPropaganation($event); editItem(item)"
+            >edit</mat-icon
+          >
           <p class="item-text">
             {{ item.name }}
           </p>
-          <mat-icon class="remove-icon" (click)="stopPropaganation($event); removeItem(item)">delete_outline</mat-icon>
+          <mat-icon
+            class="remove-icon"
+            (click)="stopPropaganation($event); removeItem(item)"
+            >delete_outline</mat-icon
+          >
         </mat-expansion-panel-header>
         {{ item.genres }}
+        <mat-icon>stars</mat-icon>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

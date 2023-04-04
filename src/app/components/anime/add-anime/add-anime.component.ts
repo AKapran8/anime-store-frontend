@@ -2,11 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+interface IData {
+  name: string;
+  genres: string;
+}
 interface IAddAnime {
   name: string;
   anotherName: string;
@@ -32,7 +37,8 @@ export class AddAnimeComponent implements OnInit {
   constructor(
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
     private _fb: FormBuilder,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: IData
   ) {}
 
   ngOnInit(): void {
@@ -41,14 +47,14 @@ export class AddAnimeComponent implements OnInit {
 
   private _initForm(): void {
     this.form = this._fb.group({
-      name: ['', Validators.required],
+      name: [this?.data?.name || '', Validators.required],
       nameUa: ['', Validators.required],
       starsCount: [
         null,
         [Validators.required, Validators.max(10), Validators.min(1)],
       ],
       minutes: [null, [Validators.required, Validators.min(1)]],
-      genres: ['', Validators.required],
+      genres: [this?.data?.genres || '', Validators.required],
       status: ['', Validators.required],
       totalEpisodes: [null, [Validators.required, Validators.min(1)]],
     });
@@ -58,6 +64,7 @@ export class AddAnimeComponent implements OnInit {
     if (!this.form?.valid) {
       return;
     }
+
     this.isSaving = true;
 
     const formValues = this.form?.value;

@@ -60,6 +60,20 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
   }
 
+  public editItem(row: any): void {
+    console.log(row)
+    const dialogRef = this._dialog.open(AddAnimeComponent, {
+      data: row
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.animeList.push(res);
+        this.animeCount = this.animeList.length;
+        this._cdr.markForCheck();
+      }
+    });
+  }
+
   public stopPropaganation(event: MouseEvent): void {
     event.stopPropagation();
   }
