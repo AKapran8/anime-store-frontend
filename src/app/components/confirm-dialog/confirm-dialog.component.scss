@@ -16,27 +16,12 @@
 .dialog-actions {
   display: flex;
   justify-content: space-between;
-  margin: 0px 16px 16px 16px;
+  margin: 16px 16px 16px 16px;
 }
 
 .dialog-header-title {
   padding: 12px 0px 0px 12px;
   margin: 0;
-}
-
-.form {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-
-  mat-form-field {
-    width: 48%;
-  }
-
-  .full-width {
-    width: 100%;
-  }
 }
 
 .mat-icon {

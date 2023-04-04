@@ -5,6 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 interface IAddAnime {
   name: string;
@@ -28,7 +29,11 @@ export class AddAnimeComponent implements OnInit {
   public isSaving: boolean = false;
   public statusesList: string[] = ['watched', 'progress', 'feature'];
 
-  constructor(private _fb: FormBuilder, private _cdr: ChangeDetectorRef) {}
+  constructor(
+    private _dialogRef: MatDialogRef<AddAnimeComponent>,
+    private _fb: FormBuilder,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this._initForm();
@@ -67,15 +72,15 @@ export class AddAnimeComponent implements OnInit {
       status: formValues.status,
       episodesCount: formValues.totalEpisodes,
       time,
-      genres
+      genres,
     };
 
     this._save(requestBody);
   }
 
   private _save(requestBody: IAddAnime): void {
-    console.log(requestBody);
     this.isSaving = false;
+    this._dialogRef.close(requestBody);
     this._cdr.markForCheck();
   }
 

@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { AnimeComponent } from './components/anime/anime.component';
 import { AddAnimeComponent } from './components/anime/add-anime/add-anime.component';
-import { AnimeTableDataComponent } from './components/anime/anime-table-data/anime-table-data.component';
 import { HomeComponent } from './components/home/home.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,16 +17,17 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AnimeComponent,
     AddAnimeComponent,
-    AnimeTableDataComponent,
     HomeComponent,
     HeaderComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,9 +40,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatToolbarModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatExpansionModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
