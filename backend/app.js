@@ -1,12 +1,12 @@
 const express = require('express');
 
-const application = express();
+const app = express();
 
 
-application.use((req, res, next) => {
+app.use((req, res, next) => {
   res.send('Express work');
   next();
 });
 
 
-module.exports = application;
+module.exports = app;
