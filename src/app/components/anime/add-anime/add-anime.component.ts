@@ -2,10 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+interface IData {
+  name: string;
+  genres: string;
+}
 interface IAddAnime {
   name: string;
   anotherName: string;
@@ -28,7 +34,12 @@ export class AddAnimeComponent implements OnInit {
   public isSaving: boolean = false;
   public statusesList: string[] = ['watched', 'progress', 'feature'];
 
-  constructor(private _fb: FormBuilder, private _cdr: ChangeDetectorRef) {}
+  constructor(
+    private _dialogRef: MatDialogRef<AddAnimeComponent>,
+    private _fb: FormBuilder,
+    private _cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: IData
+  ) {}
 
   ngOnInit(): void {
     this._initForm();
@@ -36,14 +47,14 @@ export class AddAnimeComponent implements OnInit {
 
   private _initForm(): void {
     this.form = this._fb.group({
-      name: ['', Validators.required],
+      name: [this?.data?.name || '', Validators.required],
       nameUa: ['', Validators.required],
       starsCount: [
         null,
         [Validators.required, Validators.max(10), Validators.min(1)],
       ],
       minutes: [null, [Validators.required, Validators.min(1)]],
-      genres: ['', Validators.required],
+      genres: [this?.data?.genres || '', Validators.required],
       status: ['', Validators.required],
       totalEpisodes: [null, [Validators.required, Validators.min(1)]],
     });
@@ -53,6 +64,7 @@ export class AddAnimeComponent implements OnInit {
     if (!this.form?.valid) {
       return;
     }
+
     this.isSaving = true;
 
     const formValues = this.form?.value;
@@ -67,15 +79,15 @@ export class AddAnimeComponent implements OnInit {
       status: formValues.status,
       episodesCount: formValues.totalEpisodes,
       time,
-      genres
+      genres,
     };
 
     this._save(requestBody);
   }
 
   private _save(requestBody: IAddAnime): void {
-    console.log(requestBody);
     this.isSaving = false;
+    this._dialogRef.close(requestBody);
     this._cdr.markForCheck();
   }
 
