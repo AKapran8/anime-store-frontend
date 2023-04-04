@@ -6,8 +6,8 @@
 }
 
 .container {
-  width: 816px;
-  height: 150px;
+  width: 80%;
+  max-width: 900px;
   margin: 140px auto 0 auto;
 
   &-header {
@@ -43,7 +43,8 @@
   }
 
   input {
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     height: 24px;
     border-radius: 8px;
     padding-left: 24px;
