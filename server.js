@@ -5,11 +5,12 @@ const http = require("http");
 const normalizePort = val => {
   var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (Number.isNaN(port)) {
     return val;
   }
 
   if (port >= 0) {
+    return +port;
   }
 
   return false;
