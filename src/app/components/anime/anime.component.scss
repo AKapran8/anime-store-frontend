@@ -70,10 +70,16 @@
 
 .remove-icon {
   position: absolute;
-  top: 14px;
-  right: 25px;
+  top: 12px;
+  right: 24px;
 }
 
 .mat-expansion-panel-header {
   cursor: default;
+}
+
+@media (max-width: 500px) {
+  .remove-icon {
+    right: 12px;
+  }
 }

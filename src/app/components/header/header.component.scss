@@ -33,3 +33,18 @@
 .active {
   border-bottom: 4px #fff solid;
 }
+
+@media (max-width: 580px) {
+  .list {
+    li {
+      color: #fff;
+      margin-right: 4px;
+      font-size: 16px;
+      cursor: pointer;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+}
