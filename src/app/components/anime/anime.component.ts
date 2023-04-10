@@ -24,68 +24,43 @@ import { convertTimeToText, getStarsDescription } from './anime.functions';
 export class AnimeComponent implements OnInit, OnDestroy {
   public animeCount: number = 0;
   public searchControl: FormControl | null = null;
+  private _animeList: IAnime[] = [];
   public animeList: ITableData[] = [];
 
-  private _searchVaueChangesSub: Subscription | null = null;
+  private _searchValueChangesSub: Subscription | null = null;
   constructor(
     private _dialog: MatDialog,
-    private _cdr: ChangeDetectorRef // private _animeService: AnimeService
+    private _cdr: ChangeDetectorRef,
+    private _animeService: AnimeService
   ) {}
 
   ngOnInit(): void {
+    this._getAnimeList();
     this._initSearchControl();
-    this._initComponent();
   }
 
-  private _initComponent(): void {
-    const modified: IAnime[] = [
-      {
-        id: 1,
-        name: 'The promised Neverland',
-        nameUA: 'Обещанный Неверленд',
-        stars: 7,
-        time: 529,
-        genres: '',
-        status: 'watched',
-      },
-      {
-        id: 2,
-        name: 'One Punch Man',
-        nameUA: 'Ванпанчмен',
-        stars: 9,
-        time: 576,
-        genres: '',
-        status: 'watched',
-      },
-    ];
-
-    this._modifyList(modified);
+  private _getAnimeList(): void {
+    this._animeService
+      .getAnimeList()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.data) {
+          this._animeList = [...res.data];
+          this._modifyList();
+        }
+      });
   }
 
-  private _modifyList(arr?: IAnime[]): void {
-    if (arr?.length) {
-      this.animeList = arr.map((el) => {
-        const starsDescr = getStarsDescription(el.stars - 1);
-        const timeText = convertTimeToText(el.time);
-
-        return {
-          ...el,
-          starsDescr,
-          timeText,
-        };
-      });
-    } else {
-      const modifiedData = this.animeList.map((el) => {
-        const starsDescr = getStarsDescription(el.stars - 1);
-        const timeText = convertTimeToText(el.time);
-        return {
-          ...el,
-          starsDescr,
-          timeText,
-        };
-      });
-      this.animeList = [...modifiedData];
-    }
+  private _modifyList(): void {
+    this.animeList = this._animeList.map((a) => {
+      const starsDescr = getStarsDescription(a.stars - 1);
+      const timeText = convertTimeToText(a.time);
+      return {
+        ...a,
+        starsDescr,
+        timeText,
+      };
+    });
 
     this.animeCount = this.animeList.length;
     this._cdr.markForCheck();
@@ -94,15 +69,18 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _initSearchControl(): void {
     this.searchControl = new FormControl('');
 
-    this.searchControl?.valueChanges.subscribe((inputValue: string) => {});
+    this._searchValueChangesSub = this.searchControl?.valueChanges.subscribe(
+      (inputValue: string) => {
+        console.log(inputValue);
+      }
+    );
   }
 
   public addAnime(): void {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this.animeList.push({ ...res, id: this.animeList.length + 1 });
-        this._modifyList();
+        this._getAnimeList();
       }
     });
   }
@@ -124,15 +102,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        const modifiedArr = this.animeList.map((el) => {
-          if (el.id === res.id) {
-            return res;
-          }
-          return el;
-        });
-
-        this.animeList = [...modifiedArr];
-        this._modifyList();
+        this._getAnimeList();
       }
     });
   }
@@ -141,21 +111,22 @@ export class AnimeComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  public removeItem(anime: any): void {
+  public removeItem(anime: ITableData): void {
     const dialogRef = this._dialog.open(ConfirmDialogComponent, {
-      data: `Are you sure want to delete ${anime.name}`,
+      data: {
+        message: `Are you sure want to delete ${anime.name}`,
+        id: anime.id,
+      },
     });
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        const index: any = this.animeList.indexOf(anime);
-        this.animeList.splice(index, 1);
-        this._cdr.markForCheck();
+        this._getAnimeList();
       }
     });
   }
 
   ngOnDestroy(): void {
-    this._searchVaueChangesSub?.unsubscribe();
+    this._searchValueChangesSub?.unsubscribe();
   }
 }

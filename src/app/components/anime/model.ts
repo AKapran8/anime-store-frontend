@@ -22,3 +22,15 @@ export interface ITableData extends IAnime {
   timeText: string;
   starsDescr: string;
 }
+
+
+export interface IGetAnimeListResponse {
+  status: string;
+  data: IAnime[];
+}
+
+export interface IAddEditAnimeResponse {
+  message: string;
+}
+
+export interface IDeleteAnimeResponse extends IAddEditAnimeResponse {}

@@ -1,37 +1,35 @@
 const express = require("express");
-const bodyParser = require('body-parser');
-
+const bodyParser = require("body-parser");
 const app = express();
+
+const animeController = require("./controlers/anime/anime");
 
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH, PUT, OPTIONS');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, PATCH, PUT, OPTIONS"
+  );
   next();
 });
 
+// !ANIME PART
+// Get all items
+app.get("/anime", animeController.getAllAnime);
 
+// Add new item
+app.post("/anime", animeController.addNewAnime);
 
+// Edit item
+app.put("/anime/:id", animeController.editAnime);
 
-app.post('/api/anime', (req, res, data) => {
-  const item = req.body;
-  res.status(201).json({ message: 'Anime was added sucessfully' });
-})
-
-app.get("/api/anime", (req, res, next) => {
-  const anime = [
-    {
-      id: 1,
-      name: "Lorem",
-    },
-    {
-      id: 2,
-      name: "Ipsum",
-    },
-  ];
-  res.status(200).json({ status: "Sucess", data: anime });
-});
+// Delete item
+app.delete("/anime/:id", animeController.deleteAnime);
 
 module.exports = app;
