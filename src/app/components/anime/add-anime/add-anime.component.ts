@@ -7,20 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-interface IData {
-  name: string;
-  genres: string;
-}
-interface IAddAnime {
-  name: string;
-  anotherName: string;
-  stars: number;
-  time: string;
-  genres: string;
-  status: string;
-  episodesCount: number;
-}
+import { IAddEditAnime } from '../model';
 
 @Component({
   selector: 'app-add-anime',
@@ -38,8 +25,8 @@ export class AddAnimeComponent implements OnInit {
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
     private _fb: FormBuilder,
     private _cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: IData
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime
+  ) { }
 
   ngOnInit(): void {
     this._initForm();
@@ -48,15 +35,17 @@ export class AddAnimeComponent implements OnInit {
   private _initForm(): void {
     this.form = this._fb.group({
       name: [this?.data?.name || '', Validators.required],
-      nameUa: ['', Validators.required],
+      nameUa: [this?.data?.nameUA || '', Validators.required],
       starsCount: [
-        null,
+        this?.data?.stars || null,
         [Validators.required, Validators.max(10), Validators.min(1)],
       ],
-      minutes: [null, [Validators.required, Validators.min(1)]],
-      genres: [this?.data?.genres || '', Validators.required],
-      status: ['', Validators.required],
-      totalEpisodes: [null, [Validators.required, Validators.min(1)]],
+      minutes: [
+        this?.data?.time || null,
+        [Validators.required, Validators.min(1)],
+      ],
+      genres: [this?.data?.genres || ''],
+      status: [this?.data?.status || '', Validators.required],
     });
   }
 
@@ -69,45 +58,22 @@ export class AddAnimeComponent implements OnInit {
 
     const formValues = this.form?.value;
 
-    const time: string = this._convertTime(formValues.minutes);
-    const genres: string = this._convertGenres(formValues.genres);
-
-    const requestBody: IAddAnime = {
+    const requestBody: IAddEditAnime = {
       name: formValues.name,
-      anotherName: formValues.nameUa,
-      stars: formValues.starsCount,
-      status: formValues.status,
-      episodesCount: formValues.totalEpisodes,
-      time,
-      genres,
+      nameUA: formValues?.nameUa,
+      stars: formValues?.starsCount,
+      status: formValues?.status,
+      genres: formValues?.genres,
+      time: formValues?.minutes,
+      id: this?.data?.id
     };
 
     this._save(requestBody);
   }
 
-  private _save(requestBody: IAddAnime): void {
+  private _save(requestBody: IAddEditAnime): void {
     this.isSaving = false;
     this._dialogRef.close(requestBody);
     this._cdr.markForCheck();
-  }
-
-  private _convertTime(totalTimeValue: number): string {
-    const hours: number = Math.floor(totalTimeValue / 60);
-    const minutes: number = totalTimeValue % 60;
-
-    const hoursText: string = `Hour${this._getTimeEnd(hours)}`;
-    const minutesText: string = `minute${this._getTimeEnd(minutes)}`;
-
-    const timeStr: string = `${hours} ${hoursText} and ${minutes} ${minutesText}`;
-
-    return timeStr;
-  }
-
-  private _getTimeEnd(num: number): string {
-    return num > 1 ? '(s)' : '';
-  }
-
-  private _convertGenres(genres: string = ''): string {
-    return genres.replace(' ', ',');
   }
 }

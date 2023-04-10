@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnimeComponent } from './anime.component';
+import { StartIconsComponent } from './stars-icons.component';
 
-describe('AnimeComponent', () => {
-  let component: AnimeComponent;
-  let fixture: ComponentFixture<AnimeComponent>;
+describe('StartIconsComponent', () => {
+  let component: StartIconsComponent;
+  let fixture: ComponentFixture<StartIconsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AnimeComponent ]
+      declarations: [ StartIconsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AnimeComponent);
+    fixture = TestBed.createComponent(StartIconsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -35,8 +35,18 @@
             >delete_outline</mat-icon
           >
         </mat-expansion-panel-header>
-        {{ item.genres }}
-        <mat-icon>stars</mat-icon>
+        <div class="content">
+          <p>Another name: {{ item.nameUA }}</p>
+          <p>Time: {{ item.timeText }}</p>
+          <p>
+            Stars:
+            <app-stars-icons [count]="item.stars"></app-stars-icons>
+          </p>
+          <p *ngIf="item?.starsDescr?.length">
+            Description: {{ item.starsDescr }}
+          </p>
+          <p *ngIf="item?.genres?.length">Genres: {{ item.genres }}</p>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

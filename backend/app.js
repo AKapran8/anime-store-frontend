@@ -17,7 +17,6 @@ app.use((req, res, next) => {
 
 app.post('/api/anime', (req, res, data) => {
   const item = req.body;
-  console.log(item);
   res.status(201).json({ message: 'Anime was added sucessfully' });
 })
 
