@@ -8,6 +8,8 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IAddEditAnime } from '../model';
+import { take } from 'rxjs/operators';
+import { AnimeService } from '../service/anime.service';
 
 @Component({
   selector: 'app-add-anime',
@@ -22,11 +24,12 @@ export class AddAnimeComponent implements OnInit {
   public statusesList: string[] = ['watched', 'progress', 'feature'];
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime,
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
     private _fb: FormBuilder,
     private _cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime
-  ) { }
+    private _animeService: AnimeService
+  ) {}
 
   ngOnInit(): void {
     this._initForm();
@@ -58,22 +61,43 @@ export class AddAnimeComponent implements OnInit {
 
     const formValues = this.form?.value;
 
-    const requestBody: IAddEditAnime = {
+    let requestBody: IAddEditAnime = {
       name: formValues.name,
       nameUA: formValues?.nameUa,
       stars: formValues?.starsCount,
       status: formValues?.status,
       genres: formValues?.genres,
       time: formValues?.minutes,
-      id: this?.data?.id
     };
 
-    this._save(requestBody);
+    if (this?.data?.id) {
+      const id: number = this.data.id;
+      this._edit(requestBody, id);
+    } else {
+      this._save(requestBody);
+    }
+  }
+
+  private _edit(requestBody: IAddEditAnime, id: number): void {
+    this._cdr.markForCheck();
+
+    this._animeService
+      .editAnime(requestBody, id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this._dialogRef.close(requestBody);
+        this.isSaving = false;
+      });
   }
 
   private _save(requestBody: IAddEditAnime): void {
-    this.isSaving = false;
-    this._dialogRef.close(requestBody);
-    this._cdr.markForCheck();
+    this._animeService
+      .addAnime(requestBody)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.isSaving = false;
+        this._dialogRef.close(true);
+        this._cdr.markForCheck();
+      });
   }
 }
