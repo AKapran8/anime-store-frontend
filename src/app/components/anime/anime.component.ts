@@ -29,9 +29,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _searchVaueChangesSub: Subscription | null = null;
   constructor(
     private _dialog: MatDialog,
-    private _cdr: ChangeDetectorRef
-  ) // private _animeService: AnimeService
-  {}
+    private _cdr: ChangeDetectorRef // private _animeService: AnimeService
+  ) {}
 
   ngOnInit(): void {
     this._initSearchControl();
@@ -41,6 +40,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _initComponent(): void {
     const modified: IAnime[] = [
       {
+        id: 1,
         name: 'The promised Neverland',
         nameUA: 'Обещанный Неверленд',
         stars: 7,
@@ -49,6 +49,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
         status: 'watched',
       },
       {
+        id: 2,
         name: 'One Punch Man',
         nameUA: 'Ванпанчмен',
         stars: 9,
@@ -100,7 +101,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this.animeList.push(res);
+        this.animeList.push({ ...res, id: this.animeList.length + 1 });
         this._modifyList();
       }
     });
@@ -114,6 +115,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       time: row.time,
       genres: row.genres,
       status: row.status,
+      id: row.id,
     };
 
     const dialogRef = this._dialog.open(AddAnimeComponent, {
@@ -122,7 +124,14 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this.animeList.push(res);
+        const modifiedArr = this.animeList.map((el) => {
+          if (el.id === res.id) {
+            return res;
+          }
+          return el;
+        });
+
+        this.animeList = [...modifiedArr];
         this._modifyList();
       }
     });

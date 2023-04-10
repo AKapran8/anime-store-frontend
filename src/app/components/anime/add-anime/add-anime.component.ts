@@ -65,6 +65,7 @@ export class AddAnimeComponent implements OnInit {
       status: formValues?.status,
       genres: formValues?.genres,
       time: formValues?.minutes,
+      id: this?.data?.id
     };
 
     this._save(requestBody);

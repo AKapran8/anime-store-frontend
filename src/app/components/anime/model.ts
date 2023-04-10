@@ -5,9 +5,11 @@ export interface IAddEditAnime {
   time: number;
   genres: string;
   status: string;
+  id?: number;
 }
 
 export interface IAnime {
+  id: number;
   name: string;
   nameUA: string;
   stars: number;
