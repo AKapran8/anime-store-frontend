@@ -67,7 +67,6 @@ export class AddAnimeComponent implements OnInit {
       time: formValues?.minutes,
     };
 
-    console.log('requestBody ', requestBody)
     this._save(requestBody);
   }
 

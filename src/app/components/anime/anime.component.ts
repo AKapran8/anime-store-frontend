@@ -13,8 +13,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { AnimeService } from './service/anime.service';
 import { take } from 'rxjs/operators';
 import { IAddEditAnime, IAnime, ITableData } from './model';
-import { starsDescrList } from './anime.data';
-import { convertTimeToText } from './anime.functions';
+import { convertTimeToText, getStarsDescription } from './anime.functions';
 
 @Component({
   selector: 'app-anime',
@@ -30,9 +29,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _searchVaueChangesSub: Subscription | null = null;
   constructor(
     private _dialog: MatDialog,
-    private _cdr: ChangeDetectorRef,
-    // private _animeService: AnimeService
-  ) { }
+    private _cdr: ChangeDetectorRef
+  ) // private _animeService: AnimeService
+  {}
 
   ngOnInit(): void {
     this._initSearchControl();
@@ -65,7 +64,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _modifyList(arr?: IAnime[]): void {
     if (arr?.length) {
       this.animeList = arr.map((el) => {
-        const starsDescr = starsDescrList[el.stars - 1];
+        const starsDescr = getStarsDescription(el.stars - 1);
         const timeText = convertTimeToText(el.time);
 
         return {
@@ -76,9 +75,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
       });
     } else {
       const modifiedData = this.animeList.map((el) => {
-        const starsDescr = starsDescrList[el.stars - 1];
+        const starsDescr = getStarsDescription(el.stars - 1);
         const timeText = convertTimeToText(el.time);
-
         return {
           ...el,
           starsDescr,
@@ -95,7 +93,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _initSearchControl(): void {
     this.searchControl = new FormControl('');
 
-    this.searchControl?.valueChanges.subscribe((inputValue: string) => { });
+    this.searchControl?.valueChanges.subscribe((inputValue: string) => {});
   }
 
   public addAnime(): void {
