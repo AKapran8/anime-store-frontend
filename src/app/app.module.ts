@@ -19,7 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-
+import { HttpClientModule } from '@angular/common/http';
+import { StarsIconsComponent } from './components/anime/stars-icons/stars-icons.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     HomeComponent,
     HeaderComponent,
     ConfirmDialogComponent,
+    StarsIconsComponent
   ],
   imports: [
     BrowserModule,
@@ -41,9 +43,11 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     MatInputModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HttpClientModule
   ],
+  exports: [StarsIconsComponent],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
