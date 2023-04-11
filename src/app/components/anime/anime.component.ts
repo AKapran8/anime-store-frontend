@@ -11,8 +11,8 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AnimeService } from './service/anime.service';
-import { take } from 'rxjs/operators';
-import { IAddEditAnime, IAnime, ITableData } from './model';
+import { take, map } from 'rxjs/operators';
+import { IAddEditAnime, IAnime, IServerAnime, ITableData } from './model';
 import { convertTimeToText, getStarsDescription } from './anime.functions';
 
 @Component({
@@ -42,10 +42,16 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _getAnimeList(): void {
     this._animeService
       .getAnimeList()
-      .pipe(take(1))
+      .pipe(
+        map((animeData) => {
+          return this._mapAnimeListData(animeData.data);
+        }),
+        take(1)
+      )
       .subscribe((res) => {
-        if (res?.data) {
-          this._animeList = [...res.data];
+        if (res) {
+          this._animeList = [...res];
+
           this._modifyList();
         }
       });
@@ -124,6 +130,23 @@ export class AnimeComponent implements OnInit, OnDestroy {
         this._getAnimeList();
       }
     });
+  }
+
+  private _mapAnimeListData(list: IServerAnime[]): IAnime[] {
+    const modifiedList =
+      list.map((a) => {
+        return {
+          id: a._id,
+          name: a.name,
+          nameUA: a.nameUA,
+          stars: a.stars,
+          time: a.time,
+          genres: a.genres,
+          status: a.status,
+        };
+      }) || [];
+
+    return [...modifiedList];
   }
 
   ngOnDestroy(): void {

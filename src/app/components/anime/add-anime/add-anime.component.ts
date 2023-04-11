@@ -71,14 +71,14 @@ export class AddAnimeComponent implements OnInit {
     };
 
     if (this?.data?.id) {
-      const id: number = this.data.id;
+      const id: string = this.data.id;
       this._edit(requestBody, id);
     } else {
       this._save(requestBody);
     }
   }
 
-  private _edit(requestBody: IAddEditAnime, id: number): void {
+  private _edit(requestBody: IAddEditAnime, id: string): void {
     this._cdr.markForCheck();
 
     this._animeService
