@@ -33,15 +33,15 @@ app.use((req, res, next) => {
 
 // !ANIME PART
 // Get all items
-app.get("/anime", animeController.getAllAnime);
+app.get("/api/anime", animeController.getAllAnime);
 
 // Add new item
-app.post("/anime", animeController.addNewAnime);
+app.post("/api/anime", animeController.addNewAnime);
 
 // Edit item
-app.put("/anime/:id", animeController.editAnime);
+app.put("/api/anime/:id", animeController.editAnime);
 
 // Delete item
-app.delete("/anime/:id", animeController.deleteAnime);
+app.delete("/api/anime/:id", animeController.deleteAnime);
 
 module.exports = app;

@@ -13,14 +13,14 @@ export class AnimeService {
   constructor(private _http: HttpClient) {}
 
   public getAnimeList(): Observable<IGetAnimeListResponse> {
-    return this._http.get<IGetAnimeListResponse>('http://localhost:3000/anime');
+    return this._http.get<IGetAnimeListResponse>('http://localhost:3000/api/anime');
   }
 
   public addAnime(
     requestBody: IAddEditAnime
   ): Observable<IAddEditAnimeResponse> {
     return this._http.post<IAddEditAnimeResponse>(
-      'http://localhost:3000/anime',
+      'http://localhost:3000/api/anime',
       requestBody
     );
   }
@@ -30,14 +30,14 @@ export class AnimeService {
     id: string
   ): Observable<IAddEditAnimeResponse> {
     return this._http.put<IAddEditAnimeResponse>(
-      `http://localhost:3000/anime/${id}`,
+      `http://localhost:3000/api/anime/${id}`,
       requestBody
     );
   }
 
   public deleteAnime(id: string): Observable<IDeleteAnimeResponse> {
     return this._http.delete<IDeleteAnimeResponse>(
-      `http://localhost:3000/anime/${id}`
+      `http://localhost:3000/api/anime/${id}`
     );
   }
 }
