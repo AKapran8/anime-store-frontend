@@ -37,7 +37,7 @@ export class AnimeService {
     );
   }
 
-  public deleteAnime(id: number): Observable<IDeleteAnimeResponse> {
+  public deleteAnime(id: string): Observable<IDeleteAnimeResponse> {
     return this._http.delete<IDeleteAnimeResponse>(
       `http://localhost:3000/anime/${id}`
     );

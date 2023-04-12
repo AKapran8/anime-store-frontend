@@ -85,13 +85,15 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public addAnime(): void {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this._getAnimeList();
+      if (res && res.createdAnime) {
+        const newElem: IAnime = this._getNewAnimeItem(res.createdAnime);
+        this._animeList.push(newElem);
+        this._modifyList();
       }
     });
   }
 
-  public editItem(row: ITableData): void {
+  public editAnime(row: ITableData): void {
     const editRow: IAddEditAnime = {
       name: row.name,
       nameUA: row.nameUA,
@@ -107,29 +109,35 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this._getAnimeList();
+      if (res && res.updatedAnime) {
+        const updatedAnime: IAnime = this._getNewAnimeItem(res.updatedAnime);
+        this._animeList.push(updatedAnime);
+        this._modifyList();
       }
     });
-  }
-
-  public stopPropaganation(event: MouseEvent): void {
-    event.stopPropagation();
   }
 
   public removeItem(anime: ITableData): void {
     const dialogRef = this._dialog.open(ConfirmDialogComponent, {
       data: {
         message: `Are you sure want to delete ${anime.name}`,
-        id: anime.id,
       },
     });
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this._getAnimeList();
+        this._animeService
+          .deleteAnime(anime.id)
+          .pipe(take(1))
+          .subscribe((res) => {
+            this._getAnimeList();
+          });
       }
     });
+  }
+
+  public stopPropaganation(event: MouseEvent): void {
+    event.stopPropagation();
   }
 
   private _mapAnimeListData(list: IServerAnime[]): IAnime[] {
@@ -147,6 +155,20 @@ export class AnimeComponent implements OnInit, OnDestroy {
       }) || [];
 
     return [...modifiedList];
+  }
+
+  private _getNewAnimeItem(elem: IServerAnime): IAnime {
+    const modifiedEl = {
+      id: elem._id,
+      name: elem.name,
+      nameUA: elem.nameUA,
+      stars: elem.stars,
+      time: elem.time,
+      genres: elem.genres,
+      status: elem.status,
+    };
+
+    return modifiedEl;
   }
 
   ngOnDestroy(): void {

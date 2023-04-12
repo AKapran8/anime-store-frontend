@@ -18,22 +18,40 @@ const addNewAnime = (req, res, next) => {
     genres: reqBody && reqBody.genres ? reqBody.genres : "",
   });
 
-  newAnime.save();
-
-  res.status(201).json({ message: "Anime was added sucessfully" });
-};
-
-const editAnime = (req, res, next) => {
-  const id = req.params.id;
-  const editableAnime = req.body;
-
-  res.status(201).json({ message: "Was updated successfully" });
+  newAnime.save().then((createdAnime) => {
+    res
+      .status(201)
+      .json({ message: "Anime was added sucessfully", createdAnime });
+  });
 };
 
 const deleteAnime = (req, res, next) => {
   const id = req.params.id;
 
-  res.status(200).json({ message: "Anime was removed successfully" });
+  Anime.deleteOne({ _id: id }).then((result) => {
+    res.status(200).json({ message: "Anime was removed successfully" });
+  });
 };
+
+const editAnime = (req, res, next) => {
+  const animeId = req.params.id;
+  const reqBody = req.body;
+
+  Anime.findById(animeId)
+    .then((anime) => {
+      anime.name = reqBody.name;
+      anime.nameUA = reqBody.nameUA;
+      anime.stars = reqBody.stars;
+      anime.status = reqBody.status;
+      anime.time = reqBody.time;
+      anime.genres = reqBody && reqBody.genres ? reqBody.genres : "";
+
+      return anime.save();
+    })
+    .then((updatedAnime) => {
+      res.json({ message: "Anime updated successfully", updatedAnime });
+    })
+};
+
 
 module.exports = { getAllAnime, addNewAnime, editAnime, deleteAnime };
