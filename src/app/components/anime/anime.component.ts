@@ -118,7 +118,11 @@ export class AnimeComponent implements OnInit, OnDestroy {
         const updatedAnime: IAnime = this._getModifiedAnimeListItem(
           res.updatedAnime
         );
-        this._animeList.push(updatedAnime);
+
+        this._animeList = this._animeList.map((el) => {
+          if (el.id === updatedAnime.id) return updatedAnime;
+          return el;
+        });
         this._modifyList();
       }
     });

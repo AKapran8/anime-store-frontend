@@ -79,8 +79,6 @@ export class AddAnimeComponent implements OnInit {
   }
 
   private _edit(requestBody: IAddEditAnime, id: string): void {
-    this._cdr.markForCheck();
-
     this._animeService
       .editAnime(requestBody, id)
       .pipe(take(1))
