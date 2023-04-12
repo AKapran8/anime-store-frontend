@@ -15,6 +15,7 @@ import { AngularMaterialModule } from 'src/app/shared/material.module';
 import { AnimeModule } from './components/anime/anime.module';
 import { HeroesComponent } from './components/heroes/heroes.component';
 import { QuotesComponent } from './components/quotes/quotes.component';
+import { UnitTestComponent } from './test/unit-test/unit-test.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { QuotesComponent } from './components/quotes/quotes.component';
     DeleteDialogComponent,
     HeroesComponent,
     QuotesComponent,
+    UnitTestComponent,
   ],
   imports: [
     BrowserModule,
