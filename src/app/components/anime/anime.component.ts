@@ -9,7 +9,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import {
+  DeleteDialogComponent,
+  IDeleteDialogData,
+} from '../delete-dialog/delete-dialog.component';
 import { AnimeService } from './service/anime.service';
 import { take, map } from 'rxjs/operators';
 import { IAddEditAnime, IAnime, IServerAnime, ITableData } from './model';
@@ -86,7 +89,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
       if (res && res.createdAnime) {
-        const newElem: IAnime = this._getNewAnimeItem(res.createdAnime);
+        const newElem: IAnime = this._getModifiedAnimeListItem(
+          res.createdAnime
+        );
         this._animeList.push(newElem);
         this._modifyList();
       }
@@ -110,7 +115,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res && res.updatedAnime) {
-        const updatedAnime: IAnime = this._getNewAnimeItem(res.updatedAnime);
+        const updatedAnime: IAnime = this._getModifiedAnimeListItem(
+          res.updatedAnime
+        );
         this._animeList.push(updatedAnime);
         this._modifyList();
       }
@@ -118,20 +125,21 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   public removeItem(anime: ITableData): void {
-    const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+    const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
         message: `Are you sure want to delete ${anime.name}`,
-      },
+        type: 'ANIME',
+        id: anime.id,
+      } as IDeleteDialogData,
     });
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this._animeService
-          .deleteAnime(anime.id)
-          .pipe(take(1))
-          .subscribe((res) => {
-            this._getAnimeList();
-          });
+        const index: number = this._animeList.findIndex(
+          (a) => a.id === anime.id
+        );
+        this._animeList.splice(index, 1);
+        this._modifyList();
       }
     });
   }
@@ -140,25 +148,16 @@ export class AnimeComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  private _mapAnimeListData(list: IServerAnime[]): IAnime[] {
-    const modifiedList =
-      list.map((a) => {
-        return {
-          id: a._id,
-          name: a.name,
-          nameUA: a.nameUA,
-          stars: a.stars,
-          time: a.time,
-          genres: a.genres,
-          status: a.status,
-        };
-      }) || [];
+  private _mapAnimeListData(list: IServerAnime[] = []): IAnime[] {
+    const modifiedList = list.map((a) => {
+      return this._getModifiedAnimeListItem(a);
+    });
 
     return [...modifiedList];
   }
 
-  private _getNewAnimeItem(elem: IServerAnime): IAnime {
-    const modifiedEl = {
+  private _getModifiedAnimeListItem(elem: IServerAnime): IAnime {
+    const modifiedEl: IAnime = {
       id: elem._id,
       name: elem.name,
       nameUA: elem.nameUA,

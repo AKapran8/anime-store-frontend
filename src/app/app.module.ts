@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { StarsIconsComponent } from './components/anime/stars-icons/stars-icons.component';
 @NgModule({
@@ -28,7 +28,7 @@ import { StarsIconsComponent } from './components/anime/stars-icons/stars-icons.
     AddAnimeComponent,
     HomeComponent,
     HeaderComponent,
-    ConfirmDialogComponent,
+    DeleteDialogComponent,
     StarsIconsComponent
   ],
   imports: [
