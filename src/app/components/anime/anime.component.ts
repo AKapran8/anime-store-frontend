@@ -9,10 +9,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import {
+  DeleteDialogComponent,
+  IDeleteDialogData,
+} from '../delete-dialog/delete-dialog.component';
 import { AnimeService } from './service/anime.service';
-import { take } from 'rxjs/operators';
-import { IAddEditAnime, IAnime, ITableData } from './model';
+import { take, map } from 'rxjs/operators';
+import { IAddEditAnime, IAnime, IServerAnime, ITableData } from './model';
 import { convertTimeToText, getStarsDescription } from './anime.functions';
 
 @Component({
@@ -42,10 +45,16 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _getAnimeList(): void {
     this._animeService
       .getAnimeList()
-      .pipe(take(1))
+      .pipe(
+        map((animeData) => {
+          return this._mapAnimeListData(animeData.data);
+        }),
+        take(1)
+      )
       .subscribe((res) => {
-        if (res?.data) {
-          this._animeList = [...res.data];
+        if (res) {
+          this._animeList = [...res];
+
           this._modifyList();
         }
       });
@@ -79,13 +88,17 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public addAnime(): void {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this._getAnimeList();
+      if (res && res.createdAnime) {
+        const newElem: IAnime = this._getModifiedAnimeListItem(
+          res.createdAnime
+        );
+        this._animeList.push(newElem);
+        this._modifyList();
       }
     });
   }
 
-  public editItem(row: ITableData): void {
+  public editAnime(row: ITableData): void {
     const editRow: IAddEditAnime = {
       name: row.name,
       nameUA: row.nameUA,
@@ -101,8 +114,36 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((res) => {
+      if (res && res.updatedAnime) {
+        const updatedAnime: IAnime = this._getModifiedAnimeListItem(
+          res.updatedAnime
+        );
+
+        this._animeList = this._animeList.map((el) => {
+          if (el.id === updatedAnime.id) return updatedAnime;
+          return el;
+        });
+        this._modifyList();
+      }
+    });
+  }
+
+  public removeItem(anime: ITableData): void {
+    const dialogRef = this._dialog.open(DeleteDialogComponent, {
+      data: {
+        message: `Are you sure want to delete ${anime.name}`,
+        type: 'ANIME',
+        id: anime.id,
+      } as IDeleteDialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this._getAnimeList();
+        const index: number = this._animeList.findIndex(
+          (a) => a.id === anime.id
+        );
+        this._animeList.splice(index, 1);
+        this._modifyList();
       }
     });
   }
@@ -111,19 +152,26 @@ export class AnimeComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  public removeItem(anime: ITableData): void {
-    const dialogRef = this._dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: `Are you sure want to delete ${anime.name}`,
-        id: anime.id,
-      },
+  private _mapAnimeListData(list: IServerAnime[] = []): IAnime[] {
+    const modifiedList = list.map((a) => {
+      return this._getModifiedAnimeListItem(a);
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this._getAnimeList();
-      }
-    });
+    return [...modifiedList];
+  }
+
+  private _getModifiedAnimeListItem(elem: IServerAnime): IAnime {
+    const modifiedEl: IAnime = {
+      id: elem._id,
+      name: elem.name,
+      nameUA: elem.nameUA,
+      stars: elem.stars,
+      time: elem.time,
+      genres: elem.genres,
+      status: elem.status,
+    };
+
+    return modifiedEl;
   }
 
   ngOnDestroy(): void {

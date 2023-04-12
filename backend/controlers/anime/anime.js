@@ -1,54 +1,57 @@
-let animeList = [
-  {
-    id: 1,
-    name: "The promised Neverland",
-    nameUA: "Обещанный Неверленд",
-    stars: 7,
-    time: 529,
-    genres: "",
-    status: "watched",
-  },
-  {
-    id: 2,
-    name: "One Punch Man",
-    nameUA: "Ванпанчмен",
-    stars: 9,
-    time: 576,
-    genres: "comedy",
-    status: "watched",
-  },
-];
+const Anime = require("./../../models/anime.model");
 
-function getAllAnime(req, res, next) {
-  res.status(200).json({ status: "Success", data: animeList });
-}
-
-function addNewAnime(req, res, next) {
-  const newAnime = { ...req.body, id: animeList.length + 1 };
-  animeList.push(newAnime);
-
-  res.status(201).json({ message: "Anime was added sucessfully" });
-}
-
-function editAnime(req, res, next) {
-  const id = req.params.id;
-  const editableAnime = req.body;
-
-  const modifiedArr = animeList.map((a) => {
-    if (a.id === +id) return editableAnime;
-    return a;
+const getAllAnime = (req, res, next) => {
+  Anime.find().then((dataTable) => {
+    res.status(200).json({ status: "Success", data: dataTable });
   });
-  animeList = [...modifiedArr];
+};
 
-  res.status(201).json({ message: "Was updated successfully" });
-}
+const addNewAnime = (req, res, next) => {
+  const reqBody = req.body;
 
-function deleteAnime(req, res, next) {
+  const newAnime = new Anime({
+    name: reqBody.name,
+    nameUA: reqBody.nameUA,
+    stars: reqBody.stars,
+    status: reqBody.status,
+    time: reqBody.time,
+    genres: reqBody && reqBody.genres ? reqBody.genres : "",
+  });
+
+  newAnime.save().then((createdAnime) => {
+    res
+      .status(201)
+      .json({ message: "Anime was added sucessfully", createdAnime });
+  });
+};
+
+const deleteAnime = (req, res, next) => {
   const id = req.params.id;
-  const modifiedArr = animeList.filter((a) => a.id !== +id);
-  animeList = [...modifiedArr];
 
-  res.status(200).json({ message: "Anime was removed successfully" });
-}
+  Anime.deleteOne({ _id: id }).then((result) => {
+    res.status(200).json({ message: "Anime was removed successfully" });
+  });
+};
+
+const editAnime = (req, res, next) => {
+  const animeId = req.params.id;
+  const reqBody = req.body;
+
+  Anime.findById(animeId)
+    .then((anime) => {
+      anime.name = reqBody.name;
+      anime.nameUA = reqBody.nameUA;
+      anime.stars = reqBody.stars;
+      anime.status = reqBody.status;
+      anime.time = reqBody.time;
+      anime.genres = reqBody && reqBody.genres ? reqBody.genres : "";
+
+      return anime.save();
+    })
+    .then((updatedAnime) => {
+      res.json({ message: "Anime updated successfully", updatedAnime });
+    })
+};
+
 
 module.exports = { getAllAnime, addNewAnime, editAnime, deleteAnime };

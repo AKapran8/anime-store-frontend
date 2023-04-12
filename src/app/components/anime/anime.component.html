@@ -23,7 +23,7 @@
     <mat-accordion multi [hideToggle]="true">
       <mat-expansion-panel *ngFor="let item of animeList">
         <mat-expansion-panel-header class="row">
-          <mat-icon (click)="stopPropaganation($event); editItem(item)"
+          <mat-icon (click)="stopPropaganation($event); editAnime(item)"
             >edit</mat-icon
           >
           <p class="item-text">

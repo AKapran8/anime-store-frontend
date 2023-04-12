@@ -29,7 +29,7 @@ export class AnimeService {
 
   public editAnime(
     requestBody: IAddEditAnime,
-    id: number
+    id: string
   ): Observable<IAddEditAnimeResponse> {
     return this._http.put<IAddEditAnimeResponse>(
       `http://localhost:3000/anime/${id}`,
@@ -37,7 +37,7 @@ export class AnimeService {
     );
   }
 
-  public deleteAnime(id: number): Observable<IDeleteAnimeResponse> {
+  public deleteAnime(id: string): Observable<IDeleteAnimeResponse> {
     return this._http.delete<IDeleteAnimeResponse>(
       `http://localhost:3000/anime/${id}`
     );

@@ -1,6 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(
+    "mongodb+srv://Wlyapa:SqHqgqRGVQMZvMAL@anime-store.fnxlp4q.mongodb.net/anime?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Connected to DataBase");
+  })
+  .catch(() => {
+    console.error("Connection failed!");
+  });
 
 const animeController = require("./controlers/anime/anime");
 

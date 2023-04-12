@@ -5,11 +5,11 @@ export interface IAddEditAnime {
   time: number;
   genres: string;
   status: string;
-  id?: number;
+  id?: string;
 }
 
 export interface IAnime {
-  id: number;
+  id: string;
   name: string;
   nameUA: string;
   stars: number;
@@ -23,10 +23,19 @@ export interface ITableData extends IAnime {
   starsDescr: string;
 }
 
+export interface IServerAnime {
+  _id: any;
+  name: string;
+  nameUA: string;
+  stars: number;
+  time: number;
+  genres: string;
+  status: string;
+}
 
 export interface IGetAnimeListResponse {
   status: string;
-  data: IAnime[];
+  data: IServerAnime[];
 }
 
 export interface IAddEditAnimeResponse {
