@@ -27,6 +27,7 @@ export class StarsIconsComponent implements OnInit {
     for (let i = 0; i < this.count; i++) {
       this.countArr.push(i);
     }
+
     this._cdr.markForCheck();
   }
 }

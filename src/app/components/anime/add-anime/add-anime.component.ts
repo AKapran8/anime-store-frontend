@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IAddEditAnime } from '../model';
+import { IAddEditAnime } from '../helpers/model';
 import { take } from 'rxjs/operators';
 import { AnimeService } from '../service/anime.service';
 

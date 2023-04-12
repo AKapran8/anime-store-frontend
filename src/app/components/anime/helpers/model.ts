@@ -24,7 +24,7 @@ export interface ITableData extends IAnime {
 }
 
 export interface IServerAnime {
-  _id: any;
+  _id: string;
   name: string;
   nameUA: string;
   stars: number;

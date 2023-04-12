@@ -6,11 +6,9 @@ import {
   IGetAnimeListResponse,
   IAddEditAnimeResponse,
   IDeleteAnimeResponse,
-} from '../model';
+} from '../helpers/model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AnimeService {
   constructor(private _http: HttpClient) {}
 
