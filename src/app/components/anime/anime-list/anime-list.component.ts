@@ -15,8 +15,16 @@ import {
 } from './../../delete-dialog/delete-dialog.component';
 import { AnimeService } from './../service/anime.service';
 import { take, map } from 'rxjs/operators';
-import { IAddEditAnime, IAnime, IServerAnime, ITableData } from '../helpers/model';
-import { convertTimeToText, getStarsDescription } from '../helpers/anime.functions';
+import {
+  IAddEditAnime,
+  IAnime,
+  IServerAnime,
+  ITableData,
+} from '../helpers/model';
+import {
+  convertTimeToText,
+  getStarsDescription,
+} from '../helpers/anime.functions';
 
 @Component({
   selector: 'app-anime-list',
@@ -29,6 +37,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   public searchControl: FormControl | null = null;
   private _animeList: IAnime[] = [];
   public animeList: ITableData[] = [];
+  public isListFetching: boolean = false;
+  public isListFetched: boolean = false;
 
   private _searchValueChangesSub: Subscription | null = null;
 
@@ -44,6 +54,9 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   private _getAnimeList(): void {
+    this.isListFetching = true;
+    this.isListFetched = false;
+
     this._animeService
       .getAnimeList()
       .pipe(
@@ -55,10 +68,13 @@ export class AnimeListComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         if (res) {
           this._animeList = [...res];
-
+          this.isListFetching = false;
+          this.isListFetched = true;
           this._modifyList();
         }
       });
+
+    this._cdr.markForCheck();
   }
 
   private _modifyList(): void {

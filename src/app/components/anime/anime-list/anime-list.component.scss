@@ -29,7 +29,10 @@
 }
 
 .count-text {
-  margin: 0 18px 0 6px;
+  margin: 4px 16px 0 4px;
+  color: #fff;
+  font-size: 20px;
+
 }
 .search-input {
   position: relative;
@@ -81,5 +84,19 @@
 @media (max-width: 500px) {
   .remove-icon {
     right: 12px;
+  }
+}
+
+.spinner {
+  margin: 0 auto;
+}
+
+.start-text {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+
+  span {
+    font-size: 16px;
   }
 }
