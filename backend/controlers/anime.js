@@ -1,4 +1,4 @@
-const Anime = require("./../../models/anime.model");
+const Anime = require("./../models/anime.model");
 
 const getAllAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
@@ -50,8 +50,7 @@ const editAnime = (req, res, next) => {
     })
     .then((updatedAnime) => {
       res.json({ message: "Anime updated successfully", updatedAnime });
-    })
+    });
 };
 
-
-module.exports = { getAllAnime, addNewAnime, editAnime, deleteAnime };
+module.exports = { getAllAnime, addNewAnime, deleteAnime, editAnime };
