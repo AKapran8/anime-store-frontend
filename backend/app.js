@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const mongoose = require("mongoose");
 
+const animeRouters = require("./routers/anime.routers");
+
 mongoose
   .connect(
     "mongodb+srv://Wlyapa:SqHqgqRGVQMZvMAL@anime-store.fnxlp4q.mongodb.net/anime?retryWrites=true&w=majority"
@@ -13,8 +15,6 @@ mongoose
   .catch(() => {
     console.error("Connection failed!");
   });
-
-const animeController = require("./controlers/anime/anime");
 
 app.use(bodyParser.json());
 
@@ -31,17 +31,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// !ANIME PART
-// Get all items
-app.get("/api/anime", animeController.getAllAnime);
-
-// Add new item
-app.post("/api/anime", animeController.addNewAnime);
-
-// Edit item
-app.put("/api/anime/:id", animeController.editAnime);
-
-// Delete item
-app.delete("/api/anime/:id", animeController.deleteAnime);
+app.use("/api/anime", animeRouters);
 
 module.exports = app;

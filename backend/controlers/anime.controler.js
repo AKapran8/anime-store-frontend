@@ -1,6 +1,6 @@
-const Anime = require("./../../models/anime.model");
+const Anime = require("./../models/anime.model");
 
-const getAllAnime = (req, res, next) => {
+const getAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
     res.status(200).json({ status: "Success", data: dataTable });
   });
@@ -50,8 +50,25 @@ const editAnime = (req, res, next) => {
     })
     .then((updatedAnime) => {
       res.json({ message: "Anime updated successfully", updatedAnime });
-    })
+    });
 };
 
+const getAnimeNames = (req, res, next) => {
+  Anime.find()
+    .select("name")
+    .then((dataTable) => {
+      const modifiedData = dataTable.map((el) => {
+        return { id: el._id, name: el.name };
+      });
 
-module.exports = { getAllAnime, addNewAnime, editAnime, deleteAnime };
+      res.status(200).json({ status: "Success", data: modifiedData });
+    });
+};
+
+module.exports = {
+  getAnime,
+  addNewAnime,
+  deleteAnime,
+  editAnime,
+  getAnimeNames,
+};

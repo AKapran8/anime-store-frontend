@@ -6,6 +6,8 @@ const animeSchema = mongoose.Schema({
   stars: { type: Number, required: true },
   status: { type: String, required: true },
   time: { type: Number, required: true },
+  heroes: { type: [String] },
+  quotes: {type: [String]},
   genres: { type: String },
 });
 
