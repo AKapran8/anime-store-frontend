@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const mongoose = require("mongoose");
 
-const animeRouters = require("./routers/anime");
+const animeRouters = require("./routers/anime.routers");
 
 mongoose
   .connect(

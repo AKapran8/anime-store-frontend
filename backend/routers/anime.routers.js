@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const animeController = require("./../controlers/anime");
+const animeController = require("./../controlers/anime.controler");
 
 router.get("", animeController.getAllAnime);
 router.post("", animeController.addNewAnime);
