@@ -55,6 +55,16 @@
             Description: {{ item.starsDescr }}
           </p>
           <p *ngIf="item?.genres?.length">Genres: {{ item.genres }}</p>
+          <div *ngIf="item?.heroes?.length">
+            Heroes:
+            <p *ngFor="let hero of item.heroes">
+              {{ hero.heroName }}
+            </p>
+          </div>
+
+          <div *ngIf="item?.quotes?.length">
+            Quotes: {{ item?.quotes?.length }}
+          </div>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

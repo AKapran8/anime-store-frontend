@@ -1,0 +1,57 @@
+<div class="wrapper">
+  <button mat-raised-button color="warn" (click)="navigateToHeroesList()">
+    Back to heroes list
+  </button>
+  <form *ngIf="form" [formGroup]="form" class="form">
+    <div class="field">
+      <mat-form-field>
+        <input type="text" placeholder="Name" formControlName="name" matInput />
+      </mat-form-field>
+    </div>
+    <div class="field">
+      <mat-form-field>
+        <input
+          type="text"
+          placeholder="quotes"
+          formControlName="quotes"
+          matInput
+        />
+      </mat-form-field>
+    </div>
+    <div class="field">
+      <mat-form-field>
+        <mat-select placeholder="Anime" formControlName="animeId">
+          <mat-option *ngFor="let item of animeList" [value]="item">
+            {{ item.text }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="field">
+      <button
+        class="image-btn"
+        mat-raised-button
+        type="button"
+        (click)="filePicker.click()"
+        color="accent"
+      >
+        Upload Image
+      </button>
+      <input type="file" #filePicker (change)="onImagePicked($event)" />
+    </div>
+     <button
+      mat-raised-button
+      type="button"
+      (click)="saveHandler()"
+      color="accent"
+      [disabled]="!form.valid"
+    >
+      Add new Hero
+    </button>
+    <div class="image" *ngIf="imagePreviewUrl">
+      <img [src]="imagePreviewUrl" [alt]="form?.get('name')?.value" />
+    </div>
+    <mat-error *ngIf="imageTypeError"> {{ imageTypeError }} </mat-error>
+
+  </form>
+</div>

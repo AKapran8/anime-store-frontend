@@ -4,10 +4,12 @@ const app = express();
 const mongoose = require("mongoose");
 
 const animeRouters = require("./routers/anime.routers");
+const heroesRouters = require("./routers/hero.routers");
+// const quotesRouters = require("./routers/quote.routers");
 
 mongoose
   .connect(
-    "mongodb+srv://Wlyapa:SqHqgqRGVQMZvMAL@anime-store.fnxlp4q.mongodb.net/anime?retryWrites=true&w=majority"
+    "mongodb+srv://Wlyapa:SqHqgqRGVQMZvMAL@anime-store.fnxlp4q.mongodb.net/my-store?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("Connected to DataBase");
@@ -32,5 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/anime", animeRouters);
+app.use("/api/heroes", heroesRouters);
+// app.use("/api/quotes", quotesRouters);
 
 module.exports = app;

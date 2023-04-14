@@ -65,13 +65,6 @@
           >
         </mat-form-field>
 
-        <div class="upload-image">
-          <button mat-stroked-button type="button" (click)="filePicker.click()">
-            Pick the Image
-          </button>
-          <input type="file" #filePicker (change)="onImagePicked($event)" />
-        </div>
-
         <mat-form-field class="full-width">
           <mat-label>Genres</mat-label>
           <textarea
@@ -82,10 +75,6 @@
           ></textarea>
         </mat-form-field>
       </form>
-      <div class="image" *ngIf="imagePreviewUrl">
-        <img [src]="imagePreviewUrl" [alt]="form?.get('name')?.value" />
-      </div>
-      <mat-error *ngIf="imageTypeError"> {{ imageTypeError }} </mat-error>
     </div>
   </div>
   <div class="dialog-actions">

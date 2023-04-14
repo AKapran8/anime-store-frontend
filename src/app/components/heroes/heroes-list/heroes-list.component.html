@@ -1,0 +1,8 @@
+<div class="wrapper">
+  <ng-container *ngIf="heroes?.length" class="block-container">
+    <mat-card class="block" *ngFor="let hero of heroes">
+      <mat-card-content>{{hero.name}}</mat-card-content>
+      <button (click)="removeHero(hero.id)" >REMOVE</button>
+    </mat-card>
+  </ng-container>
+</div>

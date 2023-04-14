@@ -16,6 +16,8 @@ const addNewAnime = (req, res, next) => {
     status: reqBody.status,
     time: reqBody.time,
     genres: reqBody && reqBody.genres ? reqBody.genres : "",
+    heroes: [],
+    quotes: [],
   });
 
   newAnime.save().then((createdAnime) => {
@@ -45,6 +47,8 @@ const editAnime = (req, res, next) => {
       anime.status = reqBody.status;
       anime.time = reqBody.time;
       anime.genres = reqBody && reqBody.genres ? reqBody.genres : "";
+      anime.heroes = anime && anime.heroes ? anime.heroes : [];
+      anime.quotes = anime && anime.quotes ? anime.quotes : [];
 
       return anime.save();
     })
@@ -58,7 +62,7 @@ const getAnimeNames = (req, res, next) => {
     .select("name")
     .then((dataTable) => {
       const modifiedData = dataTable.map((el) => {
-        return { id: el._id, name: el.name };
+        return { id: el._id, text: el.name };
       });
 
       res.status(200).json({ status: "Success", data: modifiedData });

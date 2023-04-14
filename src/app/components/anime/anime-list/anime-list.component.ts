@@ -20,7 +20,7 @@ import {
   IAnime,
   IServerAnime,
   ITableData,
-} from '../helpers/model';
+} from '../model.anime';
 import {
   convertTimeToText,
   getStarsDescription,
@@ -190,6 +190,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
       time: elem.time,
       genres: elem.genres,
       status: elem.status,
+      heroes: elem.heroes,
+      quotes: elem.quotes,
     };
 
     return modifiedEl;

@@ -1,11 +1,12 @@
 // const express = require('express');
 // const router = express.Router();
 
-// const heroesController = require("./../controlers/heroes.controler");
+// const heroController = require("./../controllers/heroes.controller");
 
-// router.get("", heroesController.getAllAnime);
-// router.post("", heroesController.addNewAnime);
-// router.put("/:id", heroesController.editAnime);
-// router.delete("/:id", heroesController.deleteAnime);
+// router.get("/", heroController.getHeroes);
+// router.get("/names", heroController.getHeroNames);
+// router.post("", heroController.addNewHero);
+// router.put("/:id", heroController.editHero);
+// router.delete("/:id", heroController.deleteHero);
 
 // module.exports = router;
