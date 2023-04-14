@@ -5,7 +5,7 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IAddEditAnime } from '../helpers/model';
 import { take } from 'rxjs/operators';
@@ -22,11 +22,13 @@ export class AddAnimeComponent implements OnInit {
   public starsError: string = '';
   public isSaving: boolean = false;
   public statusesList: string[] = ['watched', 'progress', 'feature'];
+  public imagePreviewUrl: string = '';
+  public imageTypeError: string = '';
+  private _allowedTypes: string[] = ['image/jpeg', 'image/png'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime,
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
-    private _fb: FormBuilder,
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService
   ) {}
@@ -36,20 +38,50 @@ export class AddAnimeComponent implements OnInit {
   }
 
   private _initForm(): void {
-    this.form = this._fb.group({
-      name: [this?.data?.name || '', Validators.required],
-      nameUa: [this?.data?.nameUA || '', Validators.required],
-      starsCount: [
-        this?.data?.stars || null,
-        [Validators.required, Validators.max(10), Validators.min(1)],
-      ],
-      minutes: [
-        this?.data?.time || null,
-        [Validators.required, Validators.min(1)],
-      ],
-      genres: [this?.data?.genres || ''],
-      status: [this?.data?.status || '', Validators.required],
+    this.form = new FormGroup({
+      name: new FormControl(this?.data?.name || '', Validators.required),
+      nameUa: new FormControl(this?.data?.nameUA || '', Validators.required),
+      starsCount: new FormControl(this?.data?.stars || null, [
+        Validators.required,
+        Validators.max(10),
+        Validators.min(1),
+      ]),
+      minutes: new FormControl(this?.data?.time || null, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      genres: new FormControl(this?.data?.genres || ''),
+      status: new FormControl(this?.data?.status || '', Validators.required),
+      image: new FormControl(null),
     });
+  }
+
+  public onImagePicked(event: Event): void {
+    this.imageTypeError = '';
+    this.imagePreviewUrl = '';
+    this.form?.get('image')?.setValue(null);
+    this.form?.get('image')?.updateValueAndValidity();
+
+    const fileInput = event.target as HTMLInputElement;
+
+    if (fileInput?.files?.[0]) {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      if (this._allowedTypes.includes(file.type)) {
+        reader.onload = () => {
+          this.imagePreviewUrl = reader.result as string;
+          this.form?.get('image')?.setValue(file);
+          this.form?.get('image')?.updateValueAndValidity();
+          this._cdr.markForCheck();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.imageTypeError = 'Only .jpg .jpeg .png are allowed';
+      }
+      this._cdr.markForCheck();
+    }
+    this._cdr.markForCheck();
   }
 
   public saveHandler(): void {
