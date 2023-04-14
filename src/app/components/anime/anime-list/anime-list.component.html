@@ -5,9 +5,8 @@
         <mat-icon (click)="addAnime()" class="add-item"
           >add_circle_outline</mat-icon
         >
-        <mat-icon>cloud_circle</mat-icon>
       </div>
-      <p class="count-text">{{ animeCount }} Anime</p>
+      <p class="count-text" *ngIf="!isListFetching">{{ animeCount }} Anime</p>
       <div class="search-input">
         <mat-icon>search</mat-icon>
         <input
@@ -20,6 +19,17 @@
     </div>
 
     <mat-accordion multi [hideToggle]="true">
+      <mat-spinner class="spinner" *ngIf="isListFetching"></mat-spinner>
+      <mat-expansion-panel
+        *ngIf="!isListFetching && isListFetched && !animeList.length"
+        disabled
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            No data found. Please create new one
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
       <mat-expansion-panel *ngFor="let item of animeList">
         <mat-expansion-panel-header class="row">
           <mat-icon (click)="stopPropaganation($event); editAnime(item)"
@@ -37,8 +47,8 @@
         <div class="content">
           <p>Another name: {{ item.nameUA }}</p>
           <p>Time: {{ item.timeText }}</p>
-          <p>
-            Stars:
+          <p class="start-text">
+            <span> Stars: </span>
             <app-stars-icons [count]="item.stars"></app-stars-icons>
           </p>
           <p *ngIf="item?.starsDescr?.length">
