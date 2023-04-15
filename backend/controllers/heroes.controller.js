@@ -21,7 +21,11 @@ const addNewHero = (req, res, next) => {
   });
 
   newHero.save().then((createdHero) => {
-    const newHero = { id: createdHero._id, heroName: createdHero.name };
+    const newHero = {
+      id: createdHero._id,
+      heroName: createdHero.name,
+      imageUrl: createdHero.imageUrl,
+    };
     updateAnimeHeroesList(createdHero.animeId, newHero);
 
     res
@@ -40,8 +44,9 @@ const deleteHero = (req, res, next) => {
       if (err) {
         console.error(err);
       }
-      res.status(200).json({ message: "The Hero was removed successfully!" });
     });
+
+    res.status(200).json({ message: "The Hero was removed successfully!" });
   });
 };
 
@@ -77,7 +82,11 @@ const getHeroNames = (req, res, next) => {
 
 const updateAnimeHeroesList = (animeId, hero) => {
   Anime.findById(animeId, "heroes.heroName heroes.id").then((anime) => {
-    anime.heroes = [...anime.heroes, hero];
+    if (anime.heroes.length > 0) {
+      anime.heroes = [...anime.heroes, hero];
+    } else {
+      anime.heroes = [hero]
+    }
     return anime.save();
   });
 };

@@ -1,4 +1,8 @@
+const fs = require("fs");
+const path = require("path");
+
 const Anime = require("./../models/anime.model");
+const Hero = require("./../models/hero.model");
 
 const getAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
@@ -27,12 +31,35 @@ const addNewAnime = (req, res, next) => {
   });
 };
 
-const deleteAnime = (req, res, next) => {
+const deleteAnime = async (req, res, next) => {
   const id = req.params.id;
 
-  Anime.deleteOne({ _id: id }).then((result) => {
+  try {
+    const anime = await Anime.findById(id);
+
+    if (anime && anime.heroes && anime.heroes.length > 0) {
+      const heroIds = anime.heroes.map((hero) => hero.id);
+      anime.heroes.forEach((el) => {
+        const imagePath = path.join(
+          __dirname,
+          "../../src/assets/heroes",
+          el.imageUrl
+        );
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error(err);
+          }
+        });
+      });
+      await Hero.deleteMany({ _id: { $in: heroIds } });
+    }
+    await Anime.deleteOne({ _id: id });
+
     res.status(200).json({ message: "Anime was removed successfully" });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to remove anime" });
+  }
 };
 
 const editAnime = (req, res, next) => {

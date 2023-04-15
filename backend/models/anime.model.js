@@ -7,7 +7,10 @@ const animeSchema = mongoose.Schema(
     stars: { type: Number, required: true },
     status: { type: String, required: true },
     time: { type: Number, required: true },
-    heroes: { type: [{ heroName: String, id: String }], default: [] },
+    heroes: {
+      type: [{ heroName: String, id: String, imageUrl: String }],
+      default: [],
+    },
     quotes: { type: [String], default: [] },
     genres: { type: String },
   },
