@@ -10,7 +10,6 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'anime', component: AnimeComponent },
   { path: 'heroes', component: HeroesComponent },
-  { path: 'heroes/add-edit', component: AddEditHeroComponent },
   { path: 'quotes', component: QuotesComponent },
 ];
 

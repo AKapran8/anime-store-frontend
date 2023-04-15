@@ -80,7 +80,12 @@
   <div class="dialog-actions">
     <button mat-button mat-dialog-close>Cancel</button>
     <div class="spacer"></div>
-    <button mat-raised-button color="primary" (click)="saveHandler()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="saveHandler()"
+      [disabled]="!form?.valid || isSaving"
+    >
       Save
     </button>
   </div>

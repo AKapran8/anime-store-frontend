@@ -1,8 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AnimeService } from '../../anime/service/anime.service';
 import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { IAddHero, IAddEditHeroDialogData } from '../model.hero';
+import { HeroesService } from '../service/heroes.service';
+import { mimeTypeValidator } from '../mime-type-validation';
 
 @Component({
   selector: 'app-add-edit-hero',
@@ -12,47 +16,66 @@ import { Router } from '@angular/router';
 export class AddEditHeroComponent implements OnInit {
   public form: FormGroup | null = null;
 
+  public title: string = '';
+  public imagePriview: string = '';
+  public areAnimeListFetching: boolean = false;
   public animeList: { id: string; text: string }[] = [];
   public imagePreviewUrl: string = '';
-  public imageTypeError: string = '';
-  private _allowedTypes: string[] = ['image/jpeg', 'image/png'];
+  public isSaving: boolean = false;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: IAddEditHeroDialogData,
+    private _dialogRef: MatDialogRef<AddEditHeroComponent>,
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService,
-    private _router: Router
+    private _heroesService: HeroesService
   ) {}
 
   ngOnInit(): void {
+    this._initComponent();
     this._initForm();
     this._getAnimeList();
   }
 
+  private _initComponent(): void {
+    if (this.data.type === 'add') {
+      this.title = 'Add New Hero';
+    } else {
+      this.title = 'Edit Hero';
+      this.imagePriview = this.data.initialValue?.imageUrl || '';
+    }
+    this._cdr.markForCheck();
+  }
+
   private _initForm(): void {
     this.form = new FormGroup({
-      name: new FormControl('', Validators.required),
-      image: new FormControl(null),
-      animeId: new FormControl('', Validators.required),
-      quotes: new FormControl([]),
+      name: new FormControl(this.data?.initialValue?.name || '', [
+        Validators.required,
+      ]),
+      image: new FormControl(null, [Validators.required]),
+      anime: new FormControl(this.data?.initialValue?.animeId || '', [
+        Validators.required,
+      ]),
     });
+
+    this.form.get('image')?.setAsyncValidators(mimeTypeValidator);
+    this._cdr.markForCheck();
   }
 
   private _getAnimeList(): void {
+    this.areAnimeListFetching = true;
+
     this._animeService
       .getAnimeNames()
       .pipe(take(1))
       .subscribe((response) => {
         this.animeList = response.data;
+        this.areAnimeListFetching = false;
         this._cdr.markForCheck();
       });
   }
 
-  public navigateToHeroesList(): void {
-    this._router.navigate(['heroes']);
-  }
-
   public onImagePicked(event: Event): void {
-    this.imageTypeError = '';
     this.imagePreviewUrl = '';
     this.form?.get('image')?.setValue(null);
     this.form?.get('image')?.updateValueAndValidity();
@@ -63,17 +86,15 @@ export class AddEditHeroComponent implements OnInit {
       const file = fileInput.files[0];
       const reader = new FileReader();
 
-      if (this._allowedTypes.includes(file.type)) {
-        reader.onload = () => {
-          this.imagePreviewUrl = reader.result as string;
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+        if (!this.form?.get('image')?.errors?.['invalidMimeType']) {
           this.form?.get('image')?.setValue(file);
           this.form?.get('image')?.updateValueAndValidity();
-          this._cdr.markForCheck();
-        };
-        reader.readAsDataURL(file);
-      } else {
-        this.imageTypeError = 'Only .jpg .jpeg .png are allowed';
-      }
+        }
+        this._cdr.markForCheck();
+      };
+      reader.readAsDataURL(file);
       this._cdr.markForCheck();
     }
     this._cdr.markForCheck();
@@ -81,5 +102,46 @@ export class AddEditHeroComponent implements OnInit {
 
   public saveHandler(): void {
     if (!this.form?.valid) return;
+    this.isSaving = true;
+    const imageUrl: string = this._getImageUrl();
+
+    const requiestBody: IAddHero = {
+      name: this.form.value.name.trim(),
+      image: this.form.value.image,
+      animeId: this.form.value.anime,
+      imageUrl: imageUrl,
+    };
+
+    if (this.data.type === 'add') this._save(requiestBody);
+    this._cdr.markForCheck();
+  }
+
+  private _save(body: IAddHero): void {
+    this._heroesService
+      .addHero(body)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.isSaving = false;
+        this._dialogRef.close(res.createdHero);
+      });
+  }
+
+  private _edit(requiestBody: any): void {}
+
+  private _getImageUrl(): string {
+    const nameWithoutSpaces = this.form?.value.name
+      .trim()
+      .replace(/\s+/g, '')
+      .toLowerCase();
+    const id: string = this.form?.value.anime;
+    const mime: string = this._getImageMimeType(this.form?.value.image.type);
+    const imgName: string = `${nameWithoutSpaces}_${id}.${mime}`;
+
+    return imgName || '';
+  }
+
+  private _getImageMimeType(str: string): string {
+    let modifiedMime: string = str.split('/').pop() || '';
+    return modifiedMime;
   }
 }

@@ -13,7 +13,7 @@ const addNewHero = (req, res, next) => {
   const newHero = new Hero({
     name: reqBody.name,
     animeId: reqBody.animeId,
-    image: reqBody && reqBody.image ? reqBody.image : "",
+    imageUrl: reqBody.imageUrl,
     quotes: [],
   });
 

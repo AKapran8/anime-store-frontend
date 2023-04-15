@@ -1,8 +1,23 @@
 <div class="wrapper">
-  <ng-container *ngIf="heroes?.length" class="block-container">
+  <ng-container *ngIf="heroes?.length" class="blocks-container">
     <mat-card class="block" *ngFor="let hero of heroes">
-      <mat-card-content>{{hero.name}}</mat-card-content>
-      <button (click)="removeHero(hero.id)" >REMOVE</button>
+      <div class="hero-block">
+        <img width="100px" [src]="hero.imagePath" [alt]="hero.imagePath" />
+        <div>
+          <h4>Name: {{ hero.name }}</h4>
+          <p *ngIf="hero?.quotes?.length">
+            Total Quotes {{ hero.quotes.length }}
+          </p>
+        </div>
+        <div class="actions-block">
+          <button (click)="editHero(hero)" mat-raised-button color="accent">
+            Edit
+          </button>
+          <button (click)="removeHero(hero)" mat-raised-button color="warn">
+            REMOVE
+          </button>
+        </div>
+      </div>
     </mat-card>
   </ng-container>
 </div>

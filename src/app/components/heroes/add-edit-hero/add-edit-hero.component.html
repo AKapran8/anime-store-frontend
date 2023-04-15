@@ -1,57 +1,74 @@
 <div class="wrapper">
-  <button mat-raised-button color="warn" (click)="navigateToHeroesList()">
-    Back to heroes list
-  </button>
-  <form *ngIf="form" [formGroup]="form" class="form">
-    <div class="field">
-      <mat-form-field>
-        <input type="text" placeholder="Name" formControlName="name" matInput />
-      </mat-form-field>
+  <div class="dialog-header">
+    <h4 class="dialog-header-title">
+      {{ title }}
+    </h4>
+
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <div class="form">
+      <form *ngIf="form" [formGroup]="form" class="form">
+        <div class="field">
+          <mat-form-field>
+            <input
+              type="text"
+              placeholder="Name"
+              formControlName="name"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field>
+            <mat-select placeholder="Anime" formControlName="anime">
+              <mat-option *ngIf="!animeList.length && !areAnimeListFetching"
+                >NO OPTIONS</mat-option
+              >
+              <mat-option *ngFor="let item of animeList" [value]="item.id">
+                {{ item.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="field" *ngIf="!imagePriview">
+          <button
+            class="image-btn"
+            mat-raised-button
+            type="button"
+            (click)="filePicker.click()"
+            color="accent"
+          >
+            Upload Image
+          </button>
+          <input type="file" #filePicker (change)="onImagePicked($event)" />
+        </div>
+        <div class="image" *ngIf="imagePreviewUrl && form?.get('image')?.valid">
+          <img [src]="imagePreviewUrl" [alt]="form.get('name')?.value" />
+        </div>
+        <div class="image" *ngIf="imagePriview">
+          <img [src]="imagePriview" [alt]="form.get('name')?.value" />
+        </div>
+        <mat-error *ngIf="form?.get('image')?.errors?.['invalidMimeType']">
+          Only .png, .jpg, .jpeg are allowed.
+        </mat-error>
+      </form>
     </div>
-    <div class="field">
-      <mat-form-field>
-        <input
-          type="text"
-          placeholder="quotes"
-          formControlName="quotes"
-          matInput
-        />
-      </mat-form-field>
-    </div>
-    <div class="field">
-      <mat-form-field>
-        <mat-select placeholder="Anime" formControlName="animeId">
-          <mat-option *ngFor="let item of animeList" [value]="item">
-            {{ item.text }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="field">
-      <button
-        class="image-btn"
-        mat-raised-button
-        type="button"
-        (click)="filePicker.click()"
-        color="accent"
-      >
-        Upload Image
-      </button>
-      <input type="file" #filePicker (change)="onImagePicked($event)" />
-    </div>
-     <button
+  </div>
+  <div class="dialog-actions">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <div class="spacer"></div>
+    <button
       mat-raised-button
       type="button"
       (click)="saveHandler()"
       color="accent"
-      [disabled]="!form.valid"
+      [disabled]="!form?.valid || isSaving"
     >
-      Add new Hero
+      Save
     </button>
-    <div class="image" *ngIf="imagePreviewUrl">
-      <img [src]="imagePreviewUrl" [alt]="form?.get('name')?.value" />
-    </div>
-    <mat-error *ngIf="imageTypeError"> {{ imageTypeError }} </mat-error>
-
-  </form>
+  </div>
 </div>

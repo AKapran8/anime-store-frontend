@@ -87,3 +87,25 @@ h6 {
 .mat-icon {
   color: #fff;
 }
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+
+  & button {
+    margin-top: 12px;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 16px 16px 16px;
+}
+
+.dialog-header-title {
+  padding: 12px 0px 0px 12px;
+  margin: 0;
+}

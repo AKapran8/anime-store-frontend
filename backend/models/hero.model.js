@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const heroesSchema = mongoose.Schema({
   name: { type: String, required: true },
   animeId: { type: String, required: true },
-  image: { type: String },
+  imageUrl: { type: String },
   quotes: { type: [String] },
 }, {
   toJSON: {

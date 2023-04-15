@@ -3,5 +3,19 @@
 }
 
 .block {
-  max-width: 600px;
+  margin: 24px 0;
+  max-width: 520px;
+}
+
+.hero-block {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
