@@ -33,7 +33,9 @@ export class HeroesService {
     );
   }
 
-  public deleteHero(id: string): Observable<any> {
-    return this._http.delete<any>(`http://localhost:3000/api/heroes/${id}`);
+  public deleteHero(id: string, fileName: string): Observable<any> {
+    return this._http.delete<any>(
+      `http://localhost:3000/api/heroes/${id}?fileName=${fileName}`
+    );
   }
 }
