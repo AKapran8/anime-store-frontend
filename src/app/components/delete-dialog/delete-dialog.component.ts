@@ -15,6 +15,7 @@ export interface IDeleteDialogData {
   type: 'ANIME' | 'HERO' | 'QUOTE';
   id: string;
   imageUrl?: string;
+  animeId?: string;
 }
 
 @Component({
@@ -89,9 +90,10 @@ export class DeleteDialogComponent implements OnInit {
 
   private _deleteHero(): void {
     const fileName: string = this.data?.imageUrl || '';
+    const animeId: string = this.data?.animeId || '';
 
     this._heroesService
-      .deleteHero(this._id, fileName)
+      .deleteHero(this._id, fileName, animeId)
       .pipe(take(1))
       .subscribe((res) => {
         this.isDeleting = false;

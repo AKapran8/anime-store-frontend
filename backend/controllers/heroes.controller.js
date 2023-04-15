@@ -26,7 +26,7 @@ const addNewHero = (req, res, next) => {
       heroName: createdHero.name,
       imageUrl: createdHero.imageUrl,
     };
-    updateAnimeHeroesList(createdHero.animeId, newHero);
+    _updateAnimeHeroesList(createdHero.animeId, newHero);
 
     res
       .status(201)
@@ -37,6 +37,9 @@ const addNewHero = (req, res, next) => {
 const deleteHero = (req, res, next) => {
   const id = req.params.id;
   const fileName = req.query.fileName;
+  const animeId = req.query.animeId;
+
+  _removeAnimeHero(animeId, id);
 
   Hero.deleteOne({ _id: id }).then((result) => {
     const imagePath = path.join(__dirname, "../../src/assets/heroes", fileName);
@@ -80,13 +83,23 @@ const getHeroNames = (req, res, next) => {
     });
 };
 
-const updateAnimeHeroesList = (animeId, hero) => {
-  Anime.findById(animeId, "heroes.heroName heroes.id").then((anime) => {
+const _updateAnimeHeroesList = (animeId, hero) => {
+  Anime.findById(animeId, "heroes").then((anime) => {
     if (anime.heroes.length > 0) {
       anime.heroes = [...anime.heroes, hero];
     } else {
-      anime.heroes = [hero]
+      anime.heroes.push(hero);
     }
+
+    return anime.save();
+  });
+};
+
+const _removeAnimeHero = (animeId, heroId) => {
+  Anime.findById(animeId, "heroes").then((anime) => {
+    const index = anime.heroes.findIndex((a) => a.id === heroId);
+    anime.heroes.splice(index, 1);
+
     return anime.save();
   });
 };
