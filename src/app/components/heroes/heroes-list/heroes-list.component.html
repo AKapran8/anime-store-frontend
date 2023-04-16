@@ -2,7 +2,7 @@
   <div class="blocks-container" *ngIf="heroes?.length">
     <div class="block" *ngFor="let hero of heroes">
       <div class="hero-block">
-        <img width="100px" [src]="hero.imagePath" [alt]="hero.imagePath" />
+        <img width="100px" [src]="hero.imagePath" [alt]="hero.name" />
         <div>
           <h4>Name: {{ hero.name }}</h4>
           <p *ngIf="hero?.quotes?.length">
