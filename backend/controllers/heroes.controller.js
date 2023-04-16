@@ -29,7 +29,7 @@ const addNewHero = (req, res, next) => {
 
     res
       .status(201)
-      .json({ message: "The Hero was added sucessfully", createdHero });
+      .json({ message: "The Hero was added sucessfully", hero: createdHero });
   });
 };
 
@@ -80,7 +80,7 @@ const editHero = (req, res, next) => {
       return hero.save();
     })
     .then((updatedHero) => {
-      res.json({ message: "The Hero was updated successfully", updatedHero });
+      res.json({ message: "The Hero was updated successfully", hero: updatedHero });
     });
 };
 

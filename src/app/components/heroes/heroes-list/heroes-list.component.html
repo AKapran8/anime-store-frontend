@@ -1,6 +1,6 @@
 <div class="wrapper">
-  <ng-container *ngIf="heroes?.length" class="blocks-container">
-    <mat-card class="block" *ngFor="let hero of heroes">
+  <div class="blocks-container" *ngIf="heroes?.length">
+    <div class="block" *ngFor="let hero of heroes">
       <div class="hero-block">
         <img width="100px" [src]="hero.imagePath" [alt]="hero.imagePath" />
         <div>
@@ -18,6 +18,9 @@
           </button>
         </div>
       </div>
-    </mat-card>
-  </ng-container>
+    </div>
+  </div>
+  <div *ngIf="!heroes?.length">
+    No heroes...
+  </div>
 </div>
