@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AnimeService } from '../../anime/service/anime.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IAddHero, IAddEditHeroDialogData } from '../model.hero';
+import { IAddEditHero, IAddEditHeroDialogData } from '../model.hero';
 import { HeroesService } from '../service/heroes.service';
 import { mimeTypeValidator } from '../mime-type-validation';
 
@@ -120,7 +120,7 @@ export class AddEditHeroComponent implements OnInit {
     const imageUrl: string =
       this.data.type === 'add' ? this._getImageUrl() : this._prevImgUrl;
 
-    const requiestBody: IAddHero = {
+    const requiestBody: IAddEditHero = {
       name: this.form?.value.name.trim(),
       image: this.form?.value.image || null,
       animeId: this.form?.value.anime,
@@ -133,13 +133,13 @@ export class AddEditHeroComponent implements OnInit {
     this._cdr.markForCheck();
   }
 
-  private _save(body: IAddHero): void {
+  private _save(body: IAddEditHero): void {
     this._heroesService
       .addHero(body)
       .pipe(take(1))
       .subscribe((res) => {
         this.isSaving = false;
-        this._dialogRef.close(res.createdHero);
+        this._dialogRef.close(res.hero);
       });
   }
 
@@ -151,7 +151,7 @@ export class AddEditHeroComponent implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         this.isSaving = false;
-        this._dialogRef.close(res.updatedHero);
+        this._dialogRef.close(res.hero);
       });
   }
 

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IAddHero, IAddEditHeroResponse } from '../model.hero';
+import {
+  IAddEditHero,
+  IAddEditHeroResponse,
+  IGetHeroesNameResponse,
+  IGetHeroesResponse,
+} from '../model.hero';
 
 @Injectable({
   providedIn: 'root',
@@ -9,23 +14,27 @@ import { IAddHero, IAddEditHeroResponse } from '../model.hero';
 export class HeroesService {
   constructor(private _http: HttpClient) {}
 
-  public getHeroes(): Observable<any> {
-    return this._http.get<any>('http://localhost:3000/api/heroes');
+  public getHeroes(): Observable<IGetHeroesResponse> {
+    return this._http.get<IGetHeroesResponse>(
+      'http://localhost:3000/api/heroes'
+    );
   }
 
-  public getHeroesList(): Observable<any> {
-    return this._http.get<any>('http://localhost:3000/api/heroes/names');
+  public getHeroesList(): Observable<IGetHeroesNameResponse> {
+    return this._http.get<IGetHeroesNameResponse>(
+      'http://localhost:3000/api/heroes/names'
+    );
   }
 
-  public addHero(body: IAddHero): Observable<IAddEditHeroResponse> {
+  public addHero(body: IAddEditHero): Observable<IAddEditHeroResponse> {
     const nameWithoutSpaces: string = body.name.replace(/\s+/g, '');
     const imageUrl: string = `${nameWithoutSpaces}_${body.animeId}`;
 
     const requestBody = new FormData();
     requestBody.append('name', body.name);
-    requestBody.append('image', body.image, imageUrl);
     requestBody.append('animeId', body.animeId);
     requestBody.append('imageUrl', body.imageUrl);
+    if (body.image) requestBody.append('image', body.image, imageUrl);
 
     return this._http.post<IAddEditHeroResponse>(
       'http://localhost:3000/api/heroes',
@@ -33,17 +42,21 @@ export class HeroesService {
     );
   }
 
-  public deleteHero(id: string, fileName: string, animeId: string): Observable<any> {
-    return this._http.delete<any>(
+  public deleteHero(
+    id: string,
+    fileName: string,
+    animeId: string
+  ): Observable<{ message: string }> {
+    return this._http.delete<{ message: string }>(
       `http://localhost:3000/api/heroes/${id}?fileName=${fileName}&animeId=${animeId}`
     );
   }
 
   public editHero(
-    requestBody: any,
+    requestBody: IAddEditHero,
     id: string
-  ): Observable<any> {
-    return this._http.put<any>(
+  ): Observable<IAddEditHeroResponse> {
+    return this._http.put<IAddEditHeroResponse>(
       `http://localhost:3000/api/heroes/${id}`,
       requestBody
     );

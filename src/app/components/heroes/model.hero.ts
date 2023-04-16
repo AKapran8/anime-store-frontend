@@ -1,12 +1,6 @@
-export interface IAddHero {
+export interface IAddEditHero {
   name: string;
-  image: File;
-  animeId: string;
-  imageUrl: string;
-}
-
-export interface IEditHero {
-  name: string;
+  image?: File;
   animeId: string;
   imageUrl: string;
   imagePath?: string;
@@ -30,10 +24,20 @@ export interface IHeroForQuote {
 export interface IAddEditHeroDialogData {
   type: 'add' | 'edit';
   heroId?: string;
-  initialValue?: IEditHero;
+  initialValue?: IAddEditHero;
 }
 
 export interface IAddEditHeroResponse {
   message: string;
-  createdHero: IHero;
+  hero: IHero;
+}
+
+export interface IGetHeroesResponse {
+  message: string;
+  data: IHero[];
+}
+
+export interface IGetHeroesNameResponse {
+  message: string;
+  data: { id: string; name: string }[];
 }
