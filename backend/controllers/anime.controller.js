@@ -1,8 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-
 const Anime = require("./../models/anime.model");
 const Hero = require("./../models/hero.model");
+
+const removeImgHandler = require("./../helpers/remove-image");
 
 const getAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
@@ -39,17 +38,9 @@ const deleteAnime = async (req, res, next) => {
 
     if (anime && anime.heroes && anime.heroes.length > 0) {
       const heroIds = anime.heroes.map((hero) => hero.id);
+
       anime.heroes.forEach((el) => {
-        const imagePath = path.join(
-          __dirname,
-          "../../src/assets/heroes",
-          el.imageUrl
-        );
-        fs.unlink(imagePath, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
+        removeImgHandler(el.imageUrl);
       });
       await Hero.deleteMany({ _id: { $in: heroIds } });
     }

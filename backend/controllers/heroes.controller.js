@@ -1,8 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-
 const Hero = require("./../models/hero.model");
 const Anime = require("./../models/anime.model");
+
+const removeImgHandler = require("./../helpers/remove-image");
 
 const getHeroes = (req, res, next) => {
   Hero.find().then((heroesList) => {
@@ -42,12 +41,7 @@ const deleteHero = (req, res, next) => {
   _removeAnimeHero(animeId, id);
 
   Hero.deleteOne({ _id: id }).then((result) => {
-    const imagePath = path.join(__dirname, "../../src/assets/heroes", fileName);
-    fs.unlink(imagePath, (err) => {
-      if (err) {
-        console.error(err);
-      }
-    });
+    removeImgHandler(fileName);
 
     res.status(200).json({ message: "The Hero was removed successfully!" });
   });
