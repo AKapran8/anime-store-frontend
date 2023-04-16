@@ -1,8 +1,13 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { take } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AnimeService } from '../../anime/service/anime.service';
-import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IAddHero, IAddEditHeroDialogData } from '../model.hero';
 import { HeroesService } from '../service/heroes.service';
@@ -12,6 +17,7 @@ import { mimeTypeValidator } from '../mime-type-validation';
   selector: 'app-add-edit-hero',
   templateUrl: './add-edit-hero.component.html',
   styleUrls: ['./add-edit-hero.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddEditHeroComponent implements OnInit {
   public form: FormGroup | null = null;
@@ -21,6 +27,7 @@ export class AddEditHeroComponent implements OnInit {
   public areAnimeListFetching: boolean = false;
   public animeList: { id: string; text: string }[] = [];
   public imagePreviewUrl: string = '';
+  private _prevImgUrl: string = '';
   public isSaving: boolean = false;
 
   constructor(
@@ -42,7 +49,8 @@ export class AddEditHeroComponent implements OnInit {
       this.title = 'Add New Hero';
     } else {
       this.title = 'Edit Hero';
-      this.imagePriview = this.data.initialValue?.imageUrl || '';
+      this.imagePriview = this.data.initialValue?.imagePath || '';
+      this._prevImgUrl = this.data.initialValue?.imageUrl || '';
     }
     this._cdr.markForCheck();
   }
@@ -52,13 +60,17 @@ export class AddEditHeroComponent implements OnInit {
       name: new FormControl(this.data?.initialValue?.name || '', [
         Validators.required,
       ]),
-      image: new FormControl(null, [Validators.required]),
+      image: new FormControl(null),
       anime: new FormControl(this.data?.initialValue?.animeId || '', [
         Validators.required,
       ]),
     });
 
-    this.form.get('image')?.setAsyncValidators(mimeTypeValidator);
+    if (this.data.type === 'add') {
+      this.form.get('image')?.setValidators(Validators.required);
+      this.form.get('image')?.setAsyncValidators(mimeTypeValidator);
+    }
+
     this._cdr.markForCheck();
   }
 
@@ -73,6 +85,8 @@ export class AddEditHeroComponent implements OnInit {
         this.areAnimeListFetching = false;
         this._cdr.markForCheck();
       });
+
+    this._cdr.markForCheck();
   }
 
   public onImagePicked(event: Event): void {
@@ -88,31 +102,34 @@ export class AddEditHeroComponent implements OnInit {
 
       reader.onload = () => {
         this.imagePreviewUrl = reader.result as string;
+
         if (!this.form?.get('image')?.errors?.['invalidMimeType']) {
           this.form?.get('image')?.setValue(file);
           this.form?.get('image')?.updateValueAndValidity();
         }
-        this._cdr.markForCheck();
+        this._cdr.detectChanges();
       };
       reader.readAsDataURL(file);
-      this._cdr.markForCheck();
     }
-    this._cdr.markForCheck();
   }
 
   public saveHandler(): void {
     if (!this.form?.valid) return;
+
     this.isSaving = true;
-    const imageUrl: string = this._getImageUrl();
+    const imageUrl: string =
+      this.data.type === 'add' ? this._getImageUrl() : this._prevImgUrl;
 
     const requiestBody: IAddHero = {
-      name: this.form.value.name.trim(),
-      image: this.form.value.image,
-      animeId: this.form.value.anime,
+      name: this.form?.value.name.trim(),
+      image: this.form?.value.image || null,
+      animeId: this.form?.value.anime,
       imageUrl: imageUrl,
     };
 
     if (this.data.type === 'add') this._save(requiestBody);
+    if (this.data.type === 'edit') this._edit(requiestBody);
+
     this._cdr.markForCheck();
   }
 
@@ -126,7 +143,17 @@ export class AddEditHeroComponent implements OnInit {
       });
   }
 
-  private _edit(requiestBody: any): void {}
+  private _edit(requiestBody: any): void {
+    const id: string = this.data?.heroId || '';
+
+    this._heroesService
+      .editHero(requiestBody, id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.isSaving = false;
+        this._dialogRef.close(res.updatedHero);
+      });
+  }
 
   private _getImageUrl(): string {
     const nameWithoutSpaces = this.form?.value.name

@@ -60,7 +60,7 @@ export class HeroesListComponent implements OnInit {
         type: 'HERO',
         id: hero.id,
         imageUrl: hero.imageUrl,
-        animeId: hero.animeId
+        animeId: hero.animeId,
       } as IDeleteDialogData,
     });
 
@@ -81,8 +81,10 @@ export class HeroesListComponent implements OnInit {
     const initialValue = {
       name: hero.name,
       animeId: hero.animeId,
-      imageUrl: hero.imagePath
+      imageUrl: hero.imageUrl,
+      imageUrlPath: hero.imagePath,
     };
+
     const dialogRef = this._dialog.open(AddEditHeroComponent, {
       data: {
         type: 'edit',
@@ -90,6 +92,22 @@ export class HeroesListComponent implements OnInit {
         initialValue,
       } as IAddEditHeroDialogData,
     });
+
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((updatedHero) => {
+        if (updatedHero) {
+          const hero: IHero = updatedHero;
+
+          this._heroes = this._heroes.map((el) => {
+            if (el.id === hero.id) return hero;
+            return el;
+          });
+
+          this._modifyHeroes();
+        }
+      });
   }
 
   public addHero(hero: IHero): void {

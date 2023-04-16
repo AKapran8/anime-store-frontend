@@ -38,4 +38,14 @@ export class HeroesService {
       `http://localhost:3000/api/heroes/${id}?fileName=${fileName}&animeId=${animeId}`
     );
   }
+
+  public editHero(
+    requestBody: any,
+    id: string
+  ): Observable<any> {
+    return this._http.put<any>(
+      `http://localhost:3000/api/heroes/${id}`,
+      requestBody
+    );
+  }
 }

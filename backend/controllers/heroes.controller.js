@@ -1,7 +1,7 @@
 const Hero = require("./../models/hero.model");
 const Anime = require("./../models/anime.model");
 
-const removeImgHandler = require("./../helpers/remove-image");
+const imgHelpers = require("./../helpers/image");
 
 const getHeroes = (req, res, next) => {
   Hero.find().then((heroesList) => {
@@ -41,7 +41,7 @@ const deleteHero = (req, res, next) => {
   _removeAnimeHero(animeId, id);
 
   Hero.deleteOne({ _id: id }).then((result) => {
-    removeImgHandler(fileName);
+    imgHelpers.removeImage(fileName);
 
     res.status(200).json({ message: "The Hero was removed successfully!" });
   });
@@ -53,15 +53,34 @@ const editHero = (req, res, next) => {
 
   Hero.findById(heroId)
     .then((hero) => {
+      const prevImageUrl = hero.imageUrl;
+      const imageMimeType = hero.imageUrl.split(".")[1];
+      const newImgUrl = `${reqBody.name.toLowerCase()}_${
+        reqBody.animeId
+      }.${imageMimeType}`;
+
       hero.name = reqBody.name;
-      hero.animeId = reqBody.animeId;
-      hero.image = reqBody.image;
       hero.quotes = reqBody.quotes;
+      hero.animeId = reqBody.animeId;
+      hero.imageUrl = newImgUrl;
+
+      if (reqBody.animeId !== hero.animeId) {
+        _removeAnimeHero(hero.animeId, heroId);
+        const newHero = {
+          id: hero._id,
+          heroName: hero.name,
+          imageUrl: hero.imageUrl,
+        };
+
+        _updateAnimeHeroesList(reqBody.animeId, newHero);
+      }
+
+      imgHelpers.changeImageName(prevImageUrl, newImgUrl);
 
       return hero.save();
     })
-    .then((updatedAnime) => {
-      res.json({ message: "The Hero was updated successfully", updatedAnime });
+    .then((updatedHero) => {
+      res.json({ message: "The Hero was updated successfully", updatedHero });
     });
 };
 

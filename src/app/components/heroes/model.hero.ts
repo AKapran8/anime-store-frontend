@@ -9,6 +9,7 @@ export interface IEditHero {
   name: string;
   animeId: string;
   imageUrl: string;
+  imagePath?: string;
 }
 
 export interface IHero {
