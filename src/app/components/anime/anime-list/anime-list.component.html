@@ -57,9 +57,9 @@
           <p *ngIf="item?.genres?.length">Genres: {{ item.genres }}</p>
           <div *ngIf="item?.heroes?.length">
             Heroes:
-            <p *ngFor="let hero of item.heroes">
-              {{ hero.heroName }}
-            </p>
+            <span *ngFor="let hero of item.heroes, let i = index">
+              {{ i+1 === item.heroes?.length ? hero.heroName : hero.heroName+',' }}
+            </span>
           </div>
 
           <div *ngIf="item?.quotes?.length">
