@@ -59,8 +59,6 @@ export class HeroesListComponent implements OnInit {
         message: `Are you sure want to delete ${hero.name}`,
         type: 'HERO',
         id: hero.id,
-        imageUrl: hero.imageUrl,
-        animeId: hero.animeId,
       } as IDeleteDialogData,
     });
 

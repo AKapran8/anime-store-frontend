@@ -33,18 +33,19 @@ const addNewHero = (req, res, next) => {
   });
 };
 
-const deleteHero = (req, res, next) => {
+const deleteHero = async (req, res, next) => {
   const id = req.params.id;
-  const fileName = req.query.fileName;
-  const animeId = req.query.animeId;
 
-  _removeAnimeHero(animeId, id);
+  try {
+    const hero = await Hero.findOne({ _id: id });
+    _removeAnimeHero(hero.animeId, id);
 
-  Hero.deleteOne({ _id: id }).then((result) => {
-    imgHelpers.removeImage(fileName);
+    Hero.deleteOne({ _id: id }).then((result) => {
+      imgHelpers.removeImage(hero.imageUrl);
 
-    res.status(200).json({ message: "The Hero was removed successfully!" });
-  });
+      res.status(200).json({ message: "The Hero was removed successfully!" });
+    });
+  } catch (err) {}
 };
 
 const editHero = (req, res, next) => {
@@ -80,7 +81,10 @@ const editHero = (req, res, next) => {
       return hero.save();
     })
     .then((updatedHero) => {
-      res.json({ message: "The Hero was updated successfully", hero: updatedHero });
+      res.json({
+        message: "The Hero was updated successfully",
+        hero: updatedHero,
+      });
     });
 };
 
@@ -109,7 +113,7 @@ const _updateAnimeHeroesList = (animeId, hero) => {
 };
 
 const _removeAnimeHero = (animeId, heroId) => {
-  Anime.findById(animeId, "heroes").then((anime) => {
+  Anime.findById(animeId).then((anime) => {
     const index = anime.heroes.findIndex((a) => a.id === heroId);
     anime.heroes.splice(index, 1);
 

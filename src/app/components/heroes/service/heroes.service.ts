@@ -44,11 +44,9 @@ export class HeroesService {
 
   public deleteHero(
     id: string,
-    fileName: string,
-    animeId: string
   ): Observable<{ message: string }> {
     return this._http.delete<{ message: string }>(
-      `http://localhost:3000/api/heroes/${id}?fileName=${fileName}&animeId=${animeId}`
+      `http://localhost:3000/api/heroes/${id}`
     );
   }
 
