@@ -6,14 +6,17 @@ import {
   IGetAnimeListResponse,
   IAddEditAnimeResponse,
   IDeleteAnimeResponse,
-} from '../helpers/model';
+  IGetAnimeNamesResponse,
+} from '../model.anime';
 
 @Injectable()
 export class AnimeService {
   constructor(private _http: HttpClient) {}
 
   public getAnimeList(): Observable<IGetAnimeListResponse> {
-    return this._http.get<IGetAnimeListResponse>('http://localhost:3000/api/anime');
+    return this._http.get<IGetAnimeListResponse>(
+      'http://localhost:3000/api/anime'
+    );
   }
 
   public addAnime(
@@ -38,6 +41,12 @@ export class AnimeService {
   public deleteAnime(id: string): Observable<IDeleteAnimeResponse> {
     return this._http.delete<IDeleteAnimeResponse>(
       `http://localhost:3000/api/anime/${id}`
+    );
+  }
+
+  public getAnimeNames(): Observable<IGetAnimeNamesResponse> {
+    return this._http.get<IGetAnimeNamesResponse>(
+      'http://localhost:3000/api/anime/names'
     );
   }
 }

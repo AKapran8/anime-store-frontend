@@ -1,0 +1,29 @@
+.wrapper {
+  margin-top: 40px;
+}
+
+.hero-block {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  gap: 10px
+}
+
+.blocks-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.block {
+  margin: 24px 0;
+  border: 1px solid black;
+  border-radius: 12px;
+}
+
+.actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,0 +1,26 @@
+<div class="wrapper">
+  <div class="blocks-container" *ngIf="heroes?.length">
+    <div class="block" *ngFor="let hero of heroes">
+      <div class="hero-block">
+        <img width="100px" [src]="hero.imagePath" [alt]="hero.name" />
+        <div>
+          <h4>Name: {{ hero.name }}</h4>
+          <p *ngIf="hero?.quotes?.length">
+            Total Quotes {{ hero.quotes.length }}
+          </p>
+        </div>
+        <div class="actions-block">
+          <button (click)="editHero(hero)" mat-raised-button color="accent">
+            Edit
+          </button>
+          <button (click)="removeHero(hero)" mat-raised-button color="warn">
+            REMOVE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!heroes?.length">
+    No heroes...
+  </div>
+</div>

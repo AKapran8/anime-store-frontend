@@ -16,6 +16,8 @@ export interface IAnime {
   time: number;
   genres: string;
   status: string;
+  heroes?: { id: string, heroName: string }[];
+  quotes?: string[];
 }
 
 export interface ITableData extends IAnime {
@@ -31,8 +33,14 @@ export interface IServerAnime {
   time: number;
   genres: string;
   status: string;
+  heroes?: { id: string, heroName: string }[];
+  quotes?: string[];
 }
 
+export interface IAnimeForHeroAndQuote {
+  text: string;
+  id: string;
+}
 export interface IGetAnimeListResponse {
   status: string;
   data: IServerAnime[];
@@ -40,6 +48,11 @@ export interface IGetAnimeListResponse {
 
 export interface IAddEditAnimeResponse {
   message: string;
+}
+
+export interface IGetAnimeNamesResponse {
+  status: string;
+  data: IAnimeForHeroAndQuote[];
 }
 
 export interface IDeleteAnimeResponse extends IAddEditAnimeResponse {}

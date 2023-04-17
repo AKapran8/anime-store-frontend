@@ -1,11 +1,36 @@
-// const express = require('express');
-// const router = express.Router();
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
 
-// const heroesController = require("./../controlers/heroes.controler");
+const heroController = require("./../controllers/heroes.controller");
 
-// router.get("", heroesController.getAllAnime);
-// router.post("", heroesController.addNewAnime);
-// router.put("/:id", heroesController.editAnime);
-// router.delete("/:id", heroesController.deleteAnime);
+const MIME_TYPE_HELPER = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+};
 
-// module.exports = router;
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_HELPER[file.mimetype];
+    cb(!isValid ? new Error("Invalid type") : null, "src/assets/heroes");
+  },
+  filename: (req, file, cb) => {
+    const imgName = file.originalname.toLowerCase().split(" ").join("-");
+    const ext = MIME_TYPE_HELPER[file.mimetype];
+    const name = `${imgName}.${ext}`;
+    cb(null, name);
+  },
+});
+
+router.get("/", heroController.getHeroes);
+router.get("/names", heroController.getHeroNames);
+router.post(
+  "",
+  multer({ storage }).single("image"),
+  heroController.addNewHero
+);
+router.put("/:id", heroController.editHero);
+router.delete("/:id", heroController.deleteHero);
+
+module.exports = router;

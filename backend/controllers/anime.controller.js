@@ -1,4 +1,7 @@
 const Anime = require("./../models/anime.model");
+const Hero = require("./../models/hero.model");
+
+const imgHelpers = require("./../helpers/image");
 
 const getAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
@@ -16,6 +19,8 @@ const addNewAnime = (req, res, next) => {
     status: reqBody.status,
     time: reqBody.time,
     genres: reqBody && reqBody.genres ? reqBody.genres : "",
+    heroes: [],
+    quotes: [],
   });
 
   newAnime.save().then((createdAnime) => {
@@ -25,12 +30,27 @@ const addNewAnime = (req, res, next) => {
   });
 };
 
-const deleteAnime = (req, res, next) => {
+const deleteAnime = async (req, res, next) => {
   const id = req.params.id;
 
-  Anime.deleteOne({ _id: id }).then((result) => {
+  try {
+    const anime = await Anime.findById(id);
+
+    if (anime && anime.heroes && anime.heroes.length > 0) {
+      const heroIds = anime.heroes.map((hero) => hero.id);
+
+      anime.heroes.forEach((el) => {
+        imgHelpers.removeImage(el.imageUrl);
+      });
+      await Hero.deleteMany({ _id: { $in: heroIds } });
+    }
+    await Anime.deleteOne({ _id: id });
+
     res.status(200).json({ message: "Anime was removed successfully" });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to remove anime" });
+  }
 };
 
 const editAnime = (req, res, next) => {
@@ -45,6 +65,8 @@ const editAnime = (req, res, next) => {
       anime.status = reqBody.status;
       anime.time = reqBody.time;
       anime.genres = reqBody && reqBody.genres ? reqBody.genres : "";
+      anime.heroes = anime && anime.heroes ? anime.heroes : [];
+      anime.quotes = anime && anime.quotes ? anime.quotes : [];
 
       return anime.save();
     })
@@ -58,7 +80,7 @@ const getAnimeNames = (req, res, next) => {
     .select("name")
     .then((dataTable) => {
       const modifiedData = dataTable.map((el) => {
-        return { id: el._id, name: el.name };
+        return { id: el._id, text: el.name };
       });
 
       res.status(200).json({ status: "Success", data: modifiedData });
