@@ -6,9 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnimeService } from '../anime/service/anime.service';
 import { take } from 'rxjs/operators';
-import { HeroesService } from '../heroes/service/heroes.service';
+
+import { AnimeService } from '../../services/anime/anime.service';
+import { HeroesService } from '../../services/heroes/heroes.service';
 
 export interface IDeleteDialogData {
   message: string;
@@ -25,8 +26,8 @@ export interface IDeleteDialogData {
 export class DeleteDialogComponent implements OnInit {
   public isDeleting: boolean = false;
   public message: string = '';
-  private _type: string = '';
-  public typeUI: string = '';
+  public type: string = '';
+
   private _id: string = '';
 
   constructor(
@@ -43,8 +44,7 @@ export class DeleteDialogComponent implements OnInit {
 
   private _initComponent(): void {
     this.message = this.data.message;
-    this._type = this.data.type;
-    this.typeUI = this.data.type.toLowerCase();
+    this.type = this.data.type;
     this._id = this.data.id;
 
     this._cdr.markForCheck();
@@ -53,7 +53,7 @@ export class DeleteDialogComponent implements OnInit {
   public deleteHandler(): void {
     this.isDeleting = true;
 
-    switch (this._type) {
+    switch (this.type) {
       case 'ANIME': {
         this._deleteAnime();
         break;
@@ -72,7 +72,6 @@ export class DeleteDialogComponent implements OnInit {
         break;
       }
     }
-    this._cdr.markForCheck();
   }
 
   private _deleteAnime(): void {
@@ -82,7 +81,6 @@ export class DeleteDialogComponent implements OnInit {
       .subscribe(() => {
         this.isDeleting = false;
         this._dialogRef.close(true);
-        this._cdr.markForCheck();
       });
   }
 
@@ -90,10 +88,9 @@ export class DeleteDialogComponent implements OnInit {
     this._heroesService
       .deleteHero(this._id)
       .pipe(take(1))
-      .subscribe((res) => {
+      .subscribe(() => {
         this.isDeleting = false;
         this._dialogRef.close(true);
-        this._cdr.markForCheck();
       });
   }
 

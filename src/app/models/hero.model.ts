@@ -1,3 +1,5 @@
+import { IMessageResponse } from './message-repsonse.model';
+
 export interface IAddEditHero {
   name: string;
   image?: File;
@@ -16,6 +18,7 @@ export interface IHero {
 export interface IHeroTableData extends IHero {
   imagePath: string;
 }
+
 export interface IHeroForQuote {
   text: string;
   id: string;
@@ -27,17 +30,14 @@ export interface IAddEditHeroDialogData {
   initialValue?: IAddEditHero;
 }
 
-export interface IAddEditHeroResponse {
-  message: string;
+export interface IAddEditHeroResponse extends IMessageResponse {
   hero: IHero;
 }
 
-export interface IGetHeroesResponse {
-  message: string;
-  data: IHero[];
+export interface IGetHeroesResponse extends IMessageResponse {
+  heroesList: IHero[];
 }
 
-export interface IGetHeroesNameResponse {
-  message: string;
-  data: { id: string; name: string }[];
+export interface IGetHeroesNameResponse extends IMessageResponse {
+  data: IHeroForQuote[];
 }

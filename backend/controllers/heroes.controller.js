@@ -5,7 +5,7 @@ const imgHelpers = require("./../helpers/image");
 
 const getHeroes = (req, res, next) => {
   Hero.find().then((heroesList) => {
-    res.status(200).json({ status: "Success", data: heroesList });
+    res.status(200).json({ status: "Success", heroesList: heroesList });
   });
 };
 
@@ -55,8 +55,9 @@ const editHero = (req, res, next) => {
   Hero.findById(heroId)
     .then((hero) => {
       const prevImageUrl = hero.imageUrl;
+      const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase()
       const imageMimeType = hero.imageUrl.split(".")[1];
-      const newImgUrl = `${reqBody.name.toLowerCase()}_${
+      const newImgUrl = `${nameForImage}_${
         reqBody.animeId
       }.${imageMimeType}`;
 
@@ -92,16 +93,16 @@ const getHeroNames = (req, res, next) => {
   Hero.find()
     .select("name")
     .then((dataTable) => {
-      const data = dataTable.map((el) => {
+      const heroesList = dataTable.map((el) => {
         return { id: el.id, name: el.name };
       });
 
-      res.status(200).json({ status: "Success", data });
+      res.status(200).json({ status: "Success", heroesList });
     });
 };
 
 const _updateAnimeHeroesList = (animeId, hero) => {
-  Anime.findById(animeId, "heroes").then((anime) => {
+  Anime.findById(animeId).then((anime) => {
     if (anime.heroes.length > 0) {
       anime.heroes = [...anime.heroes, hero];
     } else {

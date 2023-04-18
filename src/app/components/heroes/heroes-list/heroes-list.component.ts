@@ -5,15 +5,22 @@ import {
   OnInit,
 } from '@angular/core';
 import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 
+import { AddEditHeroComponent } from '../add-edit-hero/add-edit-hero.component';
 import {
   DeleteDialogComponent,
   IDeleteDialogData,
-} from './../../delete-dialog/delete-dialog.component';
-import { HeroesService } from '../service/heroes.service';
-import { IAddEditHeroDialogData, IHero, IHeroTableData } from '../model.hero';
-import { MatDialog } from '@angular/material/dialog';
-import { AddEditHeroComponent } from '../add-edit-hero/add-edit-hero.component';
+} from '../../delete-dialog/delete-dialog.component';
+
+import {
+  IHeroTableData,
+  IHero,
+  IAddEditHero,
+  IAddEditHeroDialogData,
+} from 'src/app/models/hero.model';
+
+import { HeroesService } from '../../../services/heroes/heroes.service';
 
 @Component({
   selector: 'app-heroes-list',
@@ -22,8 +29,9 @@ import { AddEditHeroComponent } from '../add-edit-hero/add-edit-hero.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroesListComponent implements OnInit {
-  private _heroes: IHero[] = [];
   public heroes: IHeroTableData[] = [];
+
+  private _heroes: IHero[] = [];
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -40,7 +48,7 @@ export class HeroesListComponent implements OnInit {
       .getHeroes()
       .pipe(take(1))
       .subscribe((res) => {
-        this._heroes = res.data;
+        this._heroes = res.heroesList;
         this._modifyHeroes();
       });
   }
@@ -76,11 +84,11 @@ export class HeroesListComponent implements OnInit {
   }
 
   public editHero(hero: IHeroTableData): void {
-    const initialValue = {
+    const initialValue: IAddEditHero = {
       name: hero.name,
       animeId: hero.animeId,
       imageUrl: hero.imageUrl,
-      imageUrlPath: hero.imagePath,
+      imagePath: hero.imagePath,
     };
 
     const dialogRef = this._dialog.open(AddEditHeroComponent, {

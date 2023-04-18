@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
+  IGetHeroesResponse,
+  IGetHeroesNameResponse,
   IAddEditHero,
   IAddEditHeroResponse,
-  IGetHeroesNameResponse,
-  IGetHeroesResponse,
-} from '../model.hero';
+} from 'src/app/models/hero.model';
+import { IMessageResponse } from 'src/app/models/message-repsonse.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class HeroesService {
   constructor(private _http: HttpClient) {}
 
@@ -42,10 +41,8 @@ export class HeroesService {
     );
   }
 
-  public deleteHero(
-    id: string,
-  ): Observable<{ message: string }> {
-    return this._http.delete<{ message: string }>(
+  public deleteHero(id: string): Observable<IMessageResponse> {
+    return this._http.delete<IMessageResponse>(
       `http://localhost:3000/api/heroes/${id}`
     );
   }

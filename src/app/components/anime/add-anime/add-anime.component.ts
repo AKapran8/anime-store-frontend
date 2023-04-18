@@ -7,9 +7,11 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IAddEditAnime } from '../model.anime';
 import { take } from 'rxjs/operators';
-import { AnimeService } from '../service/anime.service';
+
+import { IAddEditAnime } from 'src/app/models/anime.mode';
+
+import { AnimeService } from '../../../services/anime/anime.service';
 
 @Component({
   selector: 'app-add-anime',
@@ -53,9 +55,7 @@ export class AddAnimeComponent implements OnInit {
   }
 
   public saveHandler(): void {
-    if (!this.form?.valid) {
-      return;
-    }
+    if (!this.form?.valid) return;
 
     this.isSaving = true;
 
@@ -85,7 +85,6 @@ export class AddAnimeComponent implements OnInit {
       .subscribe((res) => {
         this._dialogRef.close(res);
         this.isSaving = false;
-        this._cdr.markForCheck();
       });
   }
 
@@ -96,7 +95,6 @@ export class AddAnimeComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res);
-        this._cdr.markForCheck();
       });
   }
 }

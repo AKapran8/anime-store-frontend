@@ -1,3 +1,5 @@
+import { IMessageResponse } from "./message-repsonse.model";
+
 export interface IAddEditAnime {
   name: string;
   nameUA: string;
@@ -33,7 +35,7 @@ export interface IServerAnime {
   time: number;
   genres: string;
   status: string;
-  heroes?: { id: string, heroName: string }[];
+  heroes?: { id: string, heroName: string, imageUrl: string }[];
   quotes?: string[];
 }
 
@@ -41,18 +43,20 @@ export interface IAnimeForHeroAndQuote {
   text: string;
   id: string;
 }
+
 export interface IGetAnimeListResponse {
   status: string;
-  data: IServerAnime[];
+  animeList: IServerAnime[];
 }
 
-export interface IAddEditAnimeResponse {
-  message: string;
+export interface IGetAnimeNamesListResponse extends IMessageResponse {
+  animeList: IAnimeForHeroAndQuote[];
 }
 
-export interface IGetAnimeNamesResponse {
-  status: string;
-  data: IAnimeForHeroAndQuote[];
+export interface IAddEditAnimeResponse extends IMessageResponse{
+  anime: IServerAnime;
 }
 
-export interface IDeleteAnimeResponse extends IAddEditAnimeResponse {}
+export interface IGetAnimeByIdResponst extends IMessageResponse {
+  anime: IServerAnime;
+}

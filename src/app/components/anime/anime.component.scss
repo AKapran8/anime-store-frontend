@@ -1,0 +1,107 @@
+.wrapper {
+  background: url("./../../../assets/background/anime.png") 0 0/100% 100%
+    no-repeat;
+  height: 100vh;
+  padding-top: 240px;
+}
+
+.container {
+  width: 80%;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &-header {
+    background: rgba(60, 85, 150, 0.7);
+    border-radius: 10px 10px 0px 0px;
+    display: flex;
+    padding: 16px 0 16px 28px;
+  }
+
+  .mat-icon {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    font-size: 28px !important;
+  }
+  .add-item {
+    margin-right: 28px;
+  }
+}
+
+.count-text {
+  margin: 4px 16px 0 4px;
+  color: #fff;
+  font-size: 20px;
+
+}
+.search-input {
+  position: relative;
+
+  .mat-icon {
+    color: #949494;
+    position: absolute;
+    top: 5px;
+    left: 6px;
+    font-size: 16px !important;
+  }
+
+  input {
+    width: 100%;
+    max-width: 300px;
+    height: 24px;
+    border-radius: 8px;
+    padding-left: 24px;
+  }
+}
+
+.mat-expansion-panel {
+  .mat-icon {
+    color: #000;
+  }
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.item-text {
+  margin: 0 50px;
+}
+
+.remove-icon {
+  position: absolute;
+  top: 12px;
+  right: 24px;
+}
+
+.mat-expansion-panel-header {
+  cursor: default;
+}
+
+@media (max-width: 500px) {
+  .remove-icon {
+    right: 12px;
+  }
+}
+
+.spinner {
+  margin: 0 auto;
+}
+
+.start-text {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+
+  span {
+    font-size: 16px;
+  }
+}
+
+.get-more-button {
+  display: block;
+  margin-top: 16px;
+}
