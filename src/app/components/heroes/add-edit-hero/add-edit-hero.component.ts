@@ -75,9 +75,7 @@ export class AddEditHeroComponent implements OnInit {
       .getAnimeListNames()
       .pipe(take(1))
       .subscribe((response) => {
-        this.animeList = response.animeList.map((a) => {
-          return { id: a._id, text: a.name };
-        });
+        this.animeList = response.animeList;
         this.areAnimeListFetching = false;
       });
   }

@@ -12,7 +12,10 @@ const getAnime = (req, res, next) => {
 const getAnimeNames = (req, res, next) => {
   Anime.find()
     .select("name")
-    .then((animeList) => {
+    .then((list) => {
+      const animeList = list.map(el => {
+        return { id: el._id, text: el.name }
+      })
       res.status(200).json({ status: "Success", animeList });
     });
 };
