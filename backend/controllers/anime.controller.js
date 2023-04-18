@@ -9,6 +9,14 @@ const getAnime = (req, res, next) => {
   });
 };
 
+const getAnimeNames = (req, res, next) => {
+  Anime.find()
+    .select("name")
+    .then((animeList) => {
+      res.status(200).json({ status: "Success", animeList });
+    });
+};
+
 const addNewAnime = (req, res, next) => {
   const reqBody = req.body;
 
@@ -89,4 +97,5 @@ module.exports = {
   deleteAnime,
   editAnime,
   getAnimeById,
+  getAnimeNames,
 };

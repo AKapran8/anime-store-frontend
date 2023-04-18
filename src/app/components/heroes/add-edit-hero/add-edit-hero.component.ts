@@ -72,7 +72,7 @@ export class AddEditHeroComponent implements OnInit {
     this.areAnimeListFetching = true;
 
     this._animeService
-      .getAnimeList()
+      .getAnimeListNames()
       .pipe(take(1))
       .subscribe((response) => {
         this.animeList = response.animeList.map((a) => {

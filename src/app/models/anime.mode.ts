@@ -40,8 +40,8 @@ export interface IServerAnime {
 }
 
 export interface IAnimeForHeroAndQuote {
-  text: string;
-  id: string;
+  name: string;
+  _id: string;
 }
 
 export interface IGetAnimeListResponse {
@@ -49,7 +49,7 @@ export interface IGetAnimeListResponse {
   animeList: IServerAnime[];
 }
 
-export interface IGetAnimeNamesResponse extends IMessageResponse {
+export interface IGetAnimeNamesListResponse extends IMessageResponse {
   animeList: IAnimeForHeroAndQuote[];
 }
 
