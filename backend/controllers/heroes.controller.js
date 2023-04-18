@@ -55,8 +55,9 @@ const editHero = (req, res, next) => {
   Hero.findById(heroId)
     .then((hero) => {
       const prevImageUrl = hero.imageUrl;
+      const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase()
       const imageMimeType = hero.imageUrl.split(".")[1];
-      const newImgUrl = `${reqBody.name.toLowerCase()}_${
+      const newImgUrl = `${nameForImage}_${
         reqBody.animeId
       }.${imageMimeType}`;
 

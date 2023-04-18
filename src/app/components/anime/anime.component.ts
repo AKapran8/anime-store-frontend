@@ -111,7 +111,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
       if (res && res.anime) {
-        const newElem: IAnime = getModifiedAnimeItemComponent(res.createdAnime);
+        const newElem: IAnime = getModifiedAnimeItemComponent(res.anime);
 
         this._animeList.push(newElem);
         this._modifyList();

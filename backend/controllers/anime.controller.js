@@ -75,31 +75,18 @@ const editAnime = (req, res, next) => {
     });
 };
 
-const getAnimeNames = (req, res, next) => {
-  Anime.find()
-    .select("name")
-    .then((dataTable) => {
-      const modifiedData = dataTable.map((el) => {
-        return { id: el._id, text: el.name };
-      });
-
-      res.status(200).json({ status: "Success", animeList: modifiedData });
-    });
-};
-
 const getAnimeById = (req, res, next) => {
   const id = req.params.id;
 
   Anime.find({ _id: id }).then((anime) => {
     res.status(200).json({ status: "Success", anime: anime[0] });
   });
-}
+};
 
 module.exports = {
   getAnime,
   addNewAnime,
   deleteAnime,
   editAnime,
-  getAnimeNames,
-  getAnimeById
+  getAnimeById,
 };

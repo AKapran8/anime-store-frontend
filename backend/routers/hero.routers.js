@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     cb(!isValid ? new Error("Invalid type") : null, "src/assets/heroes");
   },
   filename: (req, file, cb) => {
-    const imgName = file.originalname.toLowerCase().split(" ").join("-");
+    const imgName = file.originalname.replace(/\s/g, "").toLowerCase();
     const ext = MIME_TYPE_HELPER[file.mimetype];
     const name = `${imgName}.${ext}`;
     cb(null, name);

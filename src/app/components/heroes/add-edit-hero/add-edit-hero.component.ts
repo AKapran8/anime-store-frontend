@@ -72,10 +72,12 @@ export class AddEditHeroComponent implements OnInit {
     this.areAnimeListFetching = true;
 
     this._animeService
-      .getAnimeNames()
+      .getAnimeList()
       .pipe(take(1))
       .subscribe((response) => {
-        this.animeList = response.animeList;
+        this.animeList = response.animeList.map((a) => {
+          return { id: a._id, text: a.name };
+        });
         this.areAnimeListFetching = false;
       });
   }
@@ -131,7 +133,7 @@ export class AddEditHeroComponent implements OnInit {
       });
   }
 
-  private _edit(requiestBody: any): void {
+  private _edit(requiestBody: IAddEditHero): void {
     const id: string = this.data?.heroId || '';
 
     this._heroesService
