@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -12,6 +13,7 @@ import { take, map } from 'rxjs/operators';
 
 import {
   convertTimeToText,
+  getModifiedAnimeItemComponent,
   getStarsDescription,
 } from 'src/app/helpers/anime.pipes';
 
@@ -21,12 +23,7 @@ import {
 } from '../delete-dialog/delete-dialog.component';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
 
-import {
-  IAddEditAnime,
-  IAnime,
-  IServerAnime,
-  ITableData,
-} from 'src/app/models/anime.mode';
+import { IAddEditAnime, IAnime, ITableData } from 'src/app/models/anime.mode';
 
 import { AnimeService } from '../../services/anime/anime.service';
 
@@ -49,7 +46,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _cdr: ChangeDetectorRef,
-    private _animeService: AnimeService
+    private _animeService: AnimeService,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -65,8 +63,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .getAnimeList()
       .pipe(
         map((animeData) => {
-          console.log(animeData);
-          return this._mapAnimeListData(animeData.animeList);
+          return animeData.animeList.map((a) =>
+            getModifiedAnimeItemComponent(a)
+          );
         }),
         take(1)
       )
@@ -112,9 +111,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((res) => {
       if (res && res.anime) {
-        const newElem: IAnime = this._getModifiedAnimeListItem(
-          res.createdAnime
-        );
+        const newElem: IAnime = getModifiedAnimeItemComponent(res.createdAnime);
 
         this._animeList.push(newElem);
         this._modifyList();
@@ -139,7 +136,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res && res.anime) {
-        const updatedAnime: IAnime = this._getModifiedAnimeListItem(res.anime);
+        const updatedAnime: IAnime = getModifiedAnimeItemComponent(res.anime);
 
         this._animeList = this._animeList.map((el) => {
           if (el.id === updatedAnime.id) return updatedAnime;
@@ -172,32 +169,12 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
   }
 
+  public getAnimeById(id: string): void {
+    this._router.navigate(['anime', id]);
+  }
+
   public stopPropaganation(event: MouseEvent): void {
     event.stopPropagation();
-  }
-
-  private _mapAnimeListData(list: IServerAnime[] = []): IAnime[] {
-    const modifiedList = list.map((a) => {
-      return this._getModifiedAnimeListItem(a);
-    });
-
-    return [...modifiedList];
-  }
-
-  private _getModifiedAnimeListItem(elem: IServerAnime): IAnime {
-    const modifiedEl: IAnime = {
-      id: elem._id,
-      name: elem.name,
-      nameUA: elem.nameUA,
-      stars: elem.stars,
-      time: elem.time,
-      genres: elem.genres,
-      status: elem.status,
-      heroes: elem.heroes,
-      quotes: elem.quotes,
-    };
-
-    return modifiedEl;
   }
 
   ngOnDestroy(): void {

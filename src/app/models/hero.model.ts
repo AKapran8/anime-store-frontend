@@ -35,7 +35,7 @@ export interface IAddEditHeroResponse extends IMessageResponse {
 }
 
 export interface IGetHeroesResponse extends IMessageResponse {
-  data: IHero[];
+  heroesList: IHero[];
 }
 
 export interface IGetHeroesNameResponse extends IMessageResponse {

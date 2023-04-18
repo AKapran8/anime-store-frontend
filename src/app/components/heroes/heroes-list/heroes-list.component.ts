@@ -48,7 +48,7 @@ export class HeroesListComponent implements OnInit {
       .getHeroes()
       .pipe(take(1))
       .subscribe((res) => {
-        this._heroes = res.data;
+        this._heroes = res.heroesList;
         this._modifyHeroes();
       });
   }

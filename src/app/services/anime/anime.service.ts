@@ -7,6 +7,7 @@ import {
   IAddEditAnimeResponse,
   IGetAnimeListResponse,
   IGetAnimeNamesResponse,
+  IGetAnimeByIdResponst,
 } from 'src/app/models/anime.mode';
 
 @Injectable()
@@ -47,6 +48,12 @@ export class AnimeService {
   public getAnimeNames(): Observable<IGetAnimeNamesResponse> {
     return this._http.get<IGetAnimeNamesResponse>(
       'http://localhost:3000/api/anime/names'
+    );
+  }
+
+  public getAnimeById(id: string): Observable<IGetAnimeByIdResponst> {
+    return this._http.get<IGetAnimeByIdResponst>(
+      `http://localhost:3000/api/anime/${id}`
     );
   }
 }

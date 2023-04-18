@@ -87,10 +87,19 @@ const getAnimeNames = (req, res, next) => {
     });
 };
 
+const getAnimeById = (req, res, next) => {
+  const id = req.params.id;
+
+  Anime.find({ _id: id }).then((anime) => {
+    res.status(200).json({ status: "Success", anime: anime[0] });
+  });
+}
+
 module.exports = {
   getAnime,
   addNewAnime,
   deleteAnime,
   editAnime,
   getAnimeNames,
+  getAnimeById
 };

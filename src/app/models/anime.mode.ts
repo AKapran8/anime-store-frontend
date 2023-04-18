@@ -56,3 +56,7 @@ export interface IGetAnimeNamesResponse extends IMessageResponse {
 export interface IAddEditAnimeResponse extends IMessageResponse{
   anime: IServerAnime;
 }
+
+export interface IGetAnimeByIdResponst extends IMessageResponse {
+  anime: IServerAnime;
+}
