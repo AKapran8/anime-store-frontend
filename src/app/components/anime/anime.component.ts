@@ -15,7 +15,7 @@ import {
   convertTimeToText,
   getModifiedAnimeItemComponent,
   getStarsDescription,
-} from 'src/app/helpers/anime.pipes';
+} from 'src/app/help-functions/anime.pipes';
 
 import {
   DeleteDialogComponent,
