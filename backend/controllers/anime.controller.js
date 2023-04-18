@@ -5,7 +5,7 @@ const imgHelpers = require("./../helpers/image");
 
 const getAnime = (req, res, next) => {
   Anime.find().then((dataTable) => {
-    res.status(200).json({ status: "Success", data: dataTable });
+    res.status(200).json({ status: "Success", animeList: dataTable });
   });
 };
 
@@ -26,7 +26,7 @@ const addNewAnime = (req, res, next) => {
   newAnime.save().then((createdAnime) => {
     res
       .status(201)
-      .json({ message: "Anime was added sucessfully", createdAnime });
+      .json({ message: "Anime was added sucessfully", anime: createdAnime });
   });
 };
 
@@ -71,7 +71,7 @@ const editAnime = (req, res, next) => {
       return anime.save();
     })
     .then((updatedAnime) => {
-      res.json({ message: "Anime updated successfully", updatedAnime });
+      res.json({ message: "Anime updated successfully", anime: updatedAnime });
     });
 };
 
@@ -83,7 +83,7 @@ const getAnimeNames = (req, res, next) => {
         return { id: el._id, text: el.name };
       });
 
-      res.status(200).json({ status: "Success", data: modifiedData });
+      res.status(200).json({ status: "Success", animeList: modifiedData });
     });
 };
 

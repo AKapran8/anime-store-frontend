@@ -6,10 +6,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddEditHeroComponent } from './add-edit-hero/add-edit-hero.component';
 import { take } from 'rxjs/operators';
-import { IAddEditHeroDialogData, IHero } from './model.hero';
+
+import { AddEditHeroComponent } from './add-edit-hero/add-edit-hero.component';
 import { HeroesListComponent } from './heroes-list/heroes-list.component';
+
+import { IAddEditHeroDialogData, IHero } from 'src/app/models/hero.model';
 
 @Component({
   selector: 'app-heroes',

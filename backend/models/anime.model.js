@@ -21,6 +21,7 @@ const animeSchema = mongoose.Schema(
           ret.heroes = ret.heroes.map((hero) => ({
             id: hero.id,
             heroName: hero.heroName,
+            imageUrl: hero.imageUrl
           }));
         }
       },

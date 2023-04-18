@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { Observable, Observer, of } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 
 export const mimeTypeValidator = (
   control: AbstractControl
@@ -31,7 +31,7 @@ export const mimeTypeValidator = (
           case 'ffd8ffe8':
             isValid = true;
             break;
-          default: // Or you can use the blob.type as fallback
+          default:
             isValid = false;
             break;
         }
