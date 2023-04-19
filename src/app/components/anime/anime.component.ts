@@ -23,9 +23,9 @@ import {
 } from '../delete-dialog/delete-dialog.component';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
 
-import { IAddEditAnime, IAnime, ITableData } from 'src/app/models/anime.mode';
+import { IAddEditAnime, IAnime, ITableData } from 'src/app/components/anime/anime.mode';
 
-import { AnimeService } from '../../services/anime/anime.service';
+import { AnimeService } from './service/anime.service';
 
 @Component({
   selector: 'app-anime',

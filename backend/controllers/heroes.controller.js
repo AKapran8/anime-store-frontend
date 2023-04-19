@@ -41,6 +41,7 @@ const deleteHero = async (req, res, next) => {
     _removeAnimeHero(hero.animeId, id);
 
     Hero.deleteOne({ _id: id }).then((result) => {
+      console.log('HERO ', hero);
       imgHelpers.removeImage(hero.imageUrl);
 
       res.status(200).json({ message: "The Hero was removed successfully!" });
@@ -55,11 +56,9 @@ const editHero = (req, res, next) => {
   Hero.findById(heroId)
     .then((hero) => {
       const prevImageUrl = hero.imageUrl;
-      const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase()
+      const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase();
       const imageMimeType = hero.imageUrl.split(".")[1];
-      const newImgUrl = `${nameForImage}_${
-        reqBody.animeId
-      }.${imageMimeType}`;
+      const newImgUrl = `${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
 
       hero.name = reqBody.name;
       hero.quotes = reqBody.quotes;

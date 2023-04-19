@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMessageResponse } from 'src/app/models/message-repsonse.model';
 import {
   IAddEditAnime,
   IAddEditAnimeResponse,
   IGetAnimeListResponse,
   IGetAnimeNamesListResponse,
   IGetAnimeByIdResponst,
-} from 'src/app/models/anime.mode';
+} from 'src/app/components/anime/anime.mode';
 
 @Injectable()
 export class AnimeService {
@@ -39,8 +38,8 @@ export class AnimeService {
     );
   }
 
-  public deleteAnime(id: string): Observable<IMessageResponse> {
-    return this._http.delete<IMessageResponse>(
+  public deleteAnime(id: string): Observable<{message: string}> {
+    return this._http.delete<{ message: string }>(
       `http://localhost:3000/api/anime/${id}`
     );
   }

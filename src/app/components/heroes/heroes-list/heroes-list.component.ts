@@ -18,9 +18,9 @@ import {
   IHero,
   IAddEditHero,
   IAddEditHeroDialogData,
-} from 'src/app/models/hero.model';
+} from 'src/app/components/heroes/hero.model';
 
-import { HeroesService } from '../../../services/heroes/heroes.service';
+import { HeroesService } from '../service/heroes.service';
 
 @Component({
   selector: 'app-heroes-list',

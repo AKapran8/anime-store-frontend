@@ -8,8 +8,8 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 
-import { AnimeService } from '../../services/anime/anime.service';
-import { HeroesService } from '../../services/heroes/heroes.service';
+import { AnimeService } from '../anime/service/anime.service';
+import { HeroesService } from '../heroes/service/heroes.service';
 
 export interface IDeleteDialogData {
   message: string;

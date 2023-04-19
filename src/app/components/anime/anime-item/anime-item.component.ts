@@ -8,7 +8,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { getModifiedAnimeItemComponent } from 'src/app/help-functions/anime.pipes';
 
-import { AnimeService } from 'src/app/services/anime/anime.service';
+import { AnimeService } from '../service/anime.service';
 
 @Component({
   selector: 'app-anime-item',
