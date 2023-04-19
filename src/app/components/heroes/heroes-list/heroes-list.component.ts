@@ -65,7 +65,7 @@ export class HeroesListComponent implements OnInit {
   public removeHero(hero: IHeroTableData): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
-        message: `Are you sure want to delete ${hero.name}`,
+        message: `Are you sure want to delete ${hero.name}?`,
         type: 'HERO',
         id: hero.id,
       } as IDeleteDialogData,
@@ -76,9 +76,7 @@ export class HeroesListComponent implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         if (res) {
-          const index: number = this._heroes.findIndex((h) => h.id === hero.id);
-
-          this._heroes.splice(index, 1);
+          this._heroes = this._heroes.filter((h) => h.id !== hero.id);
           this._modifyHeroes();
         }
       });

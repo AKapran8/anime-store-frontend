@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
   },
 });
 
-router.get("/", heroController.getHeroes);
+router.get("", heroController.getHeroes);
 router.get("/names", heroController.getHeroNames);
 router.post("", multer({ storage }).single("image"), heroController.addNewHero);
 router.put("/:id", heroController.editHero);

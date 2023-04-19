@@ -1,1 +1,14 @@
-<p>quotes works!</p>
+<div style="margin: 40px">
+  <button mat-stroked-button color="warn" (click)="addNewQuote()">
+    Add New Quote
+  </button>
+</div>
+
+
+<div *ngFor="let quote of quotes">
+  <span >
+    {{quote.text + ' ' + quote.id}}
+  </span>
+  <button mat-button (click)="deleteQuote(quote)" color="warn">DELETE</button>
+  <button mat-button (click)="editQuote(quote)" color="primary">EDIT</button>
+</div>

@@ -18,7 +18,7 @@ export class HeroesService {
     );
   }
 
-  public getHeroesList(): Observable<IGetHeroesNameResponse> {
+  public getHeroesListForQuote(): Observable<IGetHeroesNameResponse> {
     return this._http.get<IGetHeroesNameResponse>(
       'http://localhost:3000/api/heroes/names'
     );

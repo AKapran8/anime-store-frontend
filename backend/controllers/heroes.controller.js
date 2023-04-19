@@ -1,5 +1,6 @@
 const Hero = require("./../models/hero.model");
 const Anime = require("./../models/anime.model");
+const Quote = require("./../models/quote.model");
 
 const imgHelpers = require("./../helpers/image");
 
@@ -41,6 +42,16 @@ const deleteHero = async (req, res, next) => {
     const hero = await Hero.findOne({ _id: id });
     _removeAnimeHero(hero.animeId, id);
 
+    if (hero && hero.quotes && hero.quotes.length > 0) {
+      await Quote.deleteMany({ _id: { $in: hero.quotes } });
+      await Anime.findById(hero.animeId).then((anime) => {
+        anime.quotes = anime.quotes.filter(
+          (quoteId) => !hero.quotes.includes(quoteId)
+        );
+        return anime.save();
+      });
+    }
+
     Hero.deleteOne({ _id: id }).then((result) => {
       imgHelpers.removeImage(hero.imageUrl);
 
@@ -64,7 +75,7 @@ const editHero = (req, res, next) => {
         id: heroId,
         heroName: reqBody.name,
         imageUrl: newImgUrl,
-        quotes: reqBody && reqBody.quotes ? reqBody.quotes : [],
+        quotes: hero && hero.quotes ? hero.quotes : [],
       };
 
       if (reqBody.animeId !== hero.animeId) {
@@ -75,7 +86,7 @@ const editHero = (req, res, next) => {
       }
 
       hero.name = reqBody.name;
-      hero.quotes = reqBody.quotes;
+      hero.quotes = hero.quotes || [];
       hero.animeId = reqBody.animeId;
       hero.imageUrl = newImgUrl;
 
@@ -93,10 +104,10 @@ const editHero = (req, res, next) => {
 
 const getHeroNames = (req, res, next) => {
   Hero.find()
-    .select("name")
+    .select("name animeId")
     .then((dataTable) => {
       const heroesList = dataTable.map((el) => {
-        return { id: el.id, name: el.name };
+        return { id: el.id, text: el.name, animeId: el.animeId };
       });
 
       res.status(200).json({ status: "Success", heroesList });

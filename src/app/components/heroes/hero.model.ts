@@ -20,6 +20,7 @@ export interface IHeroTableData extends IHero {
 export interface IHeroForQuote {
   text: string;
   id: string;
+  animeId: string;
 }
 
 export interface IAddEditHeroDialogData {
@@ -40,5 +41,5 @@ export interface IGetHeroesResponse {
 
 export interface IGetHeroesNameResponse {
   message: string;
-  data: IHeroForQuote[];
+  heroesList: IHeroForQuote[];
 }

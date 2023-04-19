@@ -1,5 +1,6 @@
 const Anime = require("./../models/anime.model");
 const Hero = require("./../models/hero.model");
+const Quote = require("./../models/quote.model");
 
 const imgHelpers = require("./../helpers/image");
 
@@ -55,6 +56,11 @@ const deleteAnime = async (req, res, next) => {
       });
       await Hero.deleteMany({ _id: { $in: heroIds } });
     }
+
+    if (anime && anime.quotes && anime.quotes.length > 0) {
+      await Quote.deleteMany({ _id: { $in: anime.quotes } });
+    }
+
     await Anime.deleteOne({ _id: id });
 
     res.status(200).json({ message: "Anime was removed successfully" });
