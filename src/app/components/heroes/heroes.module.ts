@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { HeroesComponent } from './heroes.component';
 import { HeroesListComponent } from './heroes-list/heroes-list.component';
@@ -11,7 +13,7 @@ import { HeroesService } from './service/heroes.service';
 
 @NgModule({
   declarations: [HeroesComponent, HeroesListComponent, AddEditHeroComponent],
-  imports: [AngularMaterialModule],
+  imports: [AngularMaterialModule, BrowserAnimationsModule, HttpClientModule, ReactiveFormsModule],
   exports: [],
   providers: [HeroesService],
 })

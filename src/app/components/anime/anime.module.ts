@@ -1,4 +1,7 @@
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AnimeComponent } from './anime.component';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
@@ -16,7 +19,7 @@ import { AnimeService } from './service/anime.service';
     StarsIconsComponent,
     AnimeItemComponent,
   ],
-  imports: [AngularMaterialModule],
+  imports: [AngularMaterialModule, BrowserAnimationsModule, HttpClientModule, ReactiveFormsModule],
   exports: [StarsIconsComponent],
   providers: [AnimeService],
 })
