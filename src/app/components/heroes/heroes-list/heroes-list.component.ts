@@ -55,7 +55,8 @@ export class HeroesListComponent implements OnInit {
 
   private _modifyHeroes(): void {
     this.heroes = this._heroes.map((hero: IHero) => {
-      const imagePath = `./../../../../assets/heroes/${hero.imageUrl}`;
+      // const imagePath: string = `http://localhost:3000/images/${hero.imageUrl}`;
+      const imagePath: string = `./../../../../assets/heroes/${hero.imageUrl}`;
       return { ...hero, imagePath };
     });
     this._cdr.markForCheck();

@@ -13,7 +13,7 @@ const MIME_TYPE_HELPER = {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const isValid = MIME_TYPE_HELPER[file.mimetype];
-    cb(!isValid ? new Error("Invalid type") : null, "backend/storage/");
+    cb(!isValid ? new Error("Invalid type") : null, "src/assets/heroes");
   },
   filename: (req, file, cb) => {
     const imgName = file.originalname.replace(/\s/g, "").toLowerCase();
