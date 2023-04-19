@@ -17,8 +17,8 @@ import { QuotesModule } from '../components/quotes/quotes.module';
   declarations: [AppComponent, DeleteDialogComponent, HeaderComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     CommonModule,
+    AppRoutingModule,
     AngularMaterialModule,
     AnimeModule,
     HeroesModule,

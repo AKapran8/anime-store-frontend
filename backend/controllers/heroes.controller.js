@@ -20,12 +20,13 @@ const addNewHero = (req, res, next) => {
   });
 
   newHero.save().then((createdHero) => {
-    const newHero = {
+    const newHeroResponse = {
       id: createdHero._id,
       heroName: createdHero.name,
       imageUrl: createdHero.imageUrl,
+      quotes: createdHero && createdHero.quotes ? createdHero.quotes : [],
     };
-    _updateAnimeHeroesList(createdHero.animeId, newHero);
+    _addNewAnimeHero(createdHero.animeId, newHeroResponse);
 
     res
       .status(201)
@@ -41,7 +42,6 @@ const deleteHero = async (req, res, next) => {
     _removeAnimeHero(hero.animeId, id);
 
     Hero.deleteOne({ _id: id }).then((result) => {
-      console.log('HERO ', hero);
       imgHelpers.removeImage(hero.imageUrl);
 
       res.status(200).json({ message: "The Hero was removed successfully!" });
@@ -60,21 +60,24 @@ const editHero = (req, res, next) => {
       const imageMimeType = hero.imageUrl.split(".")[1];
       const newImgUrl = `${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
 
+      const newHero = {
+        id: heroId,
+        heroName: reqBody.name,
+        imageUrl: newImgUrl,
+        quotes: reqBody && reqBody.quotes ? reqBody.quotes : [],
+      };
+
+      if (reqBody.animeId !== hero.animeId) {
+        _removeAnimeHero(hero.animeId, heroId);
+        _addNewAnimeHero(reqBody.animeId, newHero);
+      } else {
+        _updateCurrentAnimeHero(reqBody.animeId, newHero);
+      }
+
       hero.name = reqBody.name;
       hero.quotes = reqBody.quotes;
       hero.animeId = reqBody.animeId;
       hero.imageUrl = newImgUrl;
-
-      if (reqBody.animeId !== hero.animeId) {
-        _removeAnimeHero(hero.animeId, heroId);
-        const newHero = {
-          id: hero._id,
-          heroName: hero.name,
-          imageUrl: hero.imageUrl,
-        };
-
-        _updateAnimeHeroesList(reqBody.animeId, newHero);
-      }
 
       imgHelpers.changeImageName(prevImageUrl, newImgUrl);
 
@@ -100,14 +103,19 @@ const getHeroNames = (req, res, next) => {
     });
 };
 
-const _updateAnimeHeroesList = (animeId, hero) => {
+const _addNewAnimeHero = (animeId, hero) => {
   Anime.findById(animeId).then((anime) => {
-    if (anime.heroes.length > 0) {
-      anime.heroes = [...anime.heroes, hero];
-    } else {
-      anime.heroes.push(hero);
-    }
+    anime.heroes.push(hero);
+    return anime.save();
+  });
+};
 
+const _updateCurrentAnimeHero = (animeId, updatedHero) => {
+  Anime.findById(animeId).then((anime) => {
+    anime.heroes = anime.heroes.map((hero) => {
+      if (hero.id === updatedHero.id) return updatedHero;
+      return hero;
+    });
     return anime.save();
   });
 };
@@ -115,9 +123,10 @@ const _updateAnimeHeroesList = (animeId, hero) => {
 const _removeAnimeHero = (animeId, heroId) => {
   Anime.findById(animeId).then((anime) => {
     const index = anime.heroes.findIndex((a) => a.id === heroId);
-    anime.heroes.splice(index, 1);
-
-    return anime.save();
+    if (index >= 0) {
+      anime.heroes.splice(index, 1);
+      return anime.save();
+    }
   });
 };
 

@@ -13,7 +13,7 @@ const MIME_TYPE_HELPER = {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const isValid = MIME_TYPE_HELPER[file.mimetype];
-    cb(!isValid ? new Error("Invalid type") : null, "src/assets/heroes");
+    cb(!isValid ? new Error("Invalid type") : null, "backend/storage/");
   },
   filename: (req, file, cb) => {
     const imgName = file.originalname.replace(/\s/g, "").toLowerCase();
@@ -25,11 +25,7 @@ const storage = multer.diskStorage({
 
 router.get("/", heroController.getHeroes);
 router.get("/names", heroController.getHeroNames);
-router.post(
-  "",
-  multer({ storage }).single("image"),
-  heroController.addNewHero
-);
+router.post("", multer({ storage }).single("image"), heroController.addNewHero);
 router.put("/:id", heroController.editHero);
 router.delete("/:id", heroController.deleteHero);
 

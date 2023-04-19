@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const removeImage = (imageUrl) => {
-  const imagePath = path.join(__dirname, "../../src/assets/heroes", imageUrl);
+  const imagePath = path.join(__dirname, "../storage", imageUrl);
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.error(err);
@@ -11,14 +11,8 @@ const removeImage = (imageUrl) => {
 };
 
 const changeImageName = (prevName, newName) => {
-  const fs = require("fs");
-
-  const oldImageName = path.join(
-    __dirname,
-    "../../src/assets/heroes",
-    prevName
-  );
-  const newImageName = path.join(__dirname, "../../src/assets/heroes", newName);
+  const oldImageName = path.join(__dirname, "../storage", prevName);
+  const newImageName = path.join(__dirname, "../storage", newName);
 
   fs.rename(oldImageName, newImageName, (err) => {
     if (err) throw err;
