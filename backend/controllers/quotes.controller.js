@@ -71,14 +71,58 @@ const deleteQuote = async (req, res, next) => {
   }
 };
 
-const editQuote = (req, res, next) => {
+const editQuote = async (req, res, next) => {
   const quoteId = req.params.id;
   const reqBody = req.body;
 
-  Quote.findById(quoteId).then((quote) => {
-    console.log("reqBody ", reqBody);
-    console.log("quote ", quote);
-  });
+  try {
+    const quote = await Quote.findById(quoteId);
+    if (!quote) return res.status(404).json("Quote not found");
+
+    quote.text = reqBody.text.trim();
+    quote.season = reqBody.season;
+    quote.episode = reqBody.episode;
+    quote.time = reqBody.time;
+
+    if (quote.author.id !== reqBody.author.id) {
+      const prevHero = await Hero.findById(quote.author.id);
+      const newHero = await Hero.findById(reqBody.author.id);
+
+      if (!prevHero) throw new Error("Prev hero not found");
+      if (!newHero) throw new Error("New hero not found");
+
+      prevHero.quotes = prevHero.quotes.filter((q) => q !== quote.id);
+      newHero.quotes.push(quote.id);
+
+      await prevHero.save();
+      await newHero.save();
+    }
+
+    if (quote.animeId !== reqBody.animeId) {
+      const prevAnime = await Anime.findById(quote.animeId);
+      const newAnime = await Anime.findById(reqBody.animeId);
+
+      if (!prevAnime) throw new Error("Prev anime not found");
+      if (!newAnime) throw new Error("New anime not found");
+
+      prevAnime.quotes = prevAnime.quotes.filter((q) => q !== quote.id);
+      newAnime.quotes.push(quote.id);
+
+      await prevAnime.save();
+      await newAnime.save();
+    }
+
+    quote.animeId = reqBody.animeId;
+    quote.author = reqBody.author;
+
+    await quote.save();
+    res.json({
+      message: "The quote was updated successfully",
+      quote,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 module.exports = {
