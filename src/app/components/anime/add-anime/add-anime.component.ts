@@ -62,11 +62,11 @@ export class AddAnimeComponent implements OnInit {
     const formValues = this.form?.value;
 
     let requestBody: IAddEditAnime = {
-      name: formValues.name,
-      nameUA: formValues?.nameUa,
+      name: formValues.name.trim(),
+      nameUA: formValues?.nameUa.trim(),
       stars: formValues?.starsCount,
       status: formValues?.status,
-      genres: formValues?.genres,
+      genres: formValues?.genres.trim(),
       time: formValues?.minutes,
     };
 

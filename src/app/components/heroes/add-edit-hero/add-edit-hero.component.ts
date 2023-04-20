@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { mimeTypeValidator } from 'src/app/help-functions/image.validator';
+import { mimeTypeValidator } from './../image.validator';
 
 import { AnimeService } from '../../anime/service/anime.service';
 import { HeroesService } from '../service/heroes.service';

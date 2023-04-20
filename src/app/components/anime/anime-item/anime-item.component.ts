@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { take } from 'rxjs/operators';
-import { getModifiedAnimeItemComponent } from 'src/app/help-functions/anime.pipes';
+import { getModifiedAnimeItemComponent } from '../custom.pipes';
 
 import { AnimeService } from '../service/anime.service';
 
