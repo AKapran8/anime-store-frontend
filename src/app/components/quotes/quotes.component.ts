@@ -39,31 +39,51 @@ export class QuotesComponent implements OnInit {
 
     this._quotesService.getQuotes().subscribe((res) => {
       this.quotes = res.quotes;
-      console.log(this.quotes);
       this._cdr.markForCheck();
     });
   }
 
   public addNewQuote(): void {
     const quote = {
-      text: `In this world winning is everything`,
+      text: `I don't have any idea what are you talking about`,
       season: 2,
       episode: 12,
       time: '18:40',
       author: {
-        authorName: this.heroesList[0].text,
-        id: this.heroesList[0].id,
+        authorName: this.heroesList[1].text,
+        id: this.heroesList[1].id,
       },
-      animeId: this.heroesList[0].animeId,
+      animeId: this.heroesList[1].animeId,
     };
 
-    this._quotesService.addQuote(quote).subscribe((res) => console.log(res));
+    this._quotesService.addQuote(quote).subscribe((res) => {
+      this.quotes.push(res.createdQuote);
+      this._cdr.markForCheck();
+    });
+  }
+
+  public editQuote(quote: IQuote): void {
+    const editableQuote = {
+      text: `Must be edited text`,
+      season: 2,
+      episode: 12,
+      time: '18:40',
+      author: {
+        authorName: this.heroesList[1].text,
+        id: this.heroesList[1].id,
+      },
+      animeId: this.heroesList[1].animeId,
+    };
+
+    this._quotesService.editQuote(editableQuote, quote.id).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   public deleteQuote(quote: IQuote): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
-        message: `Are you sure want to delete this quote?`,
+        message: `Are you sure want to delete ${quote.author.authorName}'s quote?`,
         type: 'QUOTE',
         id: quote.id,
       } as IDeleteDialogData,

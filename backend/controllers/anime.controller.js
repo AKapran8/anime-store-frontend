@@ -21,8 +21,13 @@ const getAnimeNames = (req, res, next) => {
     });
 };
 
-const addNewAnime = (req, res, next) => {
+const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
+
+  const existingAnime = await Anime.findOne({ name: reqBody.name });
+  if (existingAnime) {
+    return res.status(400).json({ message: "Anime name already exists" });
+  }
 
   const newAnime = new Anime({
     name: reqBody.name,
@@ -35,11 +40,13 @@ const addNewAnime = (req, res, next) => {
     quotes: [],
   });
 
-  newAnime.save().then((createdAnime) => {
-    res
-      .status(201)
-      .json({ message: "Anime was added sucessfully", anime: createdAnime });
-  });
+  try {
+    const createdAnime = await newAnime.save();
+    res.status(201).json({ message: "Anime was added successfully", anime: createdAnime });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to add anime" });
+  }
 };
 
 const deleteAnime = async (req, res, next) => {
