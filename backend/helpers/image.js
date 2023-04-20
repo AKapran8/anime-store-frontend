@@ -3,7 +3,6 @@ const path = require("path");
 
 const removeImage = (imageUrl) => {
   const imagePath = path.join(__dirname, "../../src/assets/heroes", imageUrl);
-  // const imagePath = path.join(__dirname, "../images", imageUrl);
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.error(err);
@@ -12,8 +11,6 @@ const removeImage = (imageUrl) => {
 };
 
 const changeImageName = (prevName, newName) => {
-  // const oldImageName = path.join(__dirname, "../images", prevName);
-  // const newImageName = path.join(__dirname, "../images", newName);
   const oldImageName = path.join(
     __dirname,
     "../../src/assets/heroes",
