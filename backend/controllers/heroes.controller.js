@@ -4,35 +4,46 @@ const Quote = require("./../models/quote.model");
 
 const imgHelpers = require("./../helpers/image");
 
-const getHeroes = (req, res, next) => {
-  Hero.find().then((heroesList) => {
+const getHeroes = async (req, res, next) => {
+  try {
+    const heroesList = await Hero.find();
     res.status(200).json({ status: "Success", heroesList: heroesList });
-  });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
 };
 
-const addNewHero = (req, res, next) => {
+const addNewHero = async (req, res, next) => {
   const reqBody = req.body;
 
-  const newHero = new Hero({
-    name: reqBody.name,
-    animeId: reqBody.animeId,
-    imageUrl: reqBody.imageUrl,
-    quotes: [],
-  });
+  try {
+    const newHero = new Hero({
+      name: reqBody.name.trim(),
+      animeId: reqBody.animeId,
+      imageUrl: reqBody.imageUrl,
+      quotes: [],
+    });
 
-  newHero.save().then((createdHero) => {
-    const newHeroResponse = {
+    const createdHero = await newHero.save();
+
+    const newAnimeHero = {
       id: createdHero._id,
       heroName: createdHero.name,
       imageUrl: createdHero.imageUrl,
-      quotes: createdHero && createdHero.quotes ? createdHero.quotes : [],
+      quotes: [],
     };
-    _addNewAnimeHero(createdHero.animeId, newHeroResponse);
+
+    const anime = await Anime.findById(createdHero.animeId);
+    if (!anime) return Promise.reject("Anime not found");
+    anime.heroes.push(newAnimeHero);
+    await anime.save();
 
     res
       .status(201)
-      .json({ message: "The Hero was added sucessfully", hero: createdHero });
-  });
+      .json({ message: "The Hero was added successfully", hero: createdHero });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to add new hero" });
+  }
 };
 
 const deleteHero = async (req, res, next) => {
@@ -40,105 +51,117 @@ const deleteHero = async (req, res, next) => {
 
   try {
     const hero = await Hero.findOne({ _id: id });
-    _removeAnimeHero(hero.animeId, id);
-
-    if (hero && hero.quotes && hero.quotes.length > 0) {
-      await Quote.deleteMany({ _id: { $in: hero.quotes } });
-      await Anime.findById(hero.animeId).then((anime) => {
-        anime.quotes = anime.quotes.filter(
-          (quoteId) => !hero.quotes.includes(quoteId)
-        );
-        return anime.save();
-      });
+    if (!hero) {
+      return res.status(404).json({ message: "Hero not found" });
     }
 
-    Hero.deleteOne({ _id: id }).then((result) => {
-      imgHelpers.removeImage(hero.imageUrl);
+    const anime = await Anime.findById(hero.animeId);
+    if (!anime) throw new Error("Anime not found");
 
-      res.status(200).json({ message: "The Hero was removed successfully!" });
-    });
-  } catch (err) {}
+    anime.heroes = anime.heroes.filter((h) => h.id !== hero.id);
+
+    if (hero?.quotes?.length > 0) {
+      await Quote.deleteMany({ _id: { $in: hero.quotes } });
+      anime.quotes = anime.quotes.filter(
+        (quoteId) => !hero.quotes.includes(quoteId)
+      );
+    }
+    await anime.save();
+
+    await Hero.deleteOne({ _id: id });
+    imgHelpers.removeImage(hero.imageUrl);
+
+    res.status(200).json({ message: "The Hero was removed successfully!" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete hero", error: err.message });
+  }
 };
 
-const editHero = (req, res, next) => {
+const editHero = async (req, res, next) => {
   const heroId = req.params.id;
   const reqBody = req.body;
 
-  Hero.findById(heroId)
-    .then((hero) => {
-      const prevImageUrl = hero.imageUrl;
-      const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase();
-      const imageMimeType = hero.imageUrl.split(".")[1];
-      const newImgUrl = `${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
+  try {
+    const hero = await Hero.findById(heroId);
+    if (!hero) return res.status(404).json({ message: "Hero not found" });
 
-      const newHero = {
-        id: heroId,
-        heroName: reqBody.name,
-        imageUrl: newImgUrl,
-        quotes: hero && hero.quotes ? hero.quotes : [],
-      };
+    const prevImageUrl = hero.imageUrl;
+    const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase();
+    const imageMimeType = hero.imageUrl.split(".")[1];
+    const newImgUrl = `${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
 
-      if (reqBody.animeId !== hero.animeId) {
-        _removeAnimeHero(hero.animeId, heroId);
-        _addNewAnimeHero(reqBody.animeId, newHero);
-      } else {
-        _updateCurrentAnimeHero(reqBody.animeId, newHero);
+    const newHero = {
+      id: heroId,
+      heroName: reqBody.name.trim(),
+      imageUrl: newImgUrl,
+      quotes: hero?.quotes || [],
+    };
+
+    if (reqBody.animeId !== hero.animeId) {
+      const prevAnime = await Anime.findById(hero.animeId);
+      const newAnime = await Anime.findById(reqBody.animeId);
+
+      if (!prevAnime) throw new Error("Previous hero anime not found");
+      if (!newAnime) throw new Error("New hero anime not found");
+
+      if (prevAnime && newAnime) {
+        if (hero?.quotes.length > 0) {
+          prevAnime.quotes = prevAnime.quotes.filter(
+            (q) => !hero.quotes.includes(q)
+          );
+          hero.quotes.forEach((q) => newAnime.quotes.push(q));
+        }
+
+        prevAnime.heroes = prevAnime.heroes.filter((h) => h.id !== heroId);
+        newAnime.heroes.push(newHero);
+        await newAnime.save();
+        await prevAnime.save();
       }
-
-      hero.name = reqBody.name;
-      hero.quotes = hero.quotes || [];
-      hero.animeId = reqBody.animeId;
-      hero.imageUrl = newImgUrl;
-
-      imgHelpers.changeImageName(prevImageUrl, newImgUrl);
-
-      return hero.save();
-    })
-    .then((updatedHero) => {
-      res.json({
-        message: "The Hero was updated successfully",
-        hero: updatedHero,
-      });
-    });
-};
-
-const getHeroNames = (req, res, next) => {
-  Hero.find()
-    .select("name animeId")
-    .then((dataTable) => {
-      const heroesList = dataTable.map((el) => {
-        return { id: el.id, text: el.name, animeId: el.animeId };
+    } else {
+      const currentAnime = await Anime.findById(reqBody.animeId);
+      if (!currentAnime) throw new Error("Hero anime not found");
+      currentAnime.heroes = currentAnime.heroes.map((hero) => {
+        if (hero.id === newHero.id) return newHero;
+        return hero;
       });
 
-      res.status(200).json({ status: "Success", heroesList });
-    });
-};
-
-const _addNewAnimeHero = (animeId, hero) => {
-  Anime.findById(animeId).then((anime) => {
-    anime.heroes.push(hero);
-    return anime.save();
-  });
-};
-
-const _updateCurrentAnimeHero = (animeId, updatedHero) => {
-  Anime.findById(animeId).then((anime) => {
-    anime.heroes = anime.heroes.map((hero) => {
-      if (hero.id === updatedHero.id) return updatedHero;
-      return hero;
-    });
-    return anime.save();
-  });
-};
-
-const _removeAnimeHero = (animeId, heroId) => {
-  Anime.findById(animeId).then((anime) => {
-    const index = anime.heroes.findIndex((a) => a.id === heroId);
-    if (index >= 0) {
-      anime.heroes.splice(index, 1);
-      return anime.save();
+      await currentAnime.save();
     }
-  });
+
+    hero.name = reqBody.name.trim();
+    hero.quotes = hero.quotes || [];
+    hero.animeId = reqBody.animeId;
+    hero.imageUrl = newImgUrl;
+
+    imgHelpers.changeImageName(prevImageUrl, newImgUrl);
+
+    await hero.save();
+
+    res.json({
+      message: "The Hero was updated successfully",
+      hero,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to edit hero", error: err.message });
+  }
+};
+
+const getHeroNames = async (req, res, next) => {
+  try {
+    const list = await Hero.find().select("name animeId");
+    const heroesList = list.map((el) => {
+      return { id: el.id, text: el.name, animeId: el.animeId };
+    });
+    res.status(200).json({ status: "Success", heroesList });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: "Error", message: "Unable to get heroes list" });
+  }
 };
 
 module.exports = { getHeroes, addNewHero, deleteHero, editHero, getHeroNames };
