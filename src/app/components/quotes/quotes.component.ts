@@ -7,13 +7,16 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 
 import { HeroesService } from '../heroes/service/heroes.service';
-import { IHeroForQuote } from '../heroes/hero.model';
 import { QuotesService } from './service/quotes.service';
-import { IQuote } from './quote.model';
+
+import { IHeroForQuote } from '../heroes/hero.model';
+import { IAddEditQuote, IAddEditQuoteDialogData, IQuote } from './quote.model';
+
 import {
   DeleteDialogComponent,
   IDeleteDialogData,
 } from '../delete-dialog/delete-dialog.component';
+import { AddEditQuoteComponent } from './add-edit-quote/add-edit-quote.component';
 
 @Component({
   selector: 'app-quotes',
@@ -44,39 +47,44 @@ export class QuotesComponent implements OnInit {
   }
 
   public addNewQuote(): void {
-    const quote = {
-      text: `I don't have any idea what are you talking about`,
-      season: 2,
-      episode: 12,
-      time: '18:40',
-      author: {
-        authorName: this.heroesList[1].text,
-        id: this.heroesList[1].id,
-      },
-      animeId: this.heroesList[1].animeId,
-    };
+    const dialogRef = this._dialog.open(AddEditQuoteComponent, {
+      data: { type: 'add' } as IAddEditQuoteDialogData,
+    });
 
-    this._quotesService.addQuote(quote).subscribe((res) => {
-      this.quotes.push(res.createdQuote);
-      this._cdr.markForCheck();
+    dialogRef.afterClosed().subscribe((quote: IQuote) => {
+      if (quote) {
+        this.quotes.push(quote);
+        this._cdr.markForCheck();
+      }
     });
   }
 
   public editQuote(quote: IQuote): void {
-    const editableQuote = {
-      text: `Must be edited text`,
-      season: 2,
-      episode: 12,
-      time: '18:40',
+    const editableQuote: IAddEditQuote = {
+      text: quote.text,
+      season: quote.season,
+      episode: quote.episode,
+      time: quote.time,
       author: {
-        authorName: this.heroesList[1].text,
-        id: this.heroesList[1].id,
+        authorName: quote.author.authorName,
+        id: quote.author.id,
       },
-      animeId: this.heroesList[1].animeId,
     };
 
-    this._quotesService.editQuote(editableQuote, quote.id).subscribe((res) => {
-      console.log(res);
+    const dialogRef = this._dialog.open(AddEditQuoteComponent, {
+      data: {
+        type: 'edit',
+        quoteId: quote.id,
+        initialValue: editableQuote,
+      } as IAddEditQuoteDialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((editableQuote: IQuote) => {
+      this.quotes = this.quotes.map((q: IQuote) => {
+        if (q.id === editableQuote.id) return editableQuote;
+        return q;
+      });
+      this._cdr.markForCheck();
     });
   }
 

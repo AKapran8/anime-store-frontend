@@ -1,6 +1,5 @@
 const Quote = require("./../models/quote.model");
 const Hero = require("./../models/hero.model");
-const Anime = require("./../models/anime.model");
 
 const getQuotes = async (req, res, next) => {
   try {
@@ -21,7 +20,6 @@ const addNewQuote = async (req, res, next) => {
       episode: reqBody.episode,
       time: reqBody.time,
       author: reqBody.author,
-      animeId: reqBody.animeId,
     });
 
     const createdQuote = await newQuote.save();
@@ -31,14 +29,9 @@ const addNewQuote = async (req, res, next) => {
     hero.quotes.push(createdQuote._id);
     await hero.save();
 
-    const anime = await Hero.findById(newQuote.animeId);
-    if (!anime) throw new Error("Anime not found");
-    anime.quotes.push(createdQuote._id);
-    await anime.save();
-
     res
       .status(201)
-      .json({ message: "Quote was added sucessfully", createdQuote });
+      .json({ message: "Quote was added sucessfully", quote: createdQuote });
   } catch (err) {
     res.status(500).json({ message: "Failed to add new quote" });
   }
@@ -50,12 +43,6 @@ const deleteQuote = async (req, res, next) => {
   try {
     const quote = await Quote.findById(quoteId);
     if (!quote) return res.status(404).json({ message: "Quote not found" });
-
-    const anime = await Anime.findById(quote.animeId);
-    if (!anime) throw new Error("Anime not found");
-
-    anime.quotes = anime.quotes.filter((quote) => quote !== quoteId);
-    await anime.save();
 
     const hero = await Hero.findById(quote.author.id);
     if (!hero) throw new Error("Hero not found");
@@ -96,20 +83,6 @@ const editQuote = async (req, res, next) => {
 
       await prevHero.save();
       await newHero.save();
-    }
-
-    if (quote.animeId !== reqBody.animeId) {
-      const prevAnime = await Anime.findById(quote.animeId);
-      const newAnime = await Anime.findById(reqBody.animeId);
-
-      if (!prevAnime) throw new Error("Prev anime not found");
-      if (!newAnime) throw new Error("New anime not found");
-
-      prevAnime.quotes = prevAnime.quotes.filter((q) => q !== quote.id);
-      newAnime.quotes.push(quote.id);
-
-      await prevAnime.save();
-      await newAnime.save();
     }
 
     quote.animeId = reqBody.animeId;

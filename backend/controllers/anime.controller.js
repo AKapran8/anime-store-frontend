@@ -44,7 +44,6 @@ const addNewAnime = async (req, res, next) => {
     time: reqBody.time,
     genres: reqBody?.genres || "",
     heroes: [],
-    quotes: [],
   });
 
   try {
@@ -70,10 +69,6 @@ const deleteAnime = async (req, res, next) => {
       });
 
       await Hero.deleteMany({ _id: { $in: heroIds } });
-    }
-
-    if (anime?.quotes?.length > 0) {
-      await Quote.deleteMany({ _id: { $in: anime.quotes } });
     }
 
     await Anime.deleteOne({ _id: id });

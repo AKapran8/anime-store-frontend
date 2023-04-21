@@ -1,0 +1,87 @@
+<div class="wrapper">
+  <div class="dialog-header">
+    <h4 class="dialog-header-title">
+      {{ title }}
+    </h4>
+
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <div class="form">
+      <form *ngIf="form" [formGroup]="form" class="form">
+        <div class="field">
+          <mat-form-field>
+            <input
+              type="text"
+              placeholder="Text"
+              formControlName="text"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field>
+            <input
+              type="text"
+              placeholder="Start time"
+              formControlName="time"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field>
+            <input
+              type="number"
+              placeholder="Season"
+              formControlName="season"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+        <div class="field">
+          <mat-form-field>
+            <input
+              type="number"
+              placeholder="Episode"
+              formControlName="episode"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+
+
+
+        <div class="field">
+          <mat-form-field>
+            <mat-select placeholder="Hero" formControlName="author">
+              <mat-option *ngIf="!heroesList.length && !areHeroesListFetching"
+                >NO OPTIONS</mat-option
+              >
+              <mat-option *ngFor="let item of heroesList" [value]="item.id">
+                {{ item.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="dialog-actions">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <div class="spacer"></div>
+    <button
+      mat-raised-button
+      type="button"
+      (click)="saveHandler()"
+      color="accent"
+      [disabled]="!form?.valid || isSaving"
+    >
+      Save
+    </button>
+  </div>
+</div>

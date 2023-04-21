@@ -55,7 +55,6 @@ export const getModifiedAnimeItemComponent = (
     genres: elem.genres,
     status: elem.status,
     heroes: elem.heroes,
-    quotes: elem.quotes,
   };
 
   return modifiedEl;

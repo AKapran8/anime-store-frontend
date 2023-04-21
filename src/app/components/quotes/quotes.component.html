@@ -6,12 +6,11 @@
 
 <div class="quotes-list">
   <div *ngFor="let quote of quotes" class="quote">
-    <p>quote: {{ quote.text }}</p>
+    <p>QUOTE: {{ quote.text }}</p>
     <p>SEASON: {{ quote.season }}</p>
-    <p>episode: {{ quote.episode }}</p>
-    <p>time: {{ quote.time }}</p>
-    <p>animeId: {{ quote.animeId }}</p>
-    <p>Hero: {{ quote.author.authorName + quote.author.id }}</p>
+    <p>EPISODE: {{ quote.episode }}</p>
+    <p>TIME: {{ quote.time }}</p>
+    <p>HERO: {{ quote.author.authorName + ' ' + quote.author.id }}</p>
     <button mat-button (click)="deleteQuote(quote)" color="warn">DELETE</button>
     <button mat-button (click)="editQuote(quote)" color="primary">EDIT</button>
   </div>

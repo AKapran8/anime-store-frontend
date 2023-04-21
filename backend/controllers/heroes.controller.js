@@ -69,7 +69,7 @@ const deleteHero = async (req, res, next) => {
     await anime.save();
 
     await Hero.deleteOne({ _id: id });
-    imgHelpers.removeImage(hero.imageUrl);
+    imgHelpers.removeImage(hero.imageUrl); //remove img from storage
 
     res.status(200).json({ message: "The Hero was removed successfully!" });
   } catch (err) {
@@ -107,13 +107,6 @@ const editHero = async (req, res, next) => {
       if (!newAnime) throw new Error("New hero anime not found");
 
       if (prevAnime && newAnime) {
-        if (hero?.quotes.length > 0) {
-          prevAnime.quotes = prevAnime.quotes.filter(
-            (q) => !hero.quotes.includes(q)
-          );
-          hero.quotes.forEach((q) => newAnime.quotes.push(q));
-        }
-
         prevAnime.heroes = prevAnime.heroes.filter((h) => h.id !== heroId);
         newAnime.heroes.push(newHero);
         await newAnime.save();
@@ -154,7 +147,7 @@ const getHeroNames = async (req, res, next) => {
   try {
     const list = await Hero.find().select("name animeId");
     const heroesList = list.map((el) => {
-      return { id: el.id, text: el.name, animeId: el.animeId };
+      return { id: el.id, text: el.name };
     });
     res.status(200).json({ status: "Success", heroesList });
   } catch (err) {

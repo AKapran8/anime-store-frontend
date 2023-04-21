@@ -7,7 +7,6 @@ const quoteSchema = mongoose.Schema(
     episode: { type: Number, require: true },
     time: { type: String, required: true },
     author: { type: { authorName: String, id: String }, required: true },
-    animeId: { type: String, required: true },
   }, {
   toJSON: {
     transform: function (doc, ret) {

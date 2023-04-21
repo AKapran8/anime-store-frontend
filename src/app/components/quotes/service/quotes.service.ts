@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { IGetQuotesResponse } from '../quote.model';
+import { IAddEditQuote, IAddEditQuoteRespone, IGetQuotesResponse } from '../quote.model';
 
 @Injectable()
 export class QuotesService {
@@ -14,8 +14,11 @@ export class QuotesService {
     );
   }
 
-  public addQuote(body: any): Observable<any> {
-    return this._http.post<any>('http://localhost:3000/api/quotes', body);
+  public addQuote(body: IAddEditQuote): Observable<IAddEditQuoteRespone> {
+    return this._http.post<IAddEditQuoteRespone>(
+      'http://localhost:3000/api/quotes',
+      body
+    );
   }
 
   public deleteQuote(id: string): Observable<{ message: string }> {
@@ -24,8 +27,11 @@ export class QuotesService {
     );
   }
 
-  public editQuote(requestBody: any, id: string): Observable<any> {
-    return this._http.put<any>(
+  public editQuote(
+    requestBody: IAddEditQuote,
+    id: string
+  ): Observable<IAddEditQuoteRespone> {
+    return this._http.put<IAddEditQuoteRespone>(
       `http://localhost:3000/api/quotes/${id}`,
       requestBody
     );

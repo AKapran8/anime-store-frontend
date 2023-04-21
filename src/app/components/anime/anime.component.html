@@ -57,16 +57,23 @@
           <p *ngIf="anime?.genres?.length">Genres: {{ anime.genres }}</p>
           <div *ngIf="anime?.heroes?.length">
             Heroes:
-            <span *ngFor="let hero of anime.heroes, let i = index">
-              {{ i+1 === anime.heroes?.length ? hero.heroName : hero.heroName+',' }}
+            <span *ngFor="let hero of anime.heroes; let i = index">
+              {{
+                i + 1 === anime.heroes?.length
+                  ? hero.heroName
+                  : hero.heroName + ","
+              }}
             </span>
           </div>
 
-          <div *ngIf="anime?.quotes?.length">
-            Quotes: {{ anime?.quotes?.length }}
-          </div>
-
-          <button class="get-more-button" mat-stroked-button color="warn" (click)="getAnimeById(anime.id)" >Get more</button>
+          <button
+            class="get-more-button"
+            mat-stroked-button
+            color="warn"
+            (click)="getAnimeById(anime.id)"
+          >
+            Get more
+          </button>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
