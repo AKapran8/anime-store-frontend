@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AnimeService } from './service/anime.service';
 
@@ -35,7 +36,8 @@ import { AnimeService } from './service/anime.service';
     MatIconModule,
     MatSelectModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatPaginatorModule
   ],
   exports: [StarsIconsComponent],
   providers: [AnimeService],

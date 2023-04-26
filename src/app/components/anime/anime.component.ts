@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
 
 import {
   convertTimeToText,
@@ -38,13 +39,22 @@ import { AnimeService } from './service/anime.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnimeComponent implements OnInit, OnDestroy {
-  public animeCount: number = 0;
+  public totalAnimeCount: number = 0;
+  public pageSizeOptions: number[] = [1, 2, 3];
+  public pageSize: number = 1;
   public searchControl: FormControl | null = null;
   public animeList: ITableData[] = [];
+  public tableData: ITableData[] = [];
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
 
   private _animeList: IAnime[] = [];
+  private _paginationConfig: PageEvent = {
+    length: 0,
+    pageIndex: 0,
+    pageSize: 1,
+    previousPageIndex: 0,
+  };
   private _searchValueChangesSub: Subscription | null = null;
 
   constructor(
@@ -97,8 +107,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.animeCount = this._animeList.length;
-    this._cdr.markForCheck();
+    this.totalAnimeCount = this._animeList.length;
+    this._paginateData();
   }
 
   private _initSearchControl(): void {
@@ -106,7 +116,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     this._searchValueChangesSub = this.searchControl?.valueChanges.subscribe(
       (inputValue: string) => {
-        console.log(inputValue);
+        if (inputValue) {
+          this._resetPagination();
+        }
       }
     );
   }
@@ -175,6 +187,30 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   public stopPropaganation(event: MouseEvent): void {
     event.stopPropagation();
+  }
+
+  public onPageChange(event: PageEvent) {
+    this._paginationConfig = event;
+    this._modifyList();
+  }
+
+  private _paginateData(): void {
+    let startIndex =
+      this._paginationConfig.pageIndex * this._paginationConfig.pageSize;
+    let endIndex = startIndex + this._paginationConfig.pageSize;
+    if (endIndex > this.animeList.length) {
+      endIndex = this.animeList.length;
+    }
+    this.tableData = [...this.animeList];
+    this.tableData = this.animeList.slice(startIndex, endIndex);
+    this._cdr.markForCheck();
+  }
+
+  private _resetPagination(): void {
+    if (this._paginationConfig) {
+      this._paginationConfig = { ...this._paginationConfig, pageIndex: 0 };
+      this._modifyList();
+    }
   }
 
   ngOnDestroy(): void {
