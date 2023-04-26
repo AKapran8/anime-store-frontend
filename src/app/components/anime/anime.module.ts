@@ -8,7 +8,13 @@ import { AddAnimeComponent } from './add-anime/add-anime.component';
 import { AnimeItemComponent } from './anime-item/anime-item.component';
 import { StarsIconsComponent } from './stars-icons/stars-icons.component';
 
-import { AngularMaterialModule } from '../../modules/material.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AnimeService } from './service/anime.service';
 
@@ -19,7 +25,18 @@ import { AnimeService } from './service/anime.service';
     StarsIconsComponent,
     AnimeItemComponent,
   ],
-  imports: [AngularMaterialModule, BrowserAnimationsModule, HttpClientModule, ReactiveFormsModule],
+  imports: [
+    BrowserAnimationsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
   exports: [StarsIconsComponent],
   providers: [AnimeService],
 })
