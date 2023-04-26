@@ -61,13 +61,27 @@ const deleteAnime = async (req, res, next) => {
 
   try {
     const anime = await Anime.findById(id);
-
     if (anime?.heroes?.length > 0) {
       const heroIds = anime.heroes.map((hero) => {
         imgHelpers.removeImage(hero.imageUrl); //remove hero img from storage
         return hero.id;
       });
 
+      const heroes = await Hero.find({ _id: { $in: heroIds } }).select(
+        "quotes"
+      );
+      let quotesIds = [""].splice(1, 1);
+      heroes.forEach((h) => {
+        if (h?.quotes.length > 0) {
+          h.quotes.forEach((q) => {
+            if (q) {
+              quotesIds.push(q);
+            }
+          });
+        }
+      });
+
+      await Quote.deleteMany({ _id: { $in: quotesIds } });
       await Hero.deleteMany({ _id: { $in: heroIds } });
     }
 

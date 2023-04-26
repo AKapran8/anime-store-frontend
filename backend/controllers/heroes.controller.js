@@ -62,9 +62,6 @@ const deleteHero = async (req, res, next) => {
 
     if (hero?.quotes?.length > 0) {
       await Quote.deleteMany({ _id: { $in: hero.quotes } });
-      anime.quotes = anime.quotes.filter(
-        (quoteId) => !hero.quotes.includes(quoteId)
-      );
     }
     await anime.save();
 
