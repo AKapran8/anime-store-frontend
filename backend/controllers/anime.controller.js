@@ -5,19 +5,17 @@ const Quote = require("./../models/quote.model");
 const imgHelpers = require("./../helpers/image");
 
 const getAnime = async (req, res, next) => {
-  const _paginationConfig = req.body.paginationConfig;
-  try {
-    const totalAnimeList = await Anime.find();
+  const pageSize = req.body.paginationConfig.pageSize;
+  const pageIndex = req.body.paginationConfig.pageIndex;
 
-    let startIndex = _paginationConfig.pageIndex * _paginationConfig.pageSize;
-    let endIndex = startIndex + _paginationConfig.pageSize;
-    if (endIndex > totalAnimeList.length) {
-      endIndex = totalAnimeList.length;
-    }
-    const animeList = totalAnimeList.slice(startIndex, endIndex);
+  try {
+    const totalElements = await Anime.countDocuments();
+    const animeList = await Anime.find()
+      .skip(pageSize * pageIndex)
+      .limit(pageSize);
 
     const data = {
-      totalElements: totalAnimeList.length,
+      totalElements,
       animeList,
     };
 

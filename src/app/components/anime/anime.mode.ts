@@ -19,7 +19,7 @@ export interface IAnime {
   heroes?: { id: string; heroName: string }[];
 }
 
-export interface ITableData extends IAnime {
+export interface IExpansionPanelData extends IAnime {
   timeText: string;
   starsDescr: string;
 }

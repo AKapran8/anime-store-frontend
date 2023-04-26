@@ -24,7 +24,7 @@ import { AddAnimeComponent } from './add-anime/add-anime.component';
 import {
   IAddEditAnime,
   IAnime,
-  ITableData,
+  IExpansionPanelData,
 } from 'src/app/components/anime/anime.mode';
 
 import { AnimeService } from './service/anime.service';
@@ -36,19 +36,19 @@ import { AnimeService } from './service/anime.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnimeComponent implements OnInit, OnDestroy {
-  public totalAnimeCount: number = 0;
-  public pageSizeOptions: number[] = [1, 2, 3];
-  public pageSize: number = 1;
+  public totalAnimeCount: number | null = null;
+  public pageSizeOptions: number[] = [];
+  public pageSize: number | null = null;
   public searchControl: FormControl | null = null;
-  public animeList: ITableData[] = [];
+  public expansionPanelData: IExpansionPanelData[] = [];
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
 
-  private _animeList: IAnime[] = [];
+  private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
     length: 0,
     pageIndex: 0,
-    pageSize: 1,
+    pageSize: 0,
     previousPageIndex: 0,
   };
   private _searchValueChangesSub: Subscription | null = null;
@@ -61,32 +61,46 @@ export class AnimeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._getAnimeList();
+    this._initComponent();
+    this._getAnime();
     this._initSearchControl();
   }
 
-  private _getAnimeList(): void {
+  private _initComponent(): void {
+    this.pageSizeOptions = [5, 10, 20];
+    this.pageSize = this.pageSizeOptions[0];
+    this._paginationConfig = {
+      ...this._paginationConfig,
+      pageSize: this.pageSize,
+    };
+    this._cdr.markForCheck();
+  }
+
+  private _getAnime(): void {
     this.isListFetching = true;
     this.isListFetched = false;
 
     this._animeService
-      .getAnimeList(this._paginationConfig)
+      .getAnimeList(
+        this._paginationConfig.pageSize,
+        this._paginationConfig.pageIndex
+      )
       .pipe(take(1))
       .subscribe((res) => {
         if (res) {
-          this._animeList = cloneDeep(res.data.animeList);
+          this._anime = cloneDeep(res.data.animeList);
           this.isListFetching = false;
           this.isListFetched = true;
           this.totalAnimeCount = res.data.totalElements;
-          this._modifyList();
+          this._getExpansionPanelData();
         }
       });
 
     this._cdr.markForCheck();
   }
 
-  private _modifyList(): void {
-    this.animeList = this._animeList.map((a) => {
+  private _getExpansionPanelData(): void {
+    this.expansionPanelData = this._anime.map((a) => {
       const starsDescr = getStarsDescription(a.stars - 1);
       const timeText = convertTimeToText(a.time);
 
@@ -115,11 +129,11 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public addAnime(): void {
     const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((isAdded: boolean) => {
-      if (isAdded) this._getAnimeList();
+      if (isAdded) this._getAnime();
     });
   }
 
-  public editAnime(row: ITableData): void {
+  public editAnime(row: IExpansionPanelData): void {
     const editRow: IAddEditAnime = {
       name: row.name,
       nameUA: row.nameUA,
@@ -135,11 +149,11 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((isEdited: boolean) => {
-      if (isEdited) this._getAnimeList();
+      if (isEdited) this._getAnime();
     });
   }
 
-  public removeItem(anime: ITableData): void {
+  public removeItem(anime: IExpansionPanelData): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
         message: `Are you sure want to delete ${anime.name}?`,
@@ -149,7 +163,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((isDeleted: boolean) => {
-      if (isDeleted) this._getAnimeList();
+      if (isDeleted) this._getAnime();
     });
   }
 
@@ -163,7 +177,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   public onPageChange(event: PageEvent) {
     this._paginationConfig = cloneDeep(event);
-    this._getAnimeList();
+    this._getAnime();
   }
 
   private _resetPagination(): void {

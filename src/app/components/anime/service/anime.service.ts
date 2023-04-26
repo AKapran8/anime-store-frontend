@@ -16,8 +16,10 @@ export class AnimeService {
   constructor(private _http: HttpClient) {}
 
   public getAnimeList(
-    paginationConfig: PageEvent
+    pageSize: number,
+    pageIndex: number
   ): Observable<IGetAnimeListResponse> {
+    const paginationConfig = { pageSize, pageIndex };
     return this._http.post<IGetAnimeListResponse>(this._url, {
       paginationConfig,
     });

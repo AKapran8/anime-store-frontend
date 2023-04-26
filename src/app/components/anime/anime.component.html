@@ -23,7 +23,7 @@
     <mat-accordion multi [hideToggle]="true">
       <mat-spinner class="spinner" *ngIf="isListFetching"></mat-spinner>
       <mat-expansion-panel
-        *ngIf="!isListFetching && isListFetched && !animeList.length"
+        *ngIf="!isListFetching && isListFetched && !expansionPanelData.length"
         disabled
       >
         <mat-expansion-panel-header>
@@ -32,7 +32,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
-      <mat-expansion-panel *ngFor="let anime of animeList">
+      <mat-expansion-panel *ngFor="let anime of expansionPanelData">
         <mat-expansion-panel-header class="row">
           <mat-icon (click)="stopPropaganation($event); editAnime(anime)"
             >edit</mat-icon
@@ -80,6 +80,7 @@
       </mat-expansion-panel>
     </mat-accordion>
     <mat-paginator
+      *ngIf="expansionPanelData.length"
       [length]="totalAnimeCount"
       [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions"
