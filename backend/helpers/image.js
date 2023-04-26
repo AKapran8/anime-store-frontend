@@ -11,8 +11,6 @@ const removeImage = (imageUrl) => {
 };
 
 const changeImageName = (prevName, newName) => {
-  const fs = require("fs");
-
   const oldImageName = path.join(
     __dirname,
     "../../src/assets/heroes",

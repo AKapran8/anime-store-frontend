@@ -8,8 +8,9 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 
-import { AnimeService } from '../../services/anime/anime.service';
-import { HeroesService } from '../../services/heroes/heroes.service';
+import { AnimeService } from '../anime/service/anime.service';
+import { HeroesService } from '../heroes/service/heroes.service';
+import { QuotesService } from '../quotes/service/quotes.service';
 
 export interface IDeleteDialogData {
   message: string;
@@ -35,6 +36,7 @@ export class DeleteDialogComponent implements OnInit {
     private _dialogRef: MatDialogRef<DeleteDialogComponent>,
     private _animeService: AnimeService,
     private _heroesService: HeroesService,
+    private _quotesService: QuotesService,
     private _cdr: ChangeDetectorRef
   ) {}
 
@@ -94,5 +96,13 @@ export class DeleteDialogComponent implements OnInit {
       });
   }
 
-  private _deleteQuote(): void {}
+  private _deleteQuote(): void {
+    this._quotesService
+      .deleteQuote(this._id)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.isDeleting = false;
+        this._dialogRef.close(true);
+      });
+  }
 }

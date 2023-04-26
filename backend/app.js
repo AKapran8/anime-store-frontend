@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path");
 const app = express();
 const mongoose = require("mongoose");
 
 const animeRouters = require("./routers/anime.routers");
 const heroesRouters = require("./routers/hero.routers");
-// const quotesRouters = require("./routers/quote.routers");
+const quotesRouters = require("./routers/quote.routers");
 
 mongoose
   .connect(
@@ -19,6 +20,7 @@ mongoose
   });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -35,6 +37,6 @@ app.use((req, res, next) => {
 
 app.use("/api/anime", animeRouters);
 app.use("/api/heroes", heroesRouters);
-// app.use("/api/quotes", quotesRouters);
+app.use("/api/quotes", quotesRouters);
 
 module.exports = app;

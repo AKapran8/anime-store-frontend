@@ -18,9 +18,9 @@ import {
   IHero,
   IAddEditHero,
   IAddEditHeroDialogData,
-} from 'src/app/models/hero.model';
+} from 'src/app/components/heroes/hero.model';
 
-import { HeroesService } from '../../../services/heroes/heroes.service';
+import { HeroesService } from '../service/heroes.service';
 
 @Component({
   selector: 'app-heroes-list',
@@ -55,7 +55,8 @@ export class HeroesListComponent implements OnInit {
 
   private _modifyHeroes(): void {
     this.heroes = this._heroes.map((hero: IHero) => {
-      const imagePath = `./../../../../assets/heroes/${hero.imageUrl}`;
+      // const imagePath: string = `http://localhost:3000/images/${hero.imageUrl}`;
+      const imagePath: string = `./../../../../assets/heroes/${hero.imageUrl}`;
       return { ...hero, imagePath };
     });
     this._cdr.markForCheck();
@@ -64,7 +65,7 @@ export class HeroesListComponent implements OnInit {
   public removeHero(hero: IHeroTableData): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
-        message: `Are you sure want to delete ${hero.name}`,
+        message: `Are you sure want to delete ${hero.name}?`,
         type: 'HERO',
         id: hero.id,
       } as IDeleteDialogData,
@@ -75,9 +76,7 @@ export class HeroesListComponent implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         if (res) {
-          const index: number = this._heroes.findIndex((h) => h.id === hero.id);
-
-          this._heroes.splice(index, 1);
+          this._heroes = this._heroes.filter((h) => h.id !== hero.id);
           this._modifyHeroes();
         }
       });

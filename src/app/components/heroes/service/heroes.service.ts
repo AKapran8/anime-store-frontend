@@ -6,8 +6,7 @@ import {
   IGetHeroesNameResponse,
   IAddEditHero,
   IAddEditHeroResponse,
-} from 'src/app/models/hero.model';
-import { IMessageResponse } from 'src/app/models/message-repsonse.model';
+} from 'src/app/components/heroes/hero.model';
 
 @Injectable()
 export class HeroesService {
@@ -19,7 +18,7 @@ export class HeroesService {
     );
   }
 
-  public getHeroesList(): Observable<IGetHeroesNameResponse> {
+  public getHeroesListForQuote(): Observable<IGetHeroesNameResponse> {
     return this._http.get<IGetHeroesNameResponse>(
       'http://localhost:3000/api/heroes/names'
     );
@@ -41,8 +40,8 @@ export class HeroesService {
     );
   }
 
-  public deleteHero(id: string): Observable<IMessageResponse> {
-    return this._http.delete<IMessageResponse>(
+  public deleteHero(id: string): Observable<{ message: string }> {
+    return this._http.delete<{ message: string }>(
       `http://localhost:3000/api/heroes/${id}`
     );
   }

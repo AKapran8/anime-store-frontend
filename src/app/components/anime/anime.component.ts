@@ -15,7 +15,7 @@ import {
   convertTimeToText,
   getModifiedAnimeItemComponent,
   getStarsDescription,
-} from 'src/app/help-functions/anime.pipes';
+} from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -23,9 +23,13 @@ import {
 } from '../delete-dialog/delete-dialog.component';
 import { AddAnimeComponent } from './add-anime/add-anime.component';
 
-import { IAddEditAnime, IAnime, ITableData } from 'src/app/models/anime.mode';
+import {
+  IAddEditAnime,
+  IAnime,
+  ITableData,
+} from 'src/app/components/anime/anime.mode';
 
-import { AnimeService } from '../../services/anime/anime.service';
+import { AnimeService } from './service/anime.service';
 
 @Component({
   selector: 'app-anime',
@@ -151,7 +155,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public removeItem(anime: ITableData): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
-        message: `Are you sure want to delete ${anime.name}`,
+        message: `Are you sure want to delete ${anime.name}?`,
         type: 'ANIME',
         id: anime.id,
       } as IDeleteDialogData,
@@ -159,11 +163,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        const index: number = this._animeList.findIndex(
-          (a) => a.id === anime.id
-        );
-
-        this._animeList.splice(index, 1);
+        this._animeList = this._animeList.filter((a) => a.id !== anime.id);
         this._modifyList();
       }
     });

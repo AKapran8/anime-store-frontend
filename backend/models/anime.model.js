@@ -11,7 +11,6 @@ const animeSchema = mongoose.Schema(
       type: [{ heroName: String, id: String, imageUrl: String }],
       default: [],
     },
-    quotes: { type: [String], default: [] },
     genres: { type: String },
   },
   {
