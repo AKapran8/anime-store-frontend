@@ -25,7 +25,7 @@ export interface ITableData extends IAnime {
 }
 
 export interface IServerAnime {
-  _id: string;
+  id: string;
   name: string;
   nameUA: string;
   stars: number;
@@ -42,7 +42,10 @@ export interface IAnimeForHeroAndQuote {
 
 export interface IGetAnimeListResponse {
   status: string;
-  animeList: IServerAnime[];
+  data: {
+    totalElements: number;
+    animeList: IServerAnime[];
+  };
 }
 
 export interface IGetAnimeNamesListResponse {

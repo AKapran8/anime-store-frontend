@@ -9,14 +9,11 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
+import { cloneDeep } from 'lodash';
 
-import {
-  convertTimeToText,
-  getModifiedAnimeItemComponent,
-  getStarsDescription,
-} from './custom.pipes';
+import { convertTimeToText, getStarsDescription } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -44,7 +41,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public pageSize: number = 1;
   public searchControl: FormControl | null = null;
   public animeList: ITableData[] = [];
-  public tableData: ITableData[] = [];
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
 
@@ -74,20 +70,14 @@ export class AnimeComponent implements OnInit, OnDestroy {
     this.isListFetched = false;
 
     this._animeService
-      .getAnimeList()
-      .pipe(
-        map((animeData) => {
-          return animeData.animeList.map((a) =>
-            getModifiedAnimeItemComponent(a)
-          );
-        }),
-        take(1)
-      )
+      .getAnimeList(this._paginationConfig)
+      .pipe(take(1))
       .subscribe((res) => {
         if (res) {
-          this._animeList = [...res];
+          this._animeList = cloneDeep(res.data.animeList);
           this.isListFetching = false;
           this.isListFetched = true;
+          this.totalAnimeCount = res.data.totalElements;
           this._modifyList();
         }
       });
@@ -107,8 +97,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.totalAnimeCount = this._animeList.length;
-    this._paginateData();
+    this._cdr.markForCheck();
   }
 
   private _initSearchControl(): void {
@@ -125,13 +114,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   public addAnime(): void {
     const dialogRef = this._dialog.open(AddAnimeComponent);
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res && res.anime) {
-        const newElem: IAnime = getModifiedAnimeItemComponent(res.anime);
-
-        this._animeList.push(newElem);
-        this._modifyList();
-      }
+    dialogRef.afterClosed().subscribe((isAdded: boolean) => {
+      if (isAdded) this._getAnimeList();
     });
   }
 
@@ -150,17 +134,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
       data: editRow,
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res && res.anime) {
-        const updatedAnime: IAnime = getModifiedAnimeItemComponent(res.anime);
-
-        this._animeList = this._animeList.map((el) => {
-          if (el.id === updatedAnime.id) return updatedAnime;
-          return el;
-        });
-
-        this._modifyList();
-      }
+    dialogRef.afterClosed().subscribe((isEdited: boolean) => {
+      if (isEdited) this._getAnimeList();
     });
   }
 
@@ -173,11 +148,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
       } as IDeleteDialogData,
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this._animeList = this._animeList.filter((a) => a.id !== anime.id);
-        this._modifyList();
-      }
+    dialogRef.afterClosed().subscribe((isDeleted: boolean) => {
+      if (isDeleted) this._getAnimeList();
     });
   }
 
@@ -190,26 +162,13 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   public onPageChange(event: PageEvent) {
-    this._paginationConfig = event;
-    this._modifyList();
-  }
-
-  private _paginateData(): void {
-    let startIndex =
-      this._paginationConfig.pageIndex * this._paginationConfig.pageSize;
-    let endIndex = startIndex + this._paginationConfig.pageSize;
-    if (endIndex > this.animeList.length) {
-      endIndex = this.animeList.length;
-    }
-    this.tableData = [...this.animeList];
-    this.tableData = this.animeList.slice(startIndex, endIndex);
-    this._cdr.markForCheck();
+    this._paginationConfig = cloneDeep(event);
+    this._getAnimeList();
   }
 
   private _resetPagination(): void {
     if (this._paginationConfig) {
       this._paginationConfig = { ...this._paginationConfig, pageIndex: 0 };
-      this._modifyList();
     }
   }
 

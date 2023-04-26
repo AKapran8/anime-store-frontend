@@ -16,11 +16,15 @@ const animeSchema = mongoose.Schema(
   {
     toJSON: {
       transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+
         if (ret.heroes && ret.heroes.length) {
           ret.heroes = ret.heroes.map((hero) => ({
             id: hero.id,
             heroName: hero.heroName,
-            imageUrl: hero.imageUrl
+            imageUrl: hero.imageUrl,
           }));
         }
       },

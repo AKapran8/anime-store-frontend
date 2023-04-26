@@ -5,9 +5,23 @@ const Quote = require("./../models/quote.model");
 const imgHelpers = require("./../helpers/image");
 
 const getAnime = async (req, res, next) => {
+  const _paginationConfig = req.body.paginationConfig;
   try {
-    const animeList = await Anime.find();
-    res.status(200).json({ status: "success", animeList });
+    const totalAnimeList = await Anime.find();
+
+    let startIndex = _paginationConfig.pageIndex * _paginationConfig.pageSize;
+    let endIndex = startIndex + _paginationConfig.pageSize;
+    if (endIndex > totalAnimeList.length) {
+      endIndex = totalAnimeList.length;
+    }
+    const animeList = totalAnimeList.slice(startIndex, endIndex);
+
+    const data = {
+      totalElements: totalAnimeList.length,
+      animeList,
+    };
+
+    res.status(200).json({ status: "success", data });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });
   }

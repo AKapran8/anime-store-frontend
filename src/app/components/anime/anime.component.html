@@ -32,7 +32,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
-      <mat-expansion-panel *ngFor="let anime of tableData">
+      <mat-expansion-panel *ngFor="let anime of animeList">
         <mat-expansion-panel-header class="row">
           <mat-icon (click)="stopPropaganation($event); editAnime(anime)"
             >edit</mat-icon
