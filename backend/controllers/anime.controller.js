@@ -70,6 +70,9 @@ const deleteAnime = async (req, res, next) => {
       const heroes = await Hero.find({ _id: { $in: heroIds } }).select(
         "quotes"
       );
+
+      // looks ugly, but I don't have any idea how to fix it
+      // Argument of type 'any' is not assignable to parameter of type 'never'.ts(2345)
       let quotesIds = [""].splice(1, 1);
       heroes.forEach((h) => {
         if (h?.quotes.length > 0) {
