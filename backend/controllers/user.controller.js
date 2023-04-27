@@ -40,10 +40,12 @@ const loginUser = async (req, res, next) => {
     const signObj = { email: user.email, userId: user.id };
     const str = "this_is_really_long_string";
     const tokenSettings = {
-      expiresIn: "1d",
+      expiresIn: "1h",
     };
 
     const token = jwt.sign(signObj, str, tokenSettings);
+
+    res.status(200).json({token})
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

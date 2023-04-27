@@ -7,3 +7,7 @@ export interface ISignUpResponseData {
   user: IUser;
   message: string;
 }
+
+export interface ILoginResponseData {
+  token: string;
+}
