@@ -30,7 +30,7 @@ const getAnimeNames = async (req, res, next) => {
 const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
 
-  const existingAnime = await Anime.findOne({ name: reqBody.name });
+  const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
 
   if (existingAnime) {
     return res.status(400).json({ message: "Anime name already exists" });
