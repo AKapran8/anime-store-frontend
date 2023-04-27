@@ -10,6 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
+import { AuthService } from './service/auth.service';
+
 @NgModule({
   declarations: [LoginComponent, SignUpComponent],
   imports: [
@@ -21,5 +23,6 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     MatProgressSpinnerModule,
   ],
   exports: [],
+  providers: [AuthService]
 })
 export class AuthModule {}
