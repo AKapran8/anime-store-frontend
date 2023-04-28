@@ -129,7 +129,7 @@ const editHero = async (req, res, next) => {
     hero.animeId = reqBody.animeId;
     hero.imageUrl = newImgUrl;
 
-    imgHelpers.changeImageName(prevImageUrl, newImgUrl);
+    imgHelpers.changeImageName(prevImageUrl, newImgUrl); // change current image name in storage
 
     await hero.save();
 

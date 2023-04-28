@@ -8,8 +8,9 @@ const signUpUser = async (req, res, next) => {
 
   try {
     const hashedPassword = await bcryptJS.hash(requestBody.password, 10);
-    if (!hashedPassword)
+    if (!hashedPassword) {
       res.status(500).json({ message: `Server Error`, status: "Failed" });
+    }
 
     const newUser = new User({
       email: requestBody.email.trim(),
@@ -38,14 +39,14 @@ const loginUser = async (req, res, next) => {
     if (!passwordMatch) res.status(404).json({ message: "Auth failed" });
 
     const signObj = { email: user.email, userId: user.id };
-    const str = "this_is_really_long_string";
+    const secretKey = "this_is_really_long_string";
     const tokenSettings = {
       expiresIn: "1h",
     };
 
-    const token = jwt.sign(signObj, str, tokenSettings);
+    const token = jwt.sign(signObj, secretKey, tokenSettings);
 
-    res.status(200).json({token})
+    res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

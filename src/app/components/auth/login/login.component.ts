@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
-import { take } from 'rxjs/operators';
+
 import { IUser } from '../user.model';
 
 @Component({
@@ -42,10 +42,6 @@ export class LoginComponent implements OnInit {
       password: this.form.value.password.trim(),
     };
 
-    this._authService
-      .login(user)
-      .pipe(take(1))
-      .subscribe((res) => {
-      });
+    this._authService.login(user);
   }
 }
