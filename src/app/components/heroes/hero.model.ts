@@ -3,7 +3,6 @@ export interface IAddEditHero {
   image?: File;
   animeId: string;
   imageUrl: string;
-  imagePath?: string;
 }
 
 export interface IHero {
@@ -12,9 +11,6 @@ export interface IHero {
   imageUrl: string;
   quotes: string[];
   animeId: string;
-}
-export interface IHeroTableData extends IHero {
-  imagePath: string;
 }
 
 export interface IHeroForQuote {

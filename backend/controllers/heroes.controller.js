@@ -15,12 +15,15 @@ const getHeroes = async (req, res, next) => {
 
 const addNewHero = async (req, res, next) => {
   const reqBody = req.body;
+  const url = `${req.protocol}://${req.get("host")}`;
 
   try {
+    const imageUrl = `${url}/images/${reqBody.imageUrl}`;
+
     const newHero = new Hero({
       name: reqBody.name.trim(),
       animeId: reqBody.animeId,
-      imageUrl: reqBody.imageUrl,
+      imageUrl,
       quotes: [],
     });
 
@@ -79,6 +82,7 @@ const deleteHero = async (req, res, next) => {
 const editHero = async (req, res, next) => {
   const heroId = req.params.id;
   const reqBody = req.body;
+  const url = `${req.protocol}://${req.get("host")}`;
 
   try {
     const hero = await Hero.findById(heroId);
@@ -87,7 +91,7 @@ const editHero = async (req, res, next) => {
     const prevImageUrl = hero.imageUrl;
     const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase();
     const imageMimeType = hero.imageUrl.split(".")[1];
-    const newImgUrl = `${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
+    const newImgUrl = `${url}/images/${nameForImage}_${reqBody.animeId}.${imageMimeType}`;
 
     const newHero = {
       id: heroId,

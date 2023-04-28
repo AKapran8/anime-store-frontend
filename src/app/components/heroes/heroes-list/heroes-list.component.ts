@@ -14,7 +14,6 @@ import {
 } from '../../delete-dialog/delete-dialog.component';
 
 import {
-  IHeroTableData,
   IHero,
   IAddEditHero,
   IAddEditHeroDialogData,
@@ -29,7 +28,7 @@ import { HeroesService } from '../service/heroes.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroesListComponent implements OnInit {
-  public heroes: IHeroTableData[] = [];
+  public heroes: IHero[] = [];
 
   private _heroes: IHero[] = [];
 
@@ -54,15 +53,11 @@ export class HeroesListComponent implements OnInit {
   }
 
   private _modifyHeroes(): void {
-    this.heroes = this._heroes.map((hero: IHero) => {
-      // const imagePath: string = `http://localhost:3000/images/${hero.imageUrl}`;
-      const imagePath: string = `./../../../../assets/heroes/${hero.imageUrl}`;
-      return { ...hero, imagePath };
-    });
+    this.heroes = [...this._heroes];
     this._cdr.markForCheck();
   }
 
-  public removeHero(hero: IHeroTableData): void {
+  public removeHero(hero: IHero): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
         message: `Are you sure want to delete ${hero.name}?`,
@@ -82,12 +77,11 @@ export class HeroesListComponent implements OnInit {
       });
   }
 
-  public editHero(hero: IHeroTableData): void {
+  public editHero(hero: IHero): void {
     const initialValue: IAddEditHero = {
       name: hero.name,
       animeId: hero.animeId,
       imageUrl: hero.imageUrl,
-      imagePath: hero.imagePath,
     };
 
     const dialogRef = this._dialog.open(AddEditHeroComponent, {
