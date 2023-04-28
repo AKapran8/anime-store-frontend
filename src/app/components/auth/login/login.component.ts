@@ -5,6 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { AuthService } from '../service/auth.service';
 
 import { IUser } from '../user.model';
@@ -16,15 +18,23 @@ import { IUser } from '../user.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup | null = null;
+  public form: FormGroup | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
     this._initForm();
+    this._authStream();
+  }
+
+  private _authStream(): void {
+    this._authService.authStatusStream().subscribe((isLoggedIn: boolean) => {
+      if (isLoggedIn) this._router.navigate(['']);
+    });
   }
 
   private _initForm(): void {

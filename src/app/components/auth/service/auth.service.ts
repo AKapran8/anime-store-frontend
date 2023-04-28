@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { IUser, ISignUpResponseData, ILoginResponseData } from '../user.model';
@@ -10,10 +10,16 @@ export class AuthService {
   private _token: string = '';
   private _url: string = 'http://localhost:3000/api/user';
 
+  private _authStatusListener = new Subject<boolean>();
+
   constructor(private _http: HttpClient) {}
 
   public getToken(): string {
     return this._token;
+  }
+
+  public authStatusStream(): Observable<boolean> {
+    return this._authStatusListener.asObservable();
   }
 
   public signUp(requestBody: IUser): Observable<ISignUpResponseData> {
@@ -29,7 +35,7 @@ export class AuthService {
       .pipe(take(1))
       .subscribe((res: { token: string }) => {
         this._token = res?.token;
-        console.log(this._token);
+        this._authStatusListener.next(true);
       });
   }
 }

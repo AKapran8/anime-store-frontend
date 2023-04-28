@@ -9,12 +9,21 @@
       <li routerLinkActive="active" routerLink="quotes">Quotes</li>
     </ul>
     <div class="auth-options">
-      <mat-icon class="auth-btn" matTooltip="Login" routerLink="login"
+      <mat-icon
+        *ngIf="!isAuthorized"
+        class="auth-btn"
+        matTooltip="Login"
+        routerLink="login"
         >perm_identity</mat-icon
       >
-      <mat-icon class="auth-btn" matTooltip="Sign Up" routerLink="signup"
+      <mat-icon
+        *ngIf="!isAuthorized"
+        class="auth-btn"
+        matTooltip="Sign Up"
+        routerLink="signup"
         >add_circle_outline</mat-icon
       >
+      <button *ngIf="isAuthorized" mat-raised-button color="warn">Logout</button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

@@ -28,6 +28,7 @@ import {
 } from 'src/app/components/anime/anime.mode';
 
 import { AnimeService } from './service/anime.service';
+import { AuthService } from '../auth/service/auth.service';
 
 @Component({
   selector: 'app-anime',
@@ -43,6 +44,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public expansionPanelData: IExpansionPanelData[] = [];
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
+  public canAddEdit: boolean = false;
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -51,19 +53,32 @@ export class AnimeComponent implements OnInit, OnDestroy {
     pageSize: 0,
     previousPageIndex: 0,
   };
+
   private _searchValueChangesSub: Subscription | null = null;
+  private _authStatusSub: Subscription | null = null;
 
   constructor(
     private _dialog: MatDialog,
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService,
-    private _router: Router
+    private _router: Router,
+    private _authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this._getAuthStatus();
     this._initComponent();
     this._getAnime();
     this._initSearchControl();
+  }
+
+  private _getAuthStatus(): void {
+    this._authStatusSub = this._authService
+      .authStatusStream()
+      .subscribe((isAuthorized: boolean) => {
+        this.canAddEdit = isAuthorized;
+        this._cdr.markForCheck();
+      });
   }
 
   private _initComponent(): void {
@@ -73,6 +88,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       ...this._paginationConfig,
       pageSize: this.pageSize,
     };
+
     this._cdr.markForCheck();
   }
 
@@ -188,5 +204,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._searchValueChangesSub?.unsubscribe();
+    this._authStatusSub?.unsubscribe();
   }
 }

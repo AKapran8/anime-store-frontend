@@ -10,6 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 import { HomeModule } from './components/home/home.module';
 import { AnimeModule } from './components/anime/anime.module';
@@ -26,6 +27,7 @@ import { AuthModule } from './components/auth/auth.module';
     MatIconModule,
     MatToolbarModule,
     MatDialogModule,
+    MatButtonModule,
     AnimeModule,
     HeroesModule,
     QuotesModule,

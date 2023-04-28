@@ -1,12 +1,43 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/service/auth.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
+  public isAuthorized: boolean = false;
 
-  constructor(private _cdr: ChangeDetectorRef) {}
+  private _authStatusSub: Subscription | null = null;
+
+  constructor(
+    private _cdr: ChangeDetectorRef,
+    private _authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this._getAuthStatus();
+  }
+
+  private _getAuthStatus(): void {
+    this._authStatusSub = this._authService
+      .authStatusStream()
+      .subscribe((isAuthorized: boolean) => {
+        this.isAuthorized = isAuthorized;
+        this._cdr.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._authStatusSub?.unsubscribe();
+  }
 }
