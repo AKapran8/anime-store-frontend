@@ -32,7 +32,6 @@
   margin: 4px 16px 0 4px;
   color: #fff;
   font-size: 20px;
-
 }
 .search-input {
   position: relative;
@@ -58,6 +57,10 @@
   .mat-icon {
     color: #000;
   }
+}
+
+mat-paginator {
+  margin-top: 1rem;
 }
 
 .row {

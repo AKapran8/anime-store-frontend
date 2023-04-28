@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const heroesSchema = mongoose.Schema({
   name: { type: String, required: true },
   animeId: { type: String, required: true },
-  imageUrl: { type: String },
-  quotes: { type: [String] },
+  imageUrl: { type: String, required: true },
+  quotes: { type: [String] || [], required: true },
 }, {
   toJSON: {
     transform: function (doc, ret) {

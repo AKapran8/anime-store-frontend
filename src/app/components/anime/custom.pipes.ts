@@ -42,20 +42,3 @@ export const starsDescrList: string[] = [
   "Шедевр: Аніме вражає своєю оригінальністю, якістю та глибиною.Є непередбачуваний сюжет, хороша режисура, незабутні персонажі та вражаючі ефекти.Це твір мистецтва, який обов'язково варто переглянути.",
   'Шедевр, який вартий перегляду: Аніме є одним з найкращих у своєму жанрі. Воно має все - оригінальну ідею, глибоких персонажів та вражаючі ефекти.Це шедевр, який варто переглянути не тільки фанатам жанру, але і тим, хто просто любить дивитися хороше аніме.',
 ];
-
-export const getModifiedAnimeItemComponent = (
-  elem: IServerAnime
-): IAnime => {
-  const modifiedEl: IAnime = {
-    id: elem._id,
-    name: elem.name,
-    nameUA: elem.nameUA,
-    stars: elem.stars,
-    time: elem.time,
-    genres: elem.genres,
-    status: elem.status,
-    heroes: elem.heroes,
-  };
-
-  return modifiedEl;
-};
