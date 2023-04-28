@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { take } from 'rxjs/operators';
-import { getModifiedAnimeItemComponent } from '../custom.pipes';
 
 import { AnimeService } from '../service/anime.service';
 
@@ -45,7 +44,7 @@ export class AnimeItemComponent implements OnInit {
       .getAnimeById(this._id)
       .pipe(take(1))
       .subscribe((res) => {
-        this.anime = getModifiedAnimeItemComponent(res.anime);
+        this.anime = res.anime;
         this._cdr.markForCheck();
       });
   }

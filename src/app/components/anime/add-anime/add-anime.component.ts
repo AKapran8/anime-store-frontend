@@ -82,8 +82,8 @@ export class AddAnimeComponent implements OnInit {
     this._animeService
       .editAnime(requestBody, id)
       .pipe(take(1))
-      .subscribe((res) => {
-        this._dialogRef.close(res);
+      .subscribe(() => {
+        this._dialogRef.close(true);
         this.isSaving = false;
       });
   }
@@ -92,9 +92,9 @@ export class AddAnimeComponent implements OnInit {
     this._animeService
       .addAnime(requestBody)
       .pipe(take(1))
-      .subscribe((res) => {
+      .subscribe(() => {
         this.isSaving = false;
-        this._dialogRef.close(res);
+        this._dialogRef.close(true);
       });
   }
 }

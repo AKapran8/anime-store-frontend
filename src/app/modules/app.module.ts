@@ -7,8 +7,10 @@ import { AppComponent } from '../app-component/app.component';
 import { DeleteDialogComponent } from '../components/delete-dialog/delete-dialog.component';
 import { HeaderComponent } from '../components/header/header.component';
 
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { HomeModule } from '../components/home/home.module';
-import { AngularMaterialModule } from './material.module';
 import { AnimeModule } from '../components/anime/anime.module';
 import { HeroesModule } from '../components/heroes/heroes.module';
 import { QuotesModule } from '../components/quotes/quotes.module';
@@ -19,7 +21,8 @@ import { QuotesModule } from '../components/quotes/quotes.module';
     BrowserModule,
     CommonModule,
     AppRoutingModule,
-    AngularMaterialModule,
+    MatIconModule,
+    MatToolbarModule,
     AnimeModule,
     HeroesModule,
     QuotesModule,

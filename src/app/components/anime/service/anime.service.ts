@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 import {
   IAddEditAnime,
@@ -11,19 +12,24 @@ import {
 
 @Injectable()
 export class AnimeService {
+  private _url: string = 'http://localhost:3000/api/anime';
   constructor(private _http: HttpClient) {}
 
-  public getAnimeList(): Observable<IGetAnimeListResponse> {
-    return this._http.get<IGetAnimeListResponse>(
-      'http://localhost:3000/api/anime'
-    );
+  public getAnimeList(
+    pageSize: number,
+    pageIndex: number
+  ): Observable<IGetAnimeListResponse> {
+    const paginationConfig = { pageSize, pageIndex };
+    return this._http.post<IGetAnimeListResponse>(this._url, {
+      paginationConfig,
+    });
   }
 
   public addAnime(
     requestBody: IAddEditAnime
   ): Observable<IAddEditAnimeResponse> {
     return this._http.post<IAddEditAnimeResponse>(
-      'http://localhost:3000/api/anime',
+      `${this._url}/add`,
       requestBody
     );
   }
@@ -33,26 +39,20 @@ export class AnimeService {
     id: string
   ): Observable<IAddEditAnimeResponse> {
     return this._http.put<IAddEditAnimeResponse>(
-      `http://localhost:3000/api/anime/${id}`,
+      `${this._url}/${id}`,
       requestBody
     );
   }
 
-  public deleteAnime(id: string): Observable<{message: string}> {
-    return this._http.delete<{ message: string }>(
-      `http://localhost:3000/api/anime/${id}`
-    );
+  public deleteAnime(id: string): Observable<{ message: string }> {
+    return this._http.delete<{ message: string }>(`${this._url}/${id}`);
   }
 
   public getAnimeById(id: string): Observable<IGetAnimeByIdResponst> {
-    return this._http.get<IGetAnimeByIdResponst>(
-      `http://localhost:3000/api/anime/${id}`
-    );
+    return this._http.get<IGetAnimeByIdResponst>(`${this._url}/${id}`);
   }
 
   public getAnimeListNames(): Observable<IGetAnimeNamesListResponse> {
-    return this._http.get<IGetAnimeNamesListResponse>(
-      'http://localhost:3000/api/anime/names'
-    );
+    return this._http.get<IGetAnimeNamesListResponse>(`${this._url}/names`);
   }
 }
