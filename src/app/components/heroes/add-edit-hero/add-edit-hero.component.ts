@@ -26,8 +26,6 @@ export class AddEditHeroComponent implements OnInit {
   public imagePreviewUrl: string = '';
   public isSaving: boolean = false;
 
-  private _prevImgUrl: string = '';
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditHeroDialogData,
     private _dialogRef: MatDialogRef<AddEditHeroComponent>,
@@ -46,8 +44,7 @@ export class AddEditHeroComponent implements OnInit {
       this.title = 'Add New Hero';
     } else {
       this.title = 'Edit Hero';
-      this.imagePriview = this.data.initialValue?.imagePath || '';
-      this._prevImgUrl = this.data.initialValue?.imageUrl || '';
+      this.imagePriview = this.data.initialValue?.imageUrl || '';
     }
   }
 
@@ -108,7 +105,7 @@ export class AddEditHeroComponent implements OnInit {
 
     this.isSaving = true;
     const imageUrl: string =
-      this.data.type === 'add' ? this._getImageUrl() : this._prevImgUrl;
+      this.data.type === 'add' ? this._getImageUrl() : this.imagePriview;
 
     const requiestBody: IAddEditHero = {
       name: this.form?.value.name.trim(),
