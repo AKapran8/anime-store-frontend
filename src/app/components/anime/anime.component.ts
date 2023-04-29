@@ -73,11 +73,11 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   private _getAuthStatus(): void {
-    this.isLoggedIn = this._authService.getIsAuth();
+    this.isLoggedIn = this._authService.getIsAuth().isAuth;
     this._authStatusSub = this._authService
       .authStatusStream()
-      .subscribe((isAuthorized: boolean) => {
-        this.isLoggedIn = isAuthorized;
+      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
+        this.isLoggedIn = authStreamData.isAuth;
         this._cdr.markForCheck();
       });
     this._cdr.markForCheck();

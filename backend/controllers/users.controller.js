@@ -13,11 +13,12 @@ const signUpUser = async (req, res, next) => {
     }
 
     const newUser = new User({
+      name: requestBody.name.trim(),
       email: requestBody.email.trim(),
       password: hashedPassword,
     });
 
-    const createdUser = await newUser.save();
+    await newUser.save();
 
     res.status(201).json({ message: "User was created" });
   } catch (error) {
@@ -46,8 +47,11 @@ const loginUser = async (req, res, next) => {
 
     const token = jwt.sign(signObj, secretKey, tokenSettings);
     const expiredAfter = 3600; // expiresIn to seconds
+    const userName = user.name;
 
-    res.status(200).json({ token, expiredAfter });
+    res
+      .status(200)
+      .json({ status: "Sucess", data: { token, expiredAfter, userName } });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

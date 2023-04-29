@@ -33,6 +33,9 @@
       >
         Logout
       </button>
+      <span class="user-name" *ngIf="userName">
+        Welcome {{ userName }}
+      </span>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

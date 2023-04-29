@@ -8,7 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../service/auth.service';
 
-import { IUser } from '../user.model';
+import { ILoginUser } from '../user.model';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
 
-    const user: IUser = {
+    const user: ILoginUser = {
       email: this.form.value.email.trim(),
       password: this.form.value.password.trim(),
     };

@@ -16,8 +16,9 @@ import { AuthService } from '../auth/service/auth.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public isAuthorized: boolean = false;
+  public userName: string = '';
 
-  private _authStatusSub: Subscription | null = null;
+  private _authInfoSub: Subscription | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -29,11 +30,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private _getAuthStatus(): void {
-    this.isAuthorized = this._authService.getIsAuth();
-    this._authStatusSub = this._authService
+    const authData: { isAuth: boolean; userName: string } =
+      this._authService.getIsAuth();
+
+    this.isAuthorized = authData.isAuth;
+    this.userName = authData.userName;
+    this._authInfoSub = this._authService
       .authStatusStream()
-      .subscribe((isAuthorized: boolean) => {
-        this.isAuthorized = isAuthorized;
+      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
+        this.isAuthorized = authStreamData.isAuth;
+        this.userName = authStreamData.userName;
         this._cdr.markForCheck();
       });
   }
@@ -43,6 +49,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._authStatusSub?.unsubscribe();
+    this._authInfoSub?.unsubscribe();
   }
 }
