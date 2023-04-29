@@ -5,8 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { take } from 'rxjs/operators';
 
-import { HeroesService } from '../heroes/service/heroes.service';
 import { QuotesService } from './service/quotes.service';
 
 import { IHeroForQuote } from '../heroes/hero.model';
@@ -17,6 +17,7 @@ import {
   IDeleteDialogData,
 } from '../delete-dialog/delete-dialog.component';
 import { AddEditQuoteComponent } from './add-edit-quote/add-edit-quote.component';
+import { AuthService } from '../auth/service/auth.service';
 
 @Component({
   selector: 'app-quotes',
@@ -25,25 +26,34 @@ import { AddEditQuoteComponent } from './add-edit-quote/add-edit-quote.component
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuotesComponent implements OnInit {
-  public heroesList: IHeroForQuote[] = [];
+  public userId: string = '';
   public quotes: IQuote[] = [];
+
   constructor(
     private _cdr: ChangeDetectorRef,
-    private _heroesService: HeroesService,
     private _quotesService: QuotesService,
+    private _authService: AuthService,
     private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this._heroesService.getHeroesListForQuote().subscribe((res) => {
-      this.heroesList = res?.heroesList || [];
-      this._cdr.markForCheck();
-    });
+    this._getUserInfo();
+    this._getQuotes();
+  }
 
-    this._quotesService.getQuotes().subscribe((res) => {
-      this.quotes = res.quotes;
-      this._cdr.markForCheck();
-    });
+  private _getUserInfo(): void {
+    this.userId = this._authService.getUserAuth().userId;
+    this._cdr.markForCheck();
+  }
+
+  private _getQuotes(): void {
+    this._quotesService
+      .getQuotes()
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.quotes = res.quotes;
+        this._cdr.markForCheck();
+      });
   }
 
   public addNewQuote(): void {

@@ -40,11 +40,11 @@ export class AuthService {
     return this._token;
   }
 
-  public authStatusStream(): Observable<IAuthUserInfo> {
+  public authInfoStream(): Observable<IAuthUserInfo> {
     return this._authStatusListener.asObservable();
   }
 
-  public getIsAuth(): IAuthUserInfo {
+  public getUserAuth(): IAuthUserInfo {
     return {
       isAuth: this._isAuth,
       userName: this._userName,

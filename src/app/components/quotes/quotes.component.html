@@ -1,5 +1,10 @@
 <div style="margin: 40px">
-  <button mat-stroked-button color="warn" (click)="addNewQuote()">
+  <button
+    mat-stroked-button
+    color="warn"
+    *ngIf="userId"
+    (click)="addNewQuote()"
+  >
     Add New Quote
   </button>
 </div>
@@ -11,8 +16,23 @@
     <p>EPISODE: {{ quote.episode }}</p>
     <p>TIME: {{ quote.time }}</p>
     <p>HERO: {{ quote.author.authorName + " " + quote.author.id }}</p>
-    <button mat-button (click)="deleteQuote(quote)" color="warn">DELETE</button>
-    <button mat-button (click)="editQuote(quote)" color="primary">EDIT</button>
+    <p>Your: {{ quote.userId === userId ? "YES" : "NO" }}</p>
+    <button
+      mat-button
+      *ngIf="userId === quote.userId"
+      (click)="deleteQuote(quote)"
+      color="warn"
+    >
+      DELETE
+    </button>
+    <button
+      mat-button
+      *ngIf="userId === quote.userId"
+      (click)="editQuote(quote)"
+      color="primary"
+    >
+      EDIT
+    </button>
   </div>
   <p *ngIf="!quotes?.length">No data</p>
 </div>

@@ -12,6 +12,7 @@ export interface IQuote {
   time: string;
   author: IQuoteAuthor;
   id: string;
+  userId: string;
 }
 
 interface IQuoteAuthor {

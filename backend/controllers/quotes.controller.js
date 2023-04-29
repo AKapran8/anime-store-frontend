@@ -2,12 +2,8 @@ const Quote = require("./../models/quote.model");
 const Hero = require("./../models/hero.model");
 
 const getQuotes = async (req, res, next) => {
-  const userId = req.userData.userId;
-
   try {
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
-
-    const quotes = await Quote.find({ userId: userId });
+    const quotes = await Quote.find();
     res.status(200).json({ status: "Success", quotes });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });
