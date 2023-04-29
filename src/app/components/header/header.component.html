@@ -23,7 +23,14 @@
         routerLink="signup"
         >add_circle_outline</mat-icon
       >
-      <button *ngIf="isAuthorized" mat-raised-button color="warn">Logout</button>
+      <button
+        *ngIf="isAuthorized"
+        (click)="logoutHandler()"
+        mat-raised-button
+        color="warn"
+      >
+        Logout
+      </button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

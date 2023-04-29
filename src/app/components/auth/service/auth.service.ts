@@ -4,17 +4,18 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { IUser, ISignUpResponseData, ILoginResponseData } from '../user.model';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
-  private _token: string = '';
+  private _token: string | null = null;
   private _url: string = 'http://localhost:3000/api/user';
 
   private _authStatusListener = new Subject<boolean>();
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _router: Router) {}
 
-  public getToken(): string {
+  public getToken(): string | null {
     return this._token;
   }
 
@@ -35,7 +36,16 @@ export class AuthService {
       .pipe(take(1))
       .subscribe((res: { token: string }) => {
         this._token = res?.token;
-        this._authStatusListener.next(true);
+
+        if (res.token) {
+          this._authStatusListener.next(true);
+        }
       });
+  }
+
+  public logout(): void {
+    this._token = null;
+    this._authStatusListener.next(false);
+    if (!this._token) this._router.navigate(['']);
   }
 }
