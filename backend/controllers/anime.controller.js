@@ -122,19 +122,24 @@ const editAnime = async (req, res, next) => {
   const reqBody = req.body;
 
   try {
-    const updatedAnime = await Anime.findById(animeId);
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const updatedAnime = await Anime.findOneAndUpdate(
+      { _id: animeId, userId: userId },
+      {
+        name: reqBody.name.trim(),
+        nameUA: reqBody.nameUA.trim(),
+        stars: reqBody.stars,
+        status: reqBody.status,
+        time: reqBody.time,
+        genres: reqBody?.genres || "",
+      }
+    );
+
     if (!updatedAnime) {
       return res.status(404).json({ message: "Anime not found" });
     }
-
-    updatedAnime.name = reqBody.name.trim();
-    updatedAnime.nameUA = reqBody.nameUA.trim();
-    updatedAnime.stars = reqBody.stars;
-    updatedAnime.status = reqBody.status;
-    updatedAnime.time = reqBody.time;
-    updatedAnime.genres = reqBody?.genres || "";
-
-    await updatedAnime.save();
 
     res.json({
       message: "Anime updated successfully",
