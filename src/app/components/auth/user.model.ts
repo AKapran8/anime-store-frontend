@@ -10,4 +10,5 @@ export interface ISignUpResponseData {
 
 export interface ILoginResponseData {
   token: string;
+  expiredAfter: number;
 }

@@ -45,8 +45,9 @@ const loginUser = async (req, res, next) => {
     };
 
     const token = jwt.sign(signObj, secretKey, tokenSettings);
+    const expiredAfter = 3600; // expiresIn to seconds
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, expiredAfter });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

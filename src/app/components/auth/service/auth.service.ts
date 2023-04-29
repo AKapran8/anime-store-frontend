@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private _token: string | null = null;
   private _url: string = 'http://localhost:3000/api/user';
+  private _tokenTimer: any;
 
   private _authStatusListener = new Subject<boolean>();
 
@@ -34,10 +35,14 @@ export class AuthService {
     return this._http
       .post<ILoginResponseData>(`${this._url}/login`, requestBody)
       .pipe(take(1))
-      .subscribe((res: { token: string }) => {
+      .subscribe((res: ILoginResponseData) => {
         this._token = res?.token;
 
         if (res.token) {
+          this._tokenTimer = setTimeout(() => {
+            this.logout();
+          }, res.expiredAfter * 1000);
+
           this._authStatusListener.next(true);
           this._redirectToHomePage();
         }
@@ -47,6 +52,7 @@ export class AuthService {
   public logout(): void {
     this._token = null;
     this._authStatusListener.next(false);
+    if (this._tokenTimer) clearTimeout(this._tokenTimer);
     if (!this._token) this._redirectToHomePage();
   }
 
