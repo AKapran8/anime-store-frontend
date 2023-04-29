@@ -19,7 +19,7 @@ const signUpUser = async (req, res, next) => {
 
     const createdUser = await newUser.save();
 
-    res.status(201).json({ message: "User was created", user: createdUser });
+    res.status(201).json({ message: "User was created" });
   } catch (error) {
     res.status(500).json({ message: "Failed to add user", error });
   }

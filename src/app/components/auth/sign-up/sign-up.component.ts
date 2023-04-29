@@ -8,6 +8,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
 import { take } from 'rxjs/operators';
 import { IUser } from '../user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -16,11 +17,13 @@ import { IUser } from '../user.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignUpComponent implements OnInit {
+  public isLoading: boolean = false;
   form: FormGroup | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -41,12 +44,14 @@ export class SignUpComponent implements OnInit {
       email: this.form.value.email.trim(),
       password: this.form.value.password.trim(),
     };
+    this.isLoading = true;
+    this._cdr.markForCheck();
 
     this._authService
       .signUp(user)
       .pipe(take(1))
-      .subscribe((res) => {
-        console.log(res);
+      .subscribe(() => {
+        this._router.navigate(['login']);
       });
   }
 }

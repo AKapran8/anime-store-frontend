@@ -39,6 +39,7 @@ export class AuthService {
 
         if (res.token) {
           this._authStatusListener.next(true);
+          this._redirectToHomePage();
         }
       });
   }
@@ -46,6 +47,10 @@ export class AuthService {
   public logout(): void {
     this._token = null;
     this._authStatusListener.next(false);
-    if (!this._token) this._router.navigate(['']);
+    if (!this._token) this._redirectToHomePage();
+  }
+
+  private _redirectToHomePage(): void {
+    this._router.navigate(['/']);
   }
 }

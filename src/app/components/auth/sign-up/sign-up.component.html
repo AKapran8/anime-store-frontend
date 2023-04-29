@@ -22,9 +22,10 @@
           />
         </mat-form-field>
       </div>
-      <button mat-raised-button type="button" color="accent" type="submit">
+      <button *ngIf="!isLoading" mat-raised-button type="button" color="accent" type="submit">
         Sign Up
       </button>
+      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
     </form>
   </div>
 </div>
