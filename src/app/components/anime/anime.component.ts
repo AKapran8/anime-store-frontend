@@ -46,6 +46,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isListFetched: boolean = false;
   public isLoggedIn: boolean = false;
   public invalidUser: boolean = false;
+  public userId: string = '';
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -56,7 +57,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
   };
 
   private _searchValueChangesSub: Subscription | null = null;
-  private _authStatusSub: Subscription | null = null;
 
   constructor(
     private _dialog: MatDialog,
@@ -67,20 +67,15 @@ export class AnimeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._getAuthStatus();
+    this._getAuthData();
     this._initComponent();
     this._getAnime();
     this._initSearchControl();
   }
 
-  private _getAuthStatus(): void {
-    this.isLoggedIn = this._authService.getIsAuth().isAuth;
-    this._authStatusSub = this._authService
-      .authStatusStream()
-      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
-        this.isLoggedIn = authStreamData.isAuth;
-        this._cdr.markForCheck();
-      });
+  private _getAuthData(): void {
+    this.isLoggedIn = this._authService.getUserAuth().isAuth;
+    this.userId = this._authService.getUserAuth().userId;
     this._cdr.markForCheck();
   }
 
@@ -215,6 +210,5 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._searchValueChangesSub?.unsubscribe();
-    this._authStatusSub?.unsubscribe();
   }
 }

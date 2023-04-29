@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { take } from 'rxjs/operators';
@@ -20,6 +21,7 @@ import {
 } from 'src/app/components/heroes/hero.model';
 
 import { HeroesService } from '../service/heroes.service';
+import { AuthService } from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-heroes-list',
@@ -29,17 +31,25 @@ import { HeroesService } from '../service/heroes.service';
 })
 export class HeroesListComponent implements OnInit {
   public heroes: IHero[] = [];
+  public userId: string = '';
 
   private _heroes: IHero[] = [];
 
   constructor(
     private _cdr: ChangeDetectorRef,
     private _heroesService: HeroesService,
+    private _authSrvice: AuthService,
     private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this._getUserInfo();
     this._getHeroes();
+  }
+
+  private _getUserInfo(): void {
+    this.userId = this._authSrvice.getUserAuth().userId;
+    this._cdr.markForCheck();
   }
 
   private _getHeroes(): void {

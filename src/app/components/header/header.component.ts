@@ -31,12 +31,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private _getAuthStatus(): void {
     const authData: { isAuth: boolean; userName: string } =
-      this._authService.getIsAuth();
+      this._authService.getUserAuth();
 
     this.isAuthorized = authData.isAuth;
     this.userName = authData.userName;
     this._authInfoSub = this._authService
-      .authStatusStream()
+      .authInfoStream()
       .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
         this.isAuthorized = authStreamData.isAuth;
         this.userName = authStreamData.userName;

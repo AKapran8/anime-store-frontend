@@ -48,10 +48,14 @@ const loginUser = async (req, res, next) => {
     const token = jwt.sign(signObj, secretKey, tokenSettings);
     const expiredAfter = 3600; // expiresIn to seconds
     const userName = user.name;
+    const userId = user.id;
 
     res
       .status(200)
-      .json({ status: "Sucess", data: { token, expiredAfter, userName } });
+      .json({
+        status: "Sucess",
+        data: { token, expiredAfter, userName, userId },
+      });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

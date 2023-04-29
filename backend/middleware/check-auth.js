@@ -9,7 +9,7 @@ const chechToken = async (req, res, next) => {
   } catch (error) {
     res
       .status(401)
-      .json({ status: "Failed", message: "You must be logged first to see this page", error });
+      .json({ status: "Failed", message: "Please verify your personality", error });
   }
 };
 

@@ -9,11 +9,8 @@ const getAnime = async (req, res, next) => {
   const pageIndex = req.body.paginationConfig.pageIndex;
 
   try {
-    const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
-
-    const totalElements = await Anime.countDocuments({ userId: userId });
-    const animeList = await Anime.find({ userId: userId })
+    const totalElements = await Anime.countDocuments();
+    const animeList = await Anime.find()
       .skip(pageSize * pageIndex)
       .limit(pageSize);
 
@@ -51,7 +48,7 @@ const addNewAnime = async (req, res, next) => {
 
   if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-  const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
+  const existingAnime = await Anime.findOne({ name: reqBody.name.trim(), userId: userId });
 
   if (existingAnime) {
     return res.status(400).json({ message: "Anime name already exists" });

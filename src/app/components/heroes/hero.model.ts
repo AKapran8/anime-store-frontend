@@ -11,6 +11,7 @@ export interface IHero {
   imageUrl: string;
   quotes: string[];
   animeId: string;
+  userId: string;
 }
 
 export interface IHeroForQuote {
