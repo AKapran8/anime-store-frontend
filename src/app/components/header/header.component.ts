@@ -29,6 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private _getAuthStatus(): void {
+    this.isAuthorized = this._authService.getIsAuth();
     this._authStatusSub = this._authService
       .authStatusStream()
       .subscribe((isAuthorized: boolean) => {
