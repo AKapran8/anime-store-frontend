@@ -9,7 +9,6 @@ import { take } from 'rxjs/operators';
 
 import { QuotesService } from './service/quotes.service';
 
-import { IHeroForQuote } from '../heroes/hero.model';
 import { IAddEditQuote, IAddEditQuoteDialogData, IQuote } from './quote.model';
 
 import {
