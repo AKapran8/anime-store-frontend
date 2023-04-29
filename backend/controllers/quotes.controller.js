@@ -26,6 +26,7 @@ const addNewQuote = async (req, res, next) => {
 
     const hero = await Hero.findById(newQuote.author.id);
     if (!hero) throw new Error("Hero not found");
+
     hero.quotes.push(createdQuote._id);
     await hero.save();
 

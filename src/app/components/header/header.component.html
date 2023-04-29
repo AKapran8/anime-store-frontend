@@ -8,7 +8,31 @@
       <li routerLinkActive="active" routerLink="heroes">Heroes</li>
       <li routerLinkActive="active" routerLink="quotes">Quotes</li>
     </ul>
-    <mat-icon>perm_identity</mat-icon>
-
+    <div class="auth-options">
+      <mat-icon
+        *ngIf="!isAuthorized"
+        class="auth-btn"
+        matTooltip="Login"
+        routerLink="login"
+        routerLinkActive="icon-active"
+        >perm_identity</mat-icon
+      >
+      <mat-icon
+        *ngIf="!isAuthorized"
+        class="auth-btn"
+        matTooltip="Sign Up"
+        routerLink="signup"
+        routerLinkActive="icon-active"
+        >add_circle_outline</mat-icon
+      >
+      <button
+        *ngIf="isAuthorized"
+        (click)="logoutHandler()"
+        mat-raised-button
+        color="warn"
+      >
+        Logout
+      </button>
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>

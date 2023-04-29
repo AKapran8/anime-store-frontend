@@ -4,10 +4,11 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { AnimeService } from '../service/anime.service';
+import { IAnime } from '../anime.mode';
 
 @Component({
   selector: 'app-anime-item',
@@ -18,12 +19,14 @@ import { AnimeService } from '../service/anime.service';
 export class AnimeItemComponent implements OnInit {
   private _id: string = '';
 
-  public anime: any;
+  public anime: IAnime | null = null;
+  public errorMessage: string = '';
 
   constructor(
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,9 +46,20 @@ export class AnimeItemComponent implements OnInit {
     this._animeService
       .getAnimeById(this._id)
       .pipe(take(1))
-      .subscribe((res) => {
-        this.anime = res.anime;
-        this._cdr.markForCheck();
-      });
+      .subscribe(
+        (res) => {
+          this.anime = res.anime;
+          this._cdr.markForCheck();
+        },
+        (err) => {
+          this.errorMessage =
+            err?.error?.message || 'You must be logged first to see this page';
+          this._cdr.markForCheck();
+        }
+      );
+  }
+
+  public navigateToLogin(): void {
+    this._router.navigate(['login']);
   }
 }

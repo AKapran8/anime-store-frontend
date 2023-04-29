@@ -35,6 +35,26 @@
   border-bottom: 4px #fff solid;
 }
 
+.icon-active {
+  color: red;
+}
+
+.auth-btn {
+  cursor: pointer;
+}
+
+.auth-options {
+  .mat-icon {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 24px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
 @media (max-width: 580px) {
   .list {
     li {
@@ -49,3 +69,4 @@
     }
   }
 }
+

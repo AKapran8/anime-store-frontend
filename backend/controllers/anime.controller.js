@@ -42,15 +42,15 @@ const getAnimeNames = async (req, res, next) => {
 const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
 
-  const existingAnime = await Anime.findOne({ name: reqBody.name });
+  const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
 
   if (existingAnime) {
     return res.status(400).json({ message: "Anime name already exists" });
   }
 
   const newAnime = new Anime({
-    name: reqBody.name,
-    nameUA: reqBody.nameUA,
+    name: reqBody.name.trim(),
+    nameUA: reqBody.nameUA.trim(),
     stars: reqBody.stars,
     status: reqBody.status,
     time: reqBody.time,
@@ -84,8 +84,8 @@ const deleteAnime = async (req, res, next) => {
       );
 
       // looks ugly, but I don't have any idea how to fix it
-      // Argument of type 'any' is not assignable to parameter of type 'never'.ts(2345)
-      let quotesIds = [""].splice(1, 1);
+      //  quotesIds.push(q); => Argument of type 'any' is not assignable to parameter of type 'never'.ts(2345)
+      const quotesIds = [""].splice(1, 1);
       heroes.forEach((h) => {
         if (h?.quotes.length > 0) {
           h.quotes.forEach((q) => {

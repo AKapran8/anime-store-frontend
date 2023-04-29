@@ -9,11 +9,16 @@ import { HeaderComponent } from './components/header/header.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 import { HomeModule } from './components/home/home.module';
 import { AnimeModule } from './components/anime/anime.module';
 import { HeroesModule } from './components/heroes/heroes.module';
 import { QuotesModule } from './components/quotes/quotes.module';
+import { AuthModule } from './components/auth/auth.module';
+
+import { AuthGuard } from './components/auth/auth.guard';
 
 @NgModule({
   declarations: [AppComponent, DeleteDialogComponent, HeaderComponent],
@@ -23,12 +28,15 @@ import { QuotesModule } from './components/quotes/quotes.module';
     AppRoutingModule,
     MatIconModule,
     MatToolbarModule,
+    MatDialogModule,
+    MatButtonModule,
     AnimeModule,
     HeroesModule,
     QuotesModule,
     HomeModule,
+    AuthModule,
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
