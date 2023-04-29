@@ -82,8 +82,8 @@ export class AuthService {
           const date: Date = new Date();
           const expiredDate: Date = new Date(date.getTime() + expiredPeriod);
           this._saveAuthData(res.data.token, expiredDate, res.data.userName);
-
           this._setUserAuthData(expiredPeriod, res.data.userName);
+          this._redirectToHomePage();
         }
       });
   }
@@ -143,7 +143,6 @@ export class AuthService {
     this._authStatusListener.next({ isAuth: true, userName });
     this._isAuth = true;
     this._setAuthTimer(expiredPeriod);
-    this._redirectToHomePage();
     this._userName = userName;
   }
 
