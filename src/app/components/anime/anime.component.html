@@ -28,7 +28,11 @@
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
-            No data found. Please create new one
+            {{
+              invalidUser
+                ? "Please verify your personality"
+                : "No data found. Please create new one"
+            }}
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>

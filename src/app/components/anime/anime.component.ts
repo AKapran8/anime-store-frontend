@@ -13,7 +13,7 @@ import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
-import { convertTimeToText, getStarsDescription } from './custom.pipes';
+import { convertTimeToText, startDescriptionEnum } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -45,6 +45,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
   public isLoggedIn: boolean = false;
+  public invalidUser: boolean = false;
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -104,14 +105,22 @@ export class AnimeComponent implements OnInit, OnDestroy {
         this._paginationConfig.pageIndex
       )
       .pipe(take(1))
-      .subscribe((res) => {
-        if (res) {
-          this._anime = cloneDeep(res.data.animeList);
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this._anime = cloneDeep(res.data.animeList);
+            this.isListFetching = false;
+            this.isListFetched = true;
+            this.totalAnimeCount = res.data.totalElements;
+            this._getExpansionPanelData();
+          }
+        },
+        error: (err) => {
           this.isListFetching = false;
           this.isListFetched = true;
-          this.totalAnimeCount = res.data.totalElements;
-          this._getExpansionPanelData();
-        }
+          this.invalidUser = true;
+          this._cdr.markForCheck();
+        },
       });
 
     this._cdr.markForCheck();
@@ -119,7 +128,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const starsDescr = getStarsDescription(a.stars - 1);
+      const starsDescr = startDescriptionEnum[a.stars - 1];
       const timeText = convertTimeToText(a.time);
 
       return {
