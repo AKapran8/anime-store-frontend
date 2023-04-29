@@ -4,17 +4,17 @@ const bcryptJS = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const signUpUser = async (req, res, next) => {
-  const requestBody = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    const hashedPassword = await bcryptJS.hash(requestBody.password, 10);
+    const hashedPassword = await bcryptJS.hash(password, 10);
     if (!hashedPassword) {
       res.status(500).json({ message: `Server Error`, status: "Failed" });
     }
 
     const newUser = new User({
-      name: requestBody.name.trim(),
-      email: requestBody.email.trim(),
+      name: name.trim(),
+      email: email.trim(),
       password: hashedPassword,
     });
 
@@ -50,12 +50,10 @@ const loginUser = async (req, res, next) => {
     const userName = user.name;
     const userId = user.id;
 
-    res
-      .status(200)
-      .json({
-        status: "Sucess",
-        data: { token, expiredAfter, userName, userId },
-      });
+    res.status(200).json({
+      status: "Sucess",
+      data: { token, expiredAfter, userName, userId },
+    });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }

@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../service/auth.service';
 
@@ -16,9 +18,11 @@ import { ILoginUser } from '../user.model';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   public form: FormGroup | null = null;
+
+  private _authUserSub: Subscription | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -26,7 +30,15 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this._getUserAuth();
     this._initForm();
+  }
+
+  private _getUserAuth(): void {
+    this._authUserSub = this._authService.authInfoStream().subscribe((res) => {
+      this.isLoading = false;
+      this._cdr.markForCheck();
+    });
   }
 
   private _initForm(): void {
@@ -47,6 +59,11 @@ export class LoginComponent implements OnInit {
     };
 
     this._authService.login(user);
+
     this._cdr.markForCheck();
+  }
+
+  ngOnDestroy(): void {
+    this._authUserSub?.unsubscribe();
   }
 }
