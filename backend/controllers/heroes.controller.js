@@ -5,8 +5,12 @@ const Quote = require("./../models/quote.model");
 const imgHelpers = require("./../helpers/image");
 
 const getHeroes = async (req, res, next) => {
+  const userId = req.userData.userId;
+
   try {
-    const heroesList = await Hero.find();
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const heroesList = await Hero.find({ userId: userId });
     res.status(200).json({ status: "Success", heroesList });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });
@@ -18,11 +22,15 @@ const addNewHero = async (req, res, next) => {
   const url = `${req.protocol}://${req.get("host")}`;
 
   try {
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
     const imageUrl = `${url}/images/${reqBody.imageUrl}`;
 
     const newHero = new Hero({
       name: reqBody.name.trim(),
       animeId: reqBody.animeId,
+      userId,
       imageUrl,
       quotes: [],
     });
@@ -146,7 +154,10 @@ const editHero = async (req, res, next) => {
 
 const getHeroNames = async (req, res, next) => {
   try {
-    const list = await Hero.find().select("name animeId");
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const list = await Hero.find({ userId: userId }).select("name animeId");
     const heroesList = list.map((el) => {
       return { id: el.id, text: el.name };
     });

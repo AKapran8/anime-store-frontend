@@ -2,8 +2,12 @@ const Quote = require("./../models/quote.model");
 const Hero = require("./../models/hero.model");
 
 const getQuotes = async (req, res, next) => {
+  const userId = req.userData.userId;
+
   try {
-    const quotes = await Quote.find();
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const quotes = await Quote.find({userId: userId});
     res.status(200).json({ status: "Success", quotes });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });
@@ -12,6 +16,7 @@ const getQuotes = async (req, res, next) => {
 
 const addNewQuote = async (req, res, next) => {
   const reqBody = req.body;
+  const userId = req.userData.userId;
 
   try {
     const newQuote = new Quote({
@@ -20,6 +25,7 @@ const addNewQuote = async (req, res, next) => {
       episode: reqBody.episode,
       time: reqBody.time,
       author: reqBody.author,
+      userId,
     });
 
     const createdQuote = await newQuote.save();

@@ -30,7 +30,10 @@ const getAnime = async (req, res, next) => {
 
 const getAnimeNames = async (req, res, next) => {
   try {
-    const list = await Anime.find().select("name");
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const list = await Anime.find({ userId: userId }).select("name");
     const animeList = list.map((el) => {
       return { id: el._id, text: el.name };
     });
@@ -44,7 +47,9 @@ const getAnimeNames = async (req, res, next) => {
 
 const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
-  const userData = req.userData;
+  const userId = req.userData.userId;
+
+  if (!userId) res.status(404).json({ message: "User not found" });
 
   const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
 
@@ -55,12 +60,12 @@ const addNewAnime = async (req, res, next) => {
   const newAnime = new Anime({
     name: reqBody.name.trim(),
     nameUA: reqBody.nameUA.trim(),
-    userId: userData.userId,
     stars: reqBody.stars,
     status: reqBody.status,
     time: reqBody.time,
     genres: reqBody?.genres || "",
     heroes: [],
+    userId,
   });
 
   try {
@@ -78,6 +83,7 @@ const deleteAnime = async (req, res, next) => {
 
   try {
     const anime = await Anime.findById(id);
+    let quotesIds;
     if (anime?.heroes?.length > 0) {
       const heroIds = anime.heroes.map((hero) => {
         imgHelpers.removeImage(hero.imageUrl); //remove hero img from storage
@@ -88,9 +94,7 @@ const deleteAnime = async (req, res, next) => {
         "quotes"
       );
 
-      // looks ugly, but I don't have any idea how to fix it
-      //  quotesIds.push(q); => Argument of type 'any' is not assignable to parameter of type 'never'.ts(2345)
-      const quotesIds = [""].splice(1, 1);
+      quotesIds = [];
       heroes.forEach((h) => {
         if (h?.quotes.length > 0) {
           h.quotes.forEach((q) => {
@@ -145,7 +149,10 @@ const getAnimeById = async (req, res, next) => {
   const id = req.params.id;
 
   try {
-    const anime = await Anime.find({ _id: id });
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const anime = await Anime.find({ _id: id, userId: userId });
     if (!anime) {
       return res
         .status(404)
