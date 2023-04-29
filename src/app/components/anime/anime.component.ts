@@ -44,7 +44,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public expansionPanelData: IExpansionPanelData[] = [];
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
-  public canAddEdit: boolean = false;
+  public isLoggedIn: boolean = false;
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -73,12 +73,14 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   private _getAuthStatus(): void {
+    this.isLoggedIn = this._authService.getIsAuth().isAuth;
     this._authStatusSub = this._authService
       .authStatusStream()
-      .subscribe((isAuthorized: boolean) => {
-        this.canAddEdit = isAuthorized;
+      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
+        this.isLoggedIn = authStreamData.isAuth;
         this._cdr.markForCheck();
       });
+    this._cdr.markForCheck();
   }
 
   private _initComponent(): void {

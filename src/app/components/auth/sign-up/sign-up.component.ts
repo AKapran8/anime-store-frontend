@@ -7,7 +7,7 @@ import {
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
 import { take } from 'rxjs/operators';
-import { IUser } from '../user.model';
+import { ISignUpUser } from '../user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -32,7 +32,8 @@ export class SignUpComponent implements OnInit {
 
   private _initForm(): void {
     this.form = new FormGroup({
-      email: new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
     });
   }
@@ -40,7 +41,8 @@ export class SignUpComponent implements OnInit {
   public signUpHandler(): void {
     if (!this.form?.valid) return;
 
-    const user: IUser = {
+    const user: ISignUpUser = {
+      name: this.form.value.name.trim(),
       email: this.form.value.email.trim(),
       password: this.form.value.password.trim(),
     };

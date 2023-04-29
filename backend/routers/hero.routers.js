@@ -4,6 +4,8 @@ const multer = require("multer");
 
 const heroController = require("./../controllers/heroes.controller");
 
+const chechAuth = require("./../middleware/check-auth");
+
 const MIME_TYPE_HELPER = {
   "image/png": "png",
   "image/jpeg": "jpeg",
@@ -23,10 +25,15 @@ const storage = multer.diskStorage({
   },
 });
 
-router.get("", heroController.getHeroes);
-router.get("/names", heroController.getHeroNames);
-router.post("", multer({ storage }).single("image"), heroController.addNewHero);
-router.put("/:id", heroController.editHero);
-router.delete("/:id", heroController.deleteHero);
+router.get("", chechAuth, heroController.getHeroes);
+router.get("/names", chechAuth, heroController.getHeroNames);
+router.post(
+  "",
+  chechAuth,
+  multer({ storage }).single("image"),
+  heroController.addNewHero
+);
+router.put("/:id", chechAuth, heroController.editHero);
+router.delete("/:id", chechAuth, heroController.deleteHero);
 
 module.exports = router;

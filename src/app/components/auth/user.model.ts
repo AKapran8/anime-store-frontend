@@ -1,14 +1,20 @@
-export interface IUser {
+export interface ILoginUser {
   email: string;
   password: string;
 }
 
+export interface ISignUpUser extends ILoginUser {
+  name: string;
+}
 export interface ISignUpResponseData {
-  user: IUser;
   message: string;
 }
 
 export interface ILoginResponseData {
-  token: string;
-  expiredAfter: number;
+  status: string;
+  data: {
+    token: string;
+    expiredAfter: number;
+    userName: string;
+  };
 }

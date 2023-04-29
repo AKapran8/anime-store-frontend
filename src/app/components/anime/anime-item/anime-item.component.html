@@ -1,7 +1,3 @@
 <h1 *ngIf="anime?.id">
   {{ anime | json }}
 </h1>
-<div *ngIf="errorMessage" class="error-message">
-  <h2>{{ errorMessage }}</h2>
-  <button mat-stroked-button (click)="navigateToLogin()" >Login</button>
-</div>
