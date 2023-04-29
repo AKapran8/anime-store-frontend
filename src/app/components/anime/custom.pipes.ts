@@ -1,5 +1,3 @@
-import { IServerAnime, IAnime } from './anime.mode';
-
 export const convertTimeToText = (totalTime: number): string => {
   const hours: number = Math.floor(totalTime / 60);
   const minutes: number = totalTime % 60;

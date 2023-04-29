@@ -16,23 +16,13 @@ export interface IAnime {
   time: number;
   genres: string;
   status: string;
+  userId: string;
   heroes?: { id: string; heroName: string }[];
 }
 
 export interface IExpansionPanelData extends IAnime {
   timeText: string;
   starsDescr: string;
-}
-
-export interface IServerAnime {
-  id: string;
-  name: string;
-  nameUA: string;
-  stars: number;
-  time: number;
-  genres: string;
-  status: string;
-  heroes?: { id: string; heroName: string; imageUrl: string }[];
 }
 
 export interface IAnimeForHeroAndQuote {
@@ -44,7 +34,7 @@ export interface IGetAnimeListResponse {
   status: string;
   data: {
     totalElements: number;
-    animeList: IServerAnime[];
+    animeList: IAnime[];
   };
 }
 
@@ -55,10 +45,10 @@ export interface IGetAnimeNamesListResponse {
 
 export interface IAddEditAnimeResponse {
   message: string;
-  anime: IServerAnime;
+  anime: IAnime;
 }
 
 export interface IGetAnimeByIdResponst {
   message: string;
-  anime: IServerAnime;
+  anime: IAnime;
 }

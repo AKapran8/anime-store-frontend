@@ -4,6 +4,7 @@ const animeSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     nameUA: { type: String, required: true },
+    userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     stars: { type: Number, required: true },
     status: { type: String, required: true },
     time: { type: Number, required: true },

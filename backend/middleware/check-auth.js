@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const chechToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    jwt.verify(token, "this_is_really_long_string");
+    const decodedToken = jwt.verify(token, "this_is_really_long_string");
+    req.userData = { userId: decodedToken.userId };
     next();
   } catch (error) {
     res

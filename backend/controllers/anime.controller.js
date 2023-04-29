@@ -9,8 +9,11 @@ const getAnime = async (req, res, next) => {
   const pageIndex = req.body.paginationConfig.pageIndex;
 
   try {
-    const totalElements = await Anime.countDocuments();
-    const animeList = await Anime.find()
+    const userId = req.userData.userId;
+    if (!userId) res.status(404).json({ message: "User not found" });
+
+    const totalElements = await Anime.countDocuments({ userId: userId });
+    const animeList = await Anime.find({ userId: userId })
       .skip(pageSize * pageIndex)
       .limit(pageSize);
 
@@ -41,6 +44,7 @@ const getAnimeNames = async (req, res, next) => {
 
 const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
+  const userData = req.userData;
 
   const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
 
@@ -51,6 +55,7 @@ const addNewAnime = async (req, res, next) => {
   const newAnime = new Anime({
     name: reqBody.name.trim(),
     nameUA: reqBody.nameUA.trim(),
+    userId: userData.userId,
     stars: reqBody.stars,
     status: reqBody.status,
     time: reqBody.time,
