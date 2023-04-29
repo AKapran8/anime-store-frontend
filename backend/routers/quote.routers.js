@@ -3,11 +3,11 @@ const router = express.Router();
 
 const quoteController = require("./../controllers/quotes.controller");
 
-const chechAuth = require("./../middleware/check-auth");
+const checkAuth = require("./../middleware/check-auth");
 
-router.get("", chechAuth, quoteController.getQuotes);
-router.post("", chechAuth, quoteController.addNewQuote);
-router.put("/:id", chechAuth, quoteController.editQuote);
-router.delete("/:id", chechAuth, quoteController.deleteQuote);
+router.get("", checkAuth, quoteController.getQuotes);
+router.post("", checkAuth, quoteController.addNewQuote);
+router.put("/:id", checkAuth, quoteController.editQuote);
+router.delete("/:id", checkAuth, quoteController.deleteQuote);
 
 module.exports = router;

@@ -3,13 +3,13 @@ const router = express.Router();
 
 const animeController = require("./../controllers/anime.controller");
 
-const chechAuth = require("./../middleware/check-auth");
+const checkAuth = require("./../middleware/check-auth");
 
-router.post("", chechAuth, animeController.getAnime);
-router.get("/names", chechAuth, animeController.getAnimeNames);
-router.get("/:id", chechAuth, animeController.getAnimeById);
-router.post("/add", chechAuth, animeController.addNewAnime);
-router.put("/:id", chechAuth, animeController.editAnime);
-router.delete("/:id", chechAuth, animeController.deleteAnime);
+router.post("", checkAuth, animeController.getAnime);
+router.get("/names", checkAuth, animeController.getAnimeNames);
+router.get("/:id", checkAuth, animeController.getAnimeById);
+router.post("/add", checkAuth, animeController.addNewAnime);
+router.put("/:id", checkAuth, animeController.editAnime);
+router.delete("/:id", checkAuth, animeController.deleteAnime);
 
 module.exports = router;
