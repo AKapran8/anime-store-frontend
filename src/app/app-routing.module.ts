@@ -14,7 +14,7 @@ import { AuthGuard } from './components/auth/auth.guard';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'anime', component: AnimeComponent },
-  { path: 'anime/:id', component: AnimeItemComponent },
+  { path: 'anime/:id', component: AnimeItemComponent, canActivate: [AuthGuard] },
   { path: 'heroes', component: HeroesComponent, canActivate: [AuthGuard] },
   { path: 'quotes', component: QuotesComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
