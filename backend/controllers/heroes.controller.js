@@ -8,7 +8,7 @@ const getHeroes = async (req, res, next) => {
   const userId = req.userData.userId;
 
   try {
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const heroesList = await Hero.find({ userId: userId });
     res.status(200).json({ status: "Success", heroesList });
@@ -23,7 +23,7 @@ const addNewHero = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const imageUrl = `${url}/images/${reqBody.imageUrl}`;
 
@@ -155,7 +155,7 @@ const editHero = async (req, res, next) => {
 const getHeroNames = async (req, res, next) => {
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const list = await Hero.find({ userId: userId }).select("name animeId");
     const heroesList = list.map((el) => {

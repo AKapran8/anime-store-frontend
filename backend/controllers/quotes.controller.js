@@ -5,9 +5,9 @@ const getQuotes = async (req, res, next) => {
   const userId = req.userData.userId;
 
   try {
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-    const quotes = await Quote.find({userId: userId});
+    const quotes = await Quote.find({ userId: userId });
     res.status(200).json({ status: "Success", quotes });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });
