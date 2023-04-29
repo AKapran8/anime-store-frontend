@@ -10,7 +10,7 @@ const getAnime = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const totalElements = await Anime.countDocuments({ userId: userId });
     const animeList = await Anime.find({ userId: userId })
@@ -31,7 +31,7 @@ const getAnime = async (req, res, next) => {
 const getAnimeNames = async (req, res, next) => {
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const list = await Anime.find({ userId: userId }).select("name");
     const animeList = list.map((el) => {
@@ -49,7 +49,7 @@ const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
   const userId = req.userData.userId;
 
-  if (!userId) res.status(404).json({ message: "User not found" });
+  if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
   const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
 
@@ -82,7 +82,10 @@ const deleteAnime = async (req, res, next) => {
   const id = req.params.id;
 
   try {
-    const anime = await Anime.findById(id);
+    const userId = req.userData.userId;
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+
+    const anime = await Anime.findOneAndRemove({ _id: id, userId: userId });
     let quotesIds;
     if (anime?.heroes?.length > 0) {
       const heroIds = anime.heroes.map((hero) => {
@@ -123,7 +126,7 @@ const editAnime = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const updatedAnime = await Anime.findOneAndUpdate(
       { _id: animeId, userId: userId },
@@ -155,7 +158,7 @@ const getAnimeById = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(404).json({ message: "User not found" });
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const anime = await Anime.find({ _id: id, userId: userId });
     if (!anime) {
