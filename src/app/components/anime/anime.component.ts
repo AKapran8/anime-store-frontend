@@ -46,6 +46,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isListFetched: boolean = false;
   public isLoggedIn: boolean = false;
   public invalidUser: boolean = false;
+  public userId: string = '';
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -75,12 +76,21 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getAuthStatus(): void {
     this.isLoggedIn = this._authService.getIsAuth().isAuth;
+    this.userId = this._authService.getIsAuth().userId;
+
     this._authStatusSub = this._authService
       .authStatusStream()
-      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
-        this.isLoggedIn = authStreamData.isAuth;
-        this._cdr.markForCheck();
-      });
+      .subscribe(
+        (authStreamData: {
+          isAuth: boolean;
+          userName: string;
+          userId: string;
+        }) => {
+          this.isLoggedIn = authStreamData.isAuth;
+          this.userId = authStreamData.userId;
+          this._cdr.markForCheck();
+        }
+      );
     this._cdr.markForCheck();
   }
 

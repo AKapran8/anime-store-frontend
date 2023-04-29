@@ -39,7 +39,7 @@
       <mat-expansion-panel *ngFor="let anime of expansionPanelData">
         <mat-expansion-panel-header class="row">
           <mat-icon
-            *ngIf="isLoggedIn"
+            *ngIf="anime.userId === userId"
             (click)="stopPropaganation($event); editAnime(anime)"
             >edit</mat-icon
           >
@@ -47,7 +47,7 @@
             {{ anime.name }}
           </p>
           <mat-icon
-            *ngIf="isLoggedIn"
+            *ngIf="anime.userId === userId"
             class="remove-icon"
             (click)="stopPropaganation($event); removeItem(anime)"
             >delete_outline</mat-icon
@@ -80,6 +80,7 @@
             mat-stroked-button
             color="warn"
             (click)="getAnimeById(anime.id)"
+            *ngIf="anime.userId === userId"
           >
             Get more
           </button>
