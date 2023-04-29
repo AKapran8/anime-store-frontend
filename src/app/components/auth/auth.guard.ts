@@ -12,7 +12,6 @@ import { AuthService } from './service/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private _isAuth: boolean = false;
   constructor(private _authService: AuthService, private _router: Router) {}
 
   canActivate(
@@ -23,17 +22,10 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    this._authService
-      .authStatusStream()
-      .pipe(take(1))
-      .subscribe((isAuth: boolean) => {
-        this._isAuth = isAuth;
-      });
+    const isAuth: boolean = this._authService.getIsAuth();
 
-    if (!this._isAuth) {
-      this._router.navigate(['/login']);
-    }
+    if (!isAuth) this._router.navigate(['/login']);
 
-    return this._isAuth;
+    return isAuth;
   }
 }
