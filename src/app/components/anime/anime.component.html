@@ -28,7 +28,11 @@
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
-            No data found. Please create new one
+            {{
+              invalidUser
+                ? "Please verify your personality"
+                : "No data found. Create new one"
+            }}
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
@@ -77,7 +81,7 @@
             color="warn"
             (click)="getAnimeById(anime.id)"
           >
-            Get more (only for authorized users)
+            Get more
           </button>
         </div>
       </mat-expansion-panel>

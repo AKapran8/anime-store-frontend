@@ -45,6 +45,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
   public isLoggedIn: boolean = false;
+  public invalidUser: boolean = false;
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -112,6 +113,11 @@ export class AnimeComponent implements OnInit, OnDestroy {
           this.totalAnimeCount = res.data.totalElements;
           this._getExpansionPanelData();
         }
+      }, err => {
+        this.isListFetching = false;
+        this.isListFetched = true;
+        this.invalidUser = true;
+        this._cdr.markForCheck();
       });
 
     this._cdr.markForCheck();
