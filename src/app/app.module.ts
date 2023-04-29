@@ -18,6 +18,8 @@ import { HeroesModule } from './components/heroes/heroes.module';
 import { QuotesModule } from './components/quotes/quotes.module';
 import { AuthModule } from './components/auth/auth.module';
 
+import { AuthGuard } from './components/auth/auth.guard';
+
 @NgModule({
   declarations: [AppComponent, DeleteDialogComponent, HeaderComponent],
   imports: [
@@ -34,7 +36,7 @@ import { AuthModule } from './components/auth/auth.module';
     HomeModule,
     AuthModule,
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

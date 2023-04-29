@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { AnimeService } from '../service/anime.service';
@@ -25,7 +25,8 @@ export class AnimeItemComponent implements OnInit {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -56,5 +57,9 @@ export class AnimeItemComponent implements OnInit {
           this._cdr.markForCheck();
         }
       );
+  }
+
+  public navigateToLogin(): void {
+    this._router.navigate(['login']);
   }
 }
