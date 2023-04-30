@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AnimeComponent } from './anime.component';
@@ -18,7 +18,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AnimeService } from './service/anime.service';
-import { AuthInterceptor } from '../auth/token-interceptor';
 
 @NgModule({
   declarations: [
@@ -41,9 +40,6 @@ import { AuthInterceptor } from '../auth/token-interceptor';
     MatPaginatorModule,
   ],
   exports: [StarsIconsComponent],
-  providers: [
-    AnimeService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ],
+  providers: [AnimeService],
 })
 export class AnimeModule {}

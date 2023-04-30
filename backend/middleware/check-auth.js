@@ -7,9 +7,7 @@ const chechToken = async (req, res, next) => {
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (error) {
-    res
-      .status(401)
-      .json({ status: "Failed", message: "Please verify your personality", error });
+    res.status(401).json({ message: "You are not authentificated" });
   }
 };
 

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app-component/app.component';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
@@ -19,6 +20,8 @@ import { QuotesModule } from './components/quotes/quotes.module';
 import { AuthModule } from './components/auth/auth.module';
 
 import { AuthGuard } from './components/auth/auth.guard';
+import { AuthInterceptor } from './components/auth/token-interceptor';
+import { ErrorInterceptor } from './components/error/error-interceptor';
 
 @NgModule({
   declarations: [AppComponent, DeleteDialogComponent, HeaderComponent],
@@ -36,7 +39,11 @@ import { AuthGuard } from './components/auth/auth.guard';
     HomeModule,
     AuthModule,
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

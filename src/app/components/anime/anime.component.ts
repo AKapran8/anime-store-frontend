@@ -25,7 +25,7 @@ import {
   IAddEditAnime,
   IAnime,
   IExpansionPanelData,
-} from 'src/app/components/anime/anime.mode';
+} from 'src/app/components/anime/anime.model';
 
 import { AnimeService } from './service/anime.service';
 import { AuthService } from '../auth/service/auth.service';
