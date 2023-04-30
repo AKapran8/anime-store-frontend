@@ -19,7 +19,7 @@ import {
   DeleteDialogComponent,
   IDeleteDialogData,
 } from '../delete-dialog/delete-dialog.component';
-import { AddAnimeComponent } from './add-anime/add-anime.component';
+import { AddAnimeComponent } from './add-edit-anime/add-edit-anime.component';
 
 import {
   IAddEditAnime,

@@ -109,3 +109,17 @@ h6 {
   padding: 12px 0px 0px 12px;
   margin: 0;
 }
+
+.error-snackbar {
+  * {
+    color: red !important;
+    text-align: center;
+  }
+}
+
+.success-snackbar {
+  * {
+    color: green !important;
+    text-align: center;
+  }
+}

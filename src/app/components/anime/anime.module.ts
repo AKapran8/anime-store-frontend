@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AnimeComponent } from './anime.component';
-import { AddAnimeComponent } from './add-anime/add-anime.component';
+import { AddAnimeComponent } from './add-edit-anime/add-edit-anime.component';
 import { AnimeItemComponent } from './anime-item/anime-item.component';
 import { StarsIconsComponent } from './stars-icons/stars-icons.component';
 

@@ -12,11 +12,12 @@ import { take } from 'rxjs/operators';
 import { IAddEditAnime } from 'src/app/components/anime/anime.model';
 
 import { AnimeService } from '../service/anime.service';
+import { SnackbarService } from '../../snackbar/snackbar.service';
 
 @Component({
-  selector: 'app-add-anime',
-  templateUrl: './add-anime.component.html',
-  styleUrls: ['./add-anime.component.scss'],
+  selector: 'app-add-edit-anime',
+  templateUrl: './add-edit-anime.component.html',
+  styleUrls: ['./add-edit-anime.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddAnimeComponent implements OnInit {
@@ -29,7 +30,8 @@ export class AddAnimeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime,
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
     private _cdr: ChangeDetectorRef,
-    private _animeService: AnimeService
+    private _animeService: AnimeService,
+    private _snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -83,8 +85,9 @@ export class AddAnimeComponent implements OnInit {
       .editAnime(requestBody, id)
       .pipe(take(1))
       .subscribe(() => {
-        this._dialogRef.close(true);
         this.isSaving = false;
+        this._dialogRef.close(true);
+        this._snackbarService.createSuccessSnackbar('Anime was edited');
       });
   }
 
@@ -95,6 +98,7 @@ export class AddAnimeComponent implements OnInit {
       .subscribe(() => {
         this.isSaving = false;
         this._dialogRef.close(true);
+        this._snackbarService.createSuccessSnackbar('Anime was added');
       });
   }
 }

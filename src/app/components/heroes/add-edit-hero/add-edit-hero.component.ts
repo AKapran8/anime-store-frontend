@@ -11,6 +11,7 @@ import {
   IAddEditHeroDialogData,
   IAddEditHero,
 } from 'src/app/components/heroes/hero.model';
+import { SnackbarService } from '../../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-add-edit-hero',
@@ -30,7 +31,8 @@ export class AddEditHeroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IAddEditHeroDialogData,
     private _dialogRef: MatDialogRef<AddEditHeroComponent>,
     private _animeService: AnimeService,
-    private _heroesService: HeroesService
+    private _heroesService: HeroesService,
+    private _snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -125,6 +127,7 @@ export class AddEditHeroComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.hero);
+        this._snackbarService.createSuccessSnackbar('Hero was added');
       });
   }
 
@@ -137,6 +140,7 @@ export class AddEditHeroComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.hero);
+        this._snackbarService.createSuccessSnackbar('Hero was edited');
       });
   }
 
