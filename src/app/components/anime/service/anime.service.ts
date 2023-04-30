@@ -8,7 +8,7 @@ import {
   IGetAnimeListResponse,
   IGetAnimeNamesListResponse,
   IGetAnimeByIdResponst,
-} from 'src/app/components/anime/anime.mode';
+} from 'src/app/components/anime/anime.model';
 
 @Injectable()
 export class AnimeService {

@@ -28,7 +28,7 @@ export class AddEditQuoteComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditQuoteDialogData,
-    private _dialogRef: MatDialogRef<any>,
+    private _dialogRef: MatDialogRef<AddEditQuoteComponent>,
     private _quotesService: QuotesService,
     private _heroesService: HeroesService,
     private _cdr: ChangeDetectorRef

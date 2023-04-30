@@ -1,5 +1,10 @@
 <div style="margin: 40px">
-  <button mat-stroked-button color="warn" (click)="addNewQuote()">
+  <button
+    mat-stroked-button
+    color="warn"
+    *ngIf="userId"
+    (click)="addNewQuote()"
+  >
     Add New Quote
   </button>
 </div>

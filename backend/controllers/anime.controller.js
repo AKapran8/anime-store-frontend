@@ -40,9 +40,9 @@ const getAnime = async (req, res, next) => {
       animeList,
     };
 
-    res.status(200).json({ status: "success", data });
+    res.status(200).json({ message: "success", data });
   } catch (err) {
-    res.status(500).json({ status: "error", message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -55,11 +55,11 @@ const getAnimeNames = async (req, res, next) => {
     const animeList = list.map((el) => {
       return { id: el._id, text: el.name };
     });
-    res.status(200).json({ status: "Success", animeList });
+    res.status(200).json({ message: "Success", animeList });
   } catch (err) {
     res
       .status(500)
-      .json({ status: "Error", message: "Unable to get anime list" });
+      .json({ message: "Unable to get anime list" });
   }
 };
 
@@ -69,7 +69,7 @@ const addNewAnime = async (req, res, next) => {
 
   if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-  const existingAnime = await Anime.findOne({ name: reqBody.name.trim() });
+  const existingAnime = await Anime.findOne({ name: reqBody.name.trim(), userId: userId });
 
   if (existingAnime) {
     return res.status(400).json({ message: "Anime name already exists" });
@@ -182,12 +182,12 @@ const getAnimeById = async (req, res, next) => {
     if (!anime) {
       return res
         .status(404)
-        .json({ status: "error", message: "Anime not found" });
+        .json({ message: "Anime not found" });
     }
 
-    res.status(200).json({ status: "Success", anime: anime[0] });
+    res.status(200).json({ message: "Success", anime: anime[0] });
   } catch (err) {
-    res.status(500).json({ status: "error", message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

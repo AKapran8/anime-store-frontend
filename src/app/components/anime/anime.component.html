@@ -28,14 +28,18 @@
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
-            No data found
+            {{
+              invalidUser
+                ? "Please verify your personality"
+                : "No data found"
+            }}
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
       <mat-expansion-panel *ngFor="let anime of expansionPanelData">
         <mat-expansion-panel-header class="row">
           <mat-icon
-            *ngIf="isLoggedIn"
+            *ngIf="anime.userId === userId"
             (click)="stopPropaganation($event); editAnime(anime)"
             >edit</mat-icon
           >
@@ -43,7 +47,7 @@
             {{ anime.name }}
           </p>
           <mat-icon
-            *ngIf="isLoggedIn"
+            *ngIf="anime.userId === userId"
             class="remove-icon"
             (click)="stopPropaganation($event); removeItem(anime)"
             >delete_outline</mat-icon
@@ -76,8 +80,9 @@
             mat-stroked-button
             color="warn"
             (click)="getAnimeById(anime.id)"
+            *ngIf="anime.userId === userId"
           >
-            Get more (only for authorized users)
+            Get more
           </button>
         </div>
       </mat-expansion-panel>

@@ -12,6 +12,7 @@ export interface IQuote {
   time: string;
   author: IQuoteAuthor;
   id: string;
+  userId: string;
 }
 
 interface IQuoteAuthor {
@@ -20,7 +21,7 @@ interface IQuoteAuthor {
 }
 
 export interface IGetQuotesResponse {
-  status: string;
+  message: string;
   quotes: IQuote[];
 }
 

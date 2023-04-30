@@ -13,7 +13,7 @@ import { take, debounceTime } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
-import { convertTimeToText, getStarsDescription } from './custom.pipes';
+import { convertTimeToText, startDescriptionEnum } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -25,7 +25,7 @@ import {
   IAddEditAnime,
   IAnime,
   IExpansionPanelData,
-} from 'src/app/components/anime/anime.mode';
+} from 'src/app/components/anime/anime.model';
 
 import { AnimeService } from './service/anime.service';
 import { AuthService } from '../auth/service/auth.service';
@@ -45,6 +45,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isListFetching: boolean = false;
   public isListFetched: boolean = false;
   public isLoggedIn: boolean = false;
+  public invalidUser: boolean = false;
+  public userId: string = '';
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -55,7 +57,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
   };
 
   private _searchValueChangesSub: Subscription | null = null;
-  private _authStatusSub: Subscription | null = null;
 
   constructor(
     private _dialog: MatDialog,
@@ -66,20 +67,15 @@ export class AnimeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._getAuthStatus();
+    this._getAuthData();
     this._initComponent();
     this._getAnime();
     this._initSearchControl();
   }
 
-  private _getAuthStatus(): void {
-    this.isLoggedIn = this._authService.getIsAuth().isAuth;
-    this._authStatusSub = this._authService
-      .authStatusStream()
-      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
-        this.isLoggedIn = authStreamData.isAuth;
-        this._cdr.markForCheck();
-      });
+  private _getAuthData(): void {
+    this.isLoggedIn = this._authService.getUserAuth().isAuth;
+    this.userId = this._authService.getUserAuth().userId;
     this._cdr.markForCheck();
   }
 
@@ -105,14 +101,22 @@ export class AnimeComponent implements OnInit, OnDestroy {
         this.searchControl?.value.trim()
       )
       .pipe(take(1))
-      .subscribe((res) => {
-        if (res) {
-          this._anime = cloneDeep(res.data.animeList);
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this._anime = cloneDeep(res.data.animeList);
+            this.isListFetching = false;
+            this.isListFetched = true;
+            this.totalAnimeCount = res.data.totalElements;
+            this._getExpansionPanelData();
+          }
+        },
+        error: (err) => {
           this.isListFetching = false;
           this.isListFetched = true;
-          this.totalAnimeCount = res.data.totalElements;
-          this._getExpansionPanelData();
-        }
+          this.invalidUser = true;
+          this._cdr.markForCheck();
+        },
       });
 
     this._cdr.markForCheck();
@@ -120,7 +124,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const starsDescr = getStarsDescription(a.stars - 1);
+      const starsDescr = startDescriptionEnum[a.stars - 1];
       const timeText = convertTimeToText(a.time);
 
       return {
@@ -208,6 +212,5 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._searchValueChangesSub?.unsubscribe();
-    this._authStatusSub?.unsubscribe();
   }
 }

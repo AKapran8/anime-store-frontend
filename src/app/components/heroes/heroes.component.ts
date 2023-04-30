@@ -11,7 +11,10 @@ import { take } from 'rxjs/operators';
 import { AddEditHeroComponent } from './add-edit-hero/add-edit-hero.component';
 import { HeroesListComponent } from './heroes-list/heroes-list.component';
 
-import { IAddEditHeroDialogData, IHero } from 'src/app/components/heroes/hero.model';
+import {
+  IAddEditHeroDialogData,
+  IHero,
+} from 'src/app/components/heroes/hero.model';
 
 @Component({
   selector: 'app-heroes',

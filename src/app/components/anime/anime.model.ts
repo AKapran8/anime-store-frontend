@@ -31,7 +31,7 @@ export interface IAnimeForHeroAndQuote {
 }
 
 export interface IGetAnimeListResponse {
-  status: string;
+  message: string;
   data: {
     totalElements: number;
     animeList: IAnime[];
