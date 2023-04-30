@@ -34,7 +34,7 @@ const loginUser = async (req, res, next) => {
     await bcryptJS.compare(requestBody.password, user.password);
 
     const signObj = { email: user.email, userId: user.id };
-    const secretKey = "this_is_really_long_string";
+    const secretKey = process.env.JWT_SECRET_KEY;
     const tokenSettings = {
       expiresIn: "1h",
     };

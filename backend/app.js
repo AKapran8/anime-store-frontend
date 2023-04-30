@@ -9,20 +9,22 @@ const heroesRouters = require("./routers/hero.routers");
 const quotesRouters = require("./routers/quote.routers");
 const userRouters = require("./routers/user.routers");
 
+const dbPass = process.env.MONGO_ATLAS_PASSWORD;
+const DbuserName = process.env.MONGO_ATLAS_USER;
+const dbConnectUrl = `mongodb+srv://${DbuserName}:${dbPass}@anime-store.fnxlp4q.mongodb.net/my-store?retryWrites=true&w=majority`;
+
 mongoose
-  .connect(
-    "mongodb+srv://Wlyapa:SqHqgqRGVQMZvMAL@anime-store.fnxlp4q.mongodb.net/my-store?retryWrites=true&w=majority"
-  )
+  .connect(dbConnectUrl)
   .then(() => {
     console.log("Connected to DataBase");
   })
   .catch((err) => {
-    console.log(err)
+    console.log(err);
   });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use('/images', express.static(path.join('backend/images')));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/images", express.static(path.join("backend/images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
