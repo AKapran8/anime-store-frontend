@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
+
 import {
   IAddEditAnime,
   IAddEditAnimeResponse,
@@ -12,7 +14,7 @@ import {
 
 @Injectable()
 export class AnimeService {
-  private _url: string = 'http://localhost:3000/api/anime';
+  private _url: string = `${environment.apiUrl}/anime`;
   constructor(private _http: HttpClient) {}
 
   public getAnimeList(

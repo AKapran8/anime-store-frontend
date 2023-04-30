@@ -10,6 +10,7 @@ import {
   ILoginUser,
 } from '../user.model';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface IAuthInfo {
   token: string;
@@ -29,7 +30,7 @@ export class AuthService {
   private _token: string | null = null;
   private _userName: string = '';
   private _userId: string = '';
-  private _url: string = 'http://localhost:3000/api/user';
+  private _url: string = `${environment.apiUrl}/user`;
   private _tokenTimer: any;
 
   private _authStatusListener = new Subject<IAuthUserInfo>();
