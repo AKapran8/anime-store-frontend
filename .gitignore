@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 /package-lock.json
+/nodemon.json
 
 # Node
 /node_modules
