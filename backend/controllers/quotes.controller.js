@@ -7,9 +7,9 @@ const getQuotes = async (req, res, next) => {
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
     const quotes = await Quote.find({ userId: userId });
-    res.status(200).json({ status: "Success", quotes });
+    res.status(200).json({ message: "Success", quotes });
   } catch (err) {
-    res.status(500).json({ status: "error", message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -81,7 +81,7 @@ const editQuote = async (req, res, next) => {
       const prevHero = await Hero.findById(quote.author.id);
       const newHero = await Hero.findById(reqBody.author.id);
 
-      if (!prevHero) throw new Error("Prev hero not found");
+      if (!prevHero) throw new Error("Previous hero not found");
       if (!newHero) throw new Error("New hero not found");
 
       prevHero.quotes = prevHero.quotes.filter((q) => q !== quote.id);

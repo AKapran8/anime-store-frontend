@@ -11,7 +11,7 @@ export interface ISignUpResponseData {
 }
 
 export interface ILoginResponseData {
-  status: string;
+  message: string;
   data: {
     token: string;
     expiredAfter: number;

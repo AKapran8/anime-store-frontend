@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import {
@@ -63,37 +63,57 @@ export class AuthService {
     this._setUserAuthData(expiresTime, authInfo.userName, authInfo.userId);
   }
 
-  public signUp(requestBody: ISignUpUser): Observable<ISignUpResponseData> {
-    return this._http.post<ISignUpResponseData>(
-      `${this._url}/signup`,
-      requestBody
-    );
+  public signUp(requestBody: ISignUpUser): void {
+    this._http
+      .post<ISignUpResponseData>(`${this._url}/signup`, requestBody)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this._router.navigate(['login']);
+        },
+        error: (err) => {
+          this._authStatusListener.next({
+            isAuth: false,
+            userName: '',
+            userId: '',
+          });
+        },
+      });
   }
 
-  public login(requestBody: ILoginUser): Subscription {
-    return this._http
+  public login(requestBody: ILoginUser): void {
+    this._http
       .post<ILoginResponseData>(`${this._url}/login`, requestBody)
       .pipe(take(1))
-      .subscribe((res: ILoginResponseData) => {
-        this._token = res.data.token;
+      .subscribe({
+        next: (res) => {
+          this._token = res.data.token;
 
-        if (this._token) {
-          const expiredPeriod: number = res.data.expiredAfter * 1000;
-          const date: Date = new Date();
-          const expiredDate: Date = new Date(date.getTime() + expiredPeriod);
-          this._saveAuthData(
-            res.data.token,
-            expiredDate,
-            res.data.userName,
-            res.data.userId
-          );
-          this._setUserAuthData(
-            expiredPeriod,
-            res.data.userName,
-            res.data.userId
-          );
-          this._redirectToHomePage();
-        }
+          if (this._token) {
+            const expiredPeriod: number = res.data.expiredAfter * 1000;
+            const date: Date = new Date();
+            const expiredDate: Date = new Date(date.getTime() + expiredPeriod);
+            this._saveAuthData(
+              res.data.token,
+              expiredDate,
+              res.data.userName,
+              res.data.userId
+            );
+            this._setUserAuthData(
+              expiredPeriod,
+              res.data.userName,
+              res.data.userId
+            );
+            this._redirectToHomePage();
+          }
+        },
+        error: (err) => {
+          this._authStatusListener.next({
+            isAuth: false,
+            userName: '',
+            userId: '',
+          });
+        },
       });
   }
 

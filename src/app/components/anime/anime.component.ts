@@ -13,7 +13,7 @@ import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
-import { convertTimeToText, getStarsDescription } from './custom.pipes';
+import { convertTimeToText, startDescriptionEnum } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -25,7 +25,7 @@ import {
   IAddEditAnime,
   IAnime,
   IExpansionPanelData,
-} from 'src/app/components/anime/anime.mode';
+} from 'src/app/components/anime/anime.model';
 
 import { AnimeService } from './service/anime.service';
 import { AuthService } from '../auth/service/auth.service';
@@ -123,7 +123,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const starsDescr = getStarsDescription(a.stars - 1);
+      const starsDescr = startDescriptionEnum[a.stars - 1];
       const timeText = convertTimeToText(a.time);
 
       return {

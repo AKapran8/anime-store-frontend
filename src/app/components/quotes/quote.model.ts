@@ -21,7 +21,7 @@ interface IQuoteAuthor {
 }
 
 export interface IGetQuotesResponse {
-  status: string;
+  message: string;
   quotes: IQuote[];
 }
 

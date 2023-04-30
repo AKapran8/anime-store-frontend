@@ -7,9 +7,9 @@ const imgHelpers = require("./../helpers/image");
 const getHeroes = async (req, res, next) => {
   try {
     const heroesList = await Hero.find();
-    res.status(200).json({ status: "Success", heroesList });
+    res.status(200).json({ message: "Success", heroesList });
   } catch (err) {
-    res.status(500).json({ status: "error", message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -41,7 +41,7 @@ const addNewHero = async (req, res, next) => {
     };
 
     const anime = await Anime.findById(createdHero.animeId);
-    if (!anime) return Promise.reject("Anime not found");
+    if (!anime) throw new Error("Anime not found");
     anime.heroes.push(newAnimeHero);
     await anime.save();
 
@@ -144,7 +144,7 @@ const editHero = async (req, res, next) => {
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Failed to edit hero", error: err.message });
+      .json({ message: "Failed to edit hero" });
   }
 };
 
@@ -161,7 +161,7 @@ const getHeroNames = async (req, res, next) => {
   } catch (err) {
     res
       .status(500)
-      .json({ status: "Error", message: "Unable to get heroes list" });
+      .json({ message: "Unable to get heroes list" });
   }
 };
 
