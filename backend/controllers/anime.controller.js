@@ -5,17 +5,35 @@ const Quote = require("./../models/quote.model");
 const imgHelpers = require("./../helpers/image");
 
 const getAnime = async (req, res, next) => {
-  const pageSize = req.body.paginationConfig.pageSize;
-  const pageIndex = req.body.paginationConfig.pageIndex;
+  const pageSize = req.body.utilsData.pageSize;
+  const pageIndex = req.body.utilsData.pageIndex;
+  const filterValue = req.body.utilsData?.filterInput?.trim() || "";
+
+  if (
+    Number.isNaN(pageSize) ||
+    Number.isNaN(pageIndex) ||
+    pageSize <= 0 ||
+    pageIndex < 0
+  ) {
+    return res.status(400).json({ message: "Invalid pagination parameters" });
+  }
 
   try {
-    const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    let totalElements;
+    let animeList;
 
-    const totalElements = await Anime.countDocuments({ userId: userId });
-    const animeList = await Anime.find({ userId: userId })
-      .skip(pageSize * pageIndex)
-      .limit(pageSize);
+    if (filterValue) {
+      const filterRegExp = new RegExp(filterValue, "i");
+      totalElements = await Anime.countDocuments({ name: filterRegExp });
+      animeList = await Anime.find({ name: filterRegExp })
+        .skip(pageSize * pageIndex)
+        .limit(pageSize);
+    } else {
+      totalElements = await Anime.countDocuments();
+      animeList = await Anime.find()
+        .skip(pageSize * pageIndex)
+        .limit(pageSize);
+    }
 
     const data = {
       totalElements,

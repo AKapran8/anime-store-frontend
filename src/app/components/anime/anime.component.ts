@@ -84,7 +84,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   private _initComponent(): void {
-    this.pageSizeOptions = [5, 10, 20];
+    // this.pageSizeOptions = [5, 10, 20];
+    this.pageSizeOptions = [1, 2, 3];
     this.pageSize = this.pageSizeOptions[0];
     this._paginationConfig = {
       ...this._paginationConfig,
@@ -101,7 +102,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
     this._animeService
       .getAnimeList(
         this._paginationConfig.pageSize,
-        this._paginationConfig.pageIndex
+        this._paginationConfig.pageIndex,
+        this.searchControl?.value.trim()
       )
       .pipe(take(1))
       .subscribe((res) => {
@@ -139,6 +141,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
       (inputValue: string) => {
         if (inputValue) {
           this._resetPagination();
+          this._getAnime();
+          console.log(this.searchControl?.value)
         }
       }
     );
