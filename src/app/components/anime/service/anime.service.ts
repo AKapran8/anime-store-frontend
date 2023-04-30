@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
+
 import {
   IAddEditAnime,
   IAddEditAnimeResponse,
@@ -17,11 +17,12 @@ export class AnimeService {
 
   public getAnimeList(
     pageSize: number,
-    pageIndex: number
+    pageIndex: number,
+    filterInput: string = ''
   ): Observable<IGetAnimeListResponse> {
-    const paginationConfig = { pageSize, pageIndex };
+    const utilsData = { pageSize, pageIndex, filterInput };
     return this._http.post<IGetAnimeListResponse>(this._url, {
-      paginationConfig,
+      utilsData,
     });
   }
 
