@@ -7,6 +7,7 @@
 /bazel-out
 /package-lock.json
 /nodemon.json
+/src/environments
 
 # Node
 /node_modules
