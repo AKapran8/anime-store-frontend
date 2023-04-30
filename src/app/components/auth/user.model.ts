@@ -16,5 +16,6 @@ export interface ILoginResponseData {
     token: string;
     expiredAfter: number;
     userName: string;
+    userId: string;
   };
 }

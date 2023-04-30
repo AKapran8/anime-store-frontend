@@ -5,12 +5,8 @@ const Quote = require("./../models/quote.model");
 const imgHelpers = require("./../helpers/image");
 
 const getHeroes = async (req, res, next) => {
-  const userId = req.userData.userId;
-
   try {
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
-
-    const heroesList = await Hero.find({ userId: userId });
+    const heroesList = await Hero.find();
     res.status(200).json({ status: "Success", heroesList });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Internal server error" });

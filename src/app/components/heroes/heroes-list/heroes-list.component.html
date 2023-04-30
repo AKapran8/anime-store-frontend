@@ -8,12 +8,25 @@
           <p *ngIf="hero?.quotes?.length">
             Total Quotes {{ hero.quotes.length }}
           </p>
+          <p>
+            Your: {{hero.userId === userId ? "YES" : "NO"}}
+          </p>
         </div>
         <div class="actions-block">
-          <button (click)="editHero(hero)" mat-raised-button color="accent">
+          <button
+            *ngIf="hero.userId === userId"
+            (click)="editHero(hero)"
+            mat-raised-button
+            color="accent"
+          >
             Edit
           </button>
-          <button (click)="removeHero(hero)" mat-raised-button color="warn">
+          <button
+            *ngIf="hero.userId === userId"
+            (click)="removeHero(hero)"
+            mat-raised-button
+            color="warn"
+          >
             REMOVE
           </button>
         </div>
