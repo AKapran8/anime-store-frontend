@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { HeroesComponent } from './heroes.component';
@@ -15,19 +16,22 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { HeroesService } from './service/heroes.service';
 
+const routes: Routes = [{ path: '', component: HeroesComponent }];
+
 @NgModule({
   declarations: [HeroesComponent, HeroesListComponent, AddEditHeroComponent],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule.forChild(routes),
   ],
-  exports: [],
+  exports: [HeroesComponent, HeroesListComponent, AddEditHeroComponent],
   providers: [HeroesService],
 })
 export class HeroesModule {}

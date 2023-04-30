@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -12,15 +13,21 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 
 import { AuthService } from './service/auth.service';
 
+const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignUpComponent }
+];
+
 @NgModule({
   declarations: [LoginComponent, SignUpComponent],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    RouterModule.forChild(routes)
   ],
   exports: [],
   providers: [AuthService]

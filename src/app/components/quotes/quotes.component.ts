@@ -89,10 +89,12 @@ export class QuotesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((editableQuote: IQuote) => {
-      this.quotes = this.quotes.map((q: IQuote) => {
-        if (q.id === editableQuote.id) return editableQuote;
-        return q;
-      });
+      if (editableQuote?.id) {
+        this.quotes = this.quotes.map((q: IQuote) => {
+          if (q.id === editableQuote.id) return editableQuote;
+          return q;
+        });
+      }
       this._cdr.markForCheck();
     });
   }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { QuotesComponent } from './quotes.component';
@@ -14,10 +15,12 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { QuotesService } from './service/quotes.service';
 
+const routes: Routes = [{ path: '', component: QuotesComponent }];
+
 @NgModule({
   declarations: [QuotesComponent, AddEditQuoteComponent],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
     MatSelectModule,
@@ -25,6 +28,7 @@ import { QuotesService } from './service/quotes.service';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    RouterModule.forChild(routes)
   ],
   exports: [],
   providers: [QuotesService],
