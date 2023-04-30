@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, debounceTime } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
@@ -84,8 +84,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   private _initComponent(): void {
-    // this.pageSizeOptions = [5, 10, 20];
-    this.pageSizeOptions = [1, 2, 3];
+    this.pageSizeOptions = [5, 10, 20];
     this.pageSize = this.pageSizeOptions[0];
     this._paginationConfig = {
       ...this._paginationConfig,
@@ -137,15 +136,14 @@ export class AnimeComponent implements OnInit, OnDestroy {
   private _initSearchControl(): void {
     this.searchControl = new FormControl('');
 
-    this._searchValueChangesSub = this.searchControl?.valueChanges.subscribe(
-      (inputValue: string) => {
+    this._searchValueChangesSub = this.searchControl?.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe((inputValue: string) => {
         if (inputValue) {
           this._resetPagination();
           this._getAnime();
-          console.log(this.searchControl?.value)
         }
-      }
-    );
+      });
   }
 
   public addAnime(): void {
