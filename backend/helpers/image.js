@@ -6,9 +6,7 @@ const removeImage = (imageLink) => {
 
   const imagePath = path.join(__dirname, "./../images", imageUrl);
   fs.unlink(imagePath, (err) => {
-    if (err) {
-      console.error(err);
-    }
+    if (err) throw new Error("Image not found");
   });
 };
 
@@ -24,4 +22,19 @@ const changeImageName = (prevImgLink, newImgLink) => {
   });
 };
 
-module.exports = { removeImage, changeImageName };
+const createNewImage = (prevImageName, newImageName) => {
+  const prevImageUrl = prevImageName.split("/images/")[1];
+  const newImageUrl = newImageName.split("/images/")[1];
+
+  const prevImagePath = path.join(__dirname, "./../images", prevImageUrl);
+  const newImagePath = path.join(__dirname, "./../images", newImageUrl);
+
+  fs.readFile(prevImagePath, (err, data) => {
+    if (err) throw new Error("Image not found");
+    fs.writeFile(newImagePath, data, (err) => {
+      if (err) throw new Error("Image can't duplicated");
+    });
+  });
+};
+
+module.exports = { removeImage, changeImageName, createNewImage };
