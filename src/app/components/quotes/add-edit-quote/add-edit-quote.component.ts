@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HeroesService } from '../../heroes/service/heroes.service';
 import { QuotesService } from '../service/quotes.service';
 import { IAddEditQuoteDialogData, IAddEditQuote } from '../quote.model';
+import { SnackbarService } from '../../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-add-edit-quote',
@@ -31,6 +32,7 @@ export class AddEditQuoteComponent implements OnInit {
     private _dialogRef: MatDialogRef<AddEditQuoteComponent>,
     private _quotesService: QuotesService,
     private _heroesService: HeroesService,
+    private _snackbarService: SnackbarService,
     private _cdr: ChangeDetectorRef
   ) {}
 
@@ -114,6 +116,7 @@ export class AddEditQuoteComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
+        this._snackbarService.createSuccessSnackbar('Quote was added');
       });
   }
 
@@ -126,6 +129,7 @@ export class AddEditQuoteComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
+        this._snackbarService.createSuccessSnackbar('Quote was edited');
       });
   }
 }

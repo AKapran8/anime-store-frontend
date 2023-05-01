@@ -5,9 +5,14 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 
+import { SnackbarService } from './snackbar.service';
+
+@Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
+  constructor(private _snackbarService: SnackbarService) {}
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
@@ -16,6 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         let errorMessage: string = 'Unkown error';
         if (error.error.message) errorMessage = error.error.message;
+        this._snackbarService.createErrorSnackbar(errorMessage)
         return throwError(errorMessage);
       })
     );

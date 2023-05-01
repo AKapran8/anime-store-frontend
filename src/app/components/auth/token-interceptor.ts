@@ -5,8 +5,9 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './service/auth.service';
 import { Observable } from 'rxjs';
+
+import { AuthService } from './service/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

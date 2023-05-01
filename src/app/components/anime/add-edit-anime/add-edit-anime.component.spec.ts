@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddAnimeComponent } from './add-anime.component';
+import { AddAnimeComponent } from './add-edit-anime.component';
 
 describe('AddAnimeComponent', () => {
   let component: AddAnimeComponent;

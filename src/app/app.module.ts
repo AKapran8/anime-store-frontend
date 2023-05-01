@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { HomeModule } from './components/home/home.module';
 import { AnimeModule } from './components/anime/anime.module';
@@ -21,7 +22,8 @@ import { AuthModule } from './components/auth/auth.module';
 
 import { AuthGuard } from './components/auth/auth.guard';
 import { AuthInterceptor } from './components/auth/token-interceptor';
-import { ErrorInterceptor } from './components/error/error-interceptor';
+import { ErrorInterceptor } from './components/snackbar/error-interceptor';
+import { SnackbarService } from './components/snackbar/snackbar.service';
 
 @NgModule({
   declarations: [AppComponent, DeleteDialogComponent, HeaderComponent],
@@ -33,6 +35,7 @@ import { ErrorInterceptor } from './components/error/error-interceptor';
     MatToolbarModule,
     MatDialogModule,
     MatButtonModule,
+    MatSnackBarModule,
     AnimeModule,
     HeroesModule,
     QuotesModule,
@@ -40,6 +43,7 @@ import { ErrorInterceptor } from './components/error/error-interceptor';
     AuthModule,
   ],
   providers: [
+    SnackbarService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
