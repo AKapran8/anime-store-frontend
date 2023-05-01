@@ -37,4 +37,19 @@ const createNewImage = (prevImageName, newImageName) => {
   });
 };
 
-module.exports = { removeImage, changeImageName, createNewImage };
+const getNewImageName = (prevUrl, heroName, newAnimeId) => {
+  const nameWithoutSpaces = heroName.trim().replace(/\s+/g, "").toLowerCase();
+  const storagePathIndex = prevUrl.indexOf("/images/");
+  const storagePath = prevUrl.substring(0, storagePathIndex + 8);
+  const mimeType = prevUrl.split(".").pop();
+  const newImageUrl = `${storagePath}${nameWithoutSpaces}_${newAnimeId}.${mimeType}`;
+
+  return newImageUrl;
+};
+
+module.exports = {
+  removeImage,
+  changeImageName,
+  createNewImage,
+  getNewImageName,
+};

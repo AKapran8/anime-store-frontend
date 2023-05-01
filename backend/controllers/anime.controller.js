@@ -241,23 +241,52 @@ const copyAnime = async (req, res, next) => {
   try {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
-    const anime = await Anime.findOne({ _id: animeId });
+    const copiedAnime = await Anime.findOne({ _id: animeId });
     const userAnimeList = await Anime.find({ userId: userId }).select("name");
-    const isExisted = !!userAnimeList.find((a) => a.name === anime.name);
+    const isExisted = !!userAnimeList.find((a) => a.name === copiedAnime.name);
     if (isExisted) return res.status(401).json({ message: "Anime name exist" });
 
-    const duplicatedAnime = new Anime({
-      name: anime.name,
-      nameUA: anime.nameUA,
+    const anime = new Anime({
+      name: copiedAnime.name,
+      nameUA: copiedAnime.nameUA,
       userId,
-      stars: anime.stars,
-      status: anime.status,
-      time: anime.time,
+      stars: copiedAnime.stars,
+      status: copiedAnime.status,
+      time: copiedAnime.time,
       heroes: [],
-      genres: anime.genres || "",
+      genres: copiedAnime.genres || "",
     });
 
-    await duplicatedAnime.save();
+    const duplicatedAnime = await anime.save();
+
+    if (copiedAnime?.heroes?.length) {
+      const heroIds = copiedAnime.heroes.map((h) => h.id);
+      const heroesList = await Hero.find({ _id: { $in: heroIds } });
+
+      const heroes = heroesList.map((h) => {
+        const imageUrl = imgHelpers.getNewImageName(
+          h.imageUrl,
+          h.name,
+          duplicatedAnime._id
+        );
+        imgHelpers.createNewImage(h.imageUrl, imageUrl);
+        return {
+          name: h.name,
+          animeId: duplicatedAnime._id,
+          imageUrl,
+          quotes: [],
+          userId,
+        };
+      });
+
+      const duplicatedHeroes = await Hero.create(heroes);
+
+      duplicatedAnime.heroes = duplicatedHeroes.map((h) => {
+        return { heroName: h.name, id: h._id, imageUrl: h.imageUrl };
+      });
+
+      await duplicatedAnime.save();
+    }
 
     res.status(201).json({ message: "Success" });
   } catch (err) {
