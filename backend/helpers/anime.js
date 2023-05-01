@@ -1,4 +1,38 @@
-const getAnimeHeroesWithQuotes = (heroesList, quotesList) => {
+const Hero = require("./../models/hero.model");
+
+const imgHelpers = require("./image");
+
+const copyAnimeHeroes = async (copiedAnime, duplicatedAnime, userId) => {
+  const heroIds = copiedAnime.heroes.map((h) => h.id);
+  const heroesList = await Hero.find({ _id: { $in: heroIds } });
+
+  const heroes = heroesList.map((h) => {
+    const imageUrl = imgHelpers.getNewImageName(
+      h.imageUrl,
+      h.name,
+      duplicatedAnime._id
+    );
+    imgHelpers.createNewImage(h.imageUrl, imageUrl);
+    return {
+      name: h.name,
+      animeId: duplicatedAnime._id,
+      imageUrl,
+      quotes: [],
+      userId,
+    };
+  });
+
+  const duplicatedHeroes = await Hero.create(heroes);
+
+  const duplicatedAnimeHeroes = duplicatedHeroes.map((h) => {
+    return { heroName: h.name, id: h._id, imageUrl: h.imageUrl };
+  });
+
+  return duplicatedAnimeHeroes;
+  return;
+};
+
+const getHeroWithQuotes = (heroesList, quotesList) => {
   const heroes =
     heroesList?.map((h) => {
       h.id = h._id;
@@ -33,5 +67,6 @@ const _getHeroQuotes = (heroId, quotesList) => {
 };
 
 module.exports = {
-  getAnimeHeroesWithQuotes,
+  copyAnimeHeroes,
+  getHeroWithQuotes,
 };

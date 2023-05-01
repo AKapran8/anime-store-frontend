@@ -193,7 +193,7 @@ const getAnimeById = async (req, res, next) => {
       quotesList = await Quote.find({ _id: { $in: quotesIds } });
     }
 
-    const heroes = animeHelpers.getAnimeHeroesWithQuotes(heroesList, quotesList);
+    const heroes = animeHelpers.getHeroWithQuotes(heroesList, quotesList);
 
     const anime = {
       id: findedAnime._id,
@@ -238,30 +238,11 @@ const copyAnime = async (req, res, next) => {
     const duplicatedAnime = await anime.save();
 
     if (copiedAnime?.heroes?.length) {
-      const heroIds = copiedAnime.heroes.map((h) => h.id);
-      const heroesList = await Hero.find({ _id: { $in: heroIds } });
-
-      const heroes = heroesList.map((h) => {
-        const imageUrl = imgHelpers.getNewImageName(
-          h.imageUrl,
-          h.name,
-          duplicatedAnime._id
-        );
-        imgHelpers.createNewImage(h.imageUrl, imageUrl);
-        return {
-          name: h.name,
-          animeId: duplicatedAnime._id,
-          imageUrl,
-          quotes: [],
-          userId,
-        };
-      });
-
-      const duplicatedHeroes = await Hero.create(heroes);
-
-      duplicatedAnime.heroes = duplicatedHeroes.map((h) => {
-        return { heroName: h.name, id: h._id, imageUrl: h.imageUrl };
-      });
+      duplicatedAnime.heroes = animeHelpers.copyAnimeHeroes(
+        copiedAnime,
+        duplicatedAnime,
+        userId
+      );
 
       await duplicatedAnime.save();
     }
