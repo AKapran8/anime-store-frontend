@@ -8,28 +8,30 @@
   <p>status: {{ anime?.status }}</p>
   <p>time: {{ anime?.time }}</p>
   <p>userId: {{ anime?.userId }}</p>
-  HEROES:
-  <ul>
-    <li *ngFor="let hero of anime?.heroes">
-      <img [src]="hero.imageUrl" [alt]="hero.name" width="150" />
-      {{ hero.name }}
-      <div *ngIf="hero?.quotes?.length">
-        Quotes:
-        <p *ngFor="let quote of hero?.quotes">
-          {{
-            "Season " +
-              quote.season +
-              " episode " +
-              quote.episode +
-              " time " +
-              quote.time +
-              ":" +
-              quote.text
-          }}
-        </p>
-      </div>
-      <br />
-      <br />
-    </li>
-  </ul>
+  <div *ngIf="anime?.heroes?.length">
+    HEROES:
+    <ul>
+      <li *ngFor="let hero of anime?.heroes">
+        <img [src]="hero.imageUrl" [alt]="hero.name" width="150" />
+        {{ hero.name }}
+        <div *ngIf="hero?.quotes?.length">
+          Quotes:
+          <p *ngFor="let quote of hero?.quotes">
+            {{
+              "Season " +
+                quote.season +
+                " episode " +
+                quote.episode +
+                " time " +
+                quote.time +
+                ":" +
+                quote.text
+            }}
+          </p>
+        </div>
+        <br />
+        <br />
+      </li>
+    </ul>
+  </div>
 </div>
