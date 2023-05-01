@@ -19,21 +19,11 @@ const getAnime = async (req, res, next) => {
   }
 
   try {
-    let totalElements;
-    let animeList;
-
-    if (filterValue) {
-      const filterRegExp = new RegExp(filterValue, "i");
-      totalElements = await Anime.countDocuments({ name: filterRegExp });
-      animeList = await Anime.find({ name: filterRegExp })
-        .skip(pageSize * pageIndex)
-        .limit(pageSize);
-    } else {
-      totalElements = await Anime.countDocuments();
-      animeList = await Anime.find()
-        .skip(pageSize * pageIndex)
-        .limit(pageSize);
-    }
+    const filterRegExp = new RegExp(filterValue, "i");
+    const totalElements = await Anime.countDocuments({ name: filterRegExp });
+    const animeList = await Anime.find({ name: filterRegExp })
+      .skip(pageSize * pageIndex)
+      .limit(pageSize);
 
     const data = {
       totalElements,
@@ -57,9 +47,7 @@ const getAnimeNames = async (req, res, next) => {
     });
     res.status(200).json({ message: "Success", animeList });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Unable to get anime list" });
+    res.status(500).json({ message: "Unable to get anime list" });
   }
 };
 
@@ -69,7 +57,10 @@ const addNewAnime = async (req, res, next) => {
 
   if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-  const existingAnime = await Anime.findOne({ name: reqBody.name.trim(), userId: userId });
+  const existingAnime = await Anime.findOne({
+    name: reqBody.name.trim(),
+    userId: userId,
+  });
 
   if (existingAnime) {
     return res.status(400).json({ message: "Anime name already exists" });
@@ -180,9 +171,7 @@ const getAnimeById = async (req, res, next) => {
 
     const anime = await Anime.find({ _id: id, userId: userId });
     if (!anime) {
-      return res
-        .status(404)
-        .json({ message: "Anime not found" });
+      return res.status(404).json({ message: "Anime not found" });
     }
 
     res.status(200).json({ message: "Success", anime: anime[0] });
