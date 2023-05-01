@@ -9,6 +9,7 @@ import { take } from 'rxjs/operators';
 
 import { AnimeService } from '../service/anime.service';
 import { IAnimeById } from '../anime.model';
+import { startDescriptionEnum } from '../custom.pipes';
 
 @Component({
   selector: 'app-anime-item',
@@ -43,12 +44,15 @@ export class AnimeItemComponent implements OnInit {
 
   private _getAnime(): void {
     this.isLoading = true;
-    this._cdr.markForCheck()
+    this._cdr.markForCheck();
     this._animeService
       .getAnimeById(this._id)
       .pipe(take(1))
       .subscribe((res) => {
-        this.anime = res.anime;
+        this.anime = {
+          ...res.anime,
+          startDescr: startDescriptionEnum[res.anime.stars - 1],
+        };
         this.isLoading = false;
         this._cdr.markForCheck();
       });

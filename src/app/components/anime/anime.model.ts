@@ -26,6 +26,7 @@ export interface IAnimeById {
   name: string;
   nameUA: string;
   stars: number;
+  startDescr?: string;
   status: string;
   time: number;
   userId: string;
