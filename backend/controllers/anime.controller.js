@@ -169,12 +169,70 @@ const getAnimeById = async (req, res, next) => {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-    const anime = await Anime.find({ _id: id, userId: userId });
-    if (!anime) {
+    const findedAnime = await Anime.findOne({ _id: id, userId: userId });
+    if (!findedAnime) {
       return res.status(404).json({ message: "Anime not found" });
     }
 
-    res.status(200).json({ message: "Success", anime: anime[0] });
+    let heroesList;
+    let quotesList;
+    if (findedAnime?.heroes?.length) {
+      const heroesIds = findedAnime.heroes.map((h) => h.id);
+      heroesList = await Hero.find({ _id: { $in: heroesIds } });
+    }
+
+    let quotesIds;
+    if (heroesList?.length) {
+      quotesIds = [];
+      heroesList.forEach((h) => {
+        if (h?.quotes.length > 0) {
+          h.quotes.forEach((q) => {
+            if (q) quotesIds.push(q);
+          });
+        }
+      });
+
+      quotesList = await Quote.find({ _id: { $in: quotesIds } });
+    }
+
+    const heroes =
+      heroesList.map((h) => {
+        h.id = h._id;
+        const quotes =
+          quotesList
+            .filter((q) => q?.author?.id === h.id)
+            .map((q) => {
+              const quote = {
+                text: q.text,
+                season: q.season,
+                episode: q.episode,
+                time: q.time,
+              };
+              return quote;
+            }) || [];
+
+        return {
+          id: h.id,
+          name: h.name,
+          animeId: h.animeId,
+          imageUrl: h.imageUrl,
+          quotes,
+        };
+      }) || [];
+
+    const anime = {
+      id: findedAnime._id,
+      name: findedAnime.name,
+      nameUA: findedAnime.nameUA,
+      stars: findedAnime.stars,
+      status: findedAnime.status,
+      time: findedAnime.time,
+      genres: findedAnime.genres,
+      heroes,
+      userId,
+    };
+
+    res.status(200).json({ message: "Success", anime });
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }

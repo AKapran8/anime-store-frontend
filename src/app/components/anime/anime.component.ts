@@ -143,10 +143,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
     this._searchValueChangesSub = this.searchControl?.valueChanges
       .pipe(debounceTime(1000))
       .subscribe((inputValue: string) => {
-        if (inputValue) {
-          this._resetPagination();
-          this._getAnime();
-        }
+        this._resetPagination();
+        this._getAnime();
       });
   }
 
@@ -193,6 +191,10 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   public getAnimeById(id: string): void {
     this._router.navigate(['anime', id]);
+  }
+
+  public copyAnime(id: string): void {
+    console.log(id);
   }
 
   public stopPropaganation(event: MouseEvent): void {

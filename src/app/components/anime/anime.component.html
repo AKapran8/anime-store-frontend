@@ -29,9 +29,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{
-              invalidUser
-                ? "Please verify your personality"
-                : "No data found"
+              invalidUser ? "Please verify your personality" : "No data found"
             }}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -54,16 +52,11 @@
           >
         </mat-expansion-panel-header>
         <div class="content">
-          <p>Another name: {{ anime.nameUA }}</p>
           <p>Time: {{ anime.timeText }}</p>
           <p class="start-text">
             <span> Stars: </span>
             <app-stars-icons [count]="anime.stars"></app-stars-icons>
           </p>
-          <p *ngIf="anime?.starsDescr?.length">
-            Description: {{ anime.starsDescr }}
-          </p>
-          <p *ngIf="anime?.genres?.length">Genres: {{ anime.genres }}</p>
           <div *ngIf="anime?.heroes?.length">
             Heroes:
             <span *ngFor="let hero of anime.heroes; let i = index">
@@ -83,6 +76,16 @@
             *ngIf="anime.userId === userId"
           >
             Get more
+          </button>
+
+             <button
+            class="get-more-button"
+            mat-stroked-button
+            color="warn"
+            (click)="copyAnime(anime.id)"
+            *ngIf="anime.userId !== userId"
+          >
+            Copy to your list
           </button>
         </div>
       </mat-expansion-panel>

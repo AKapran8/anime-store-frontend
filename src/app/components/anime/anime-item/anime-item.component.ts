@@ -8,7 +8,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { AnimeService } from '../service/anime.service';
-import { IAnime } from '../anime.model';
+import { IAnimeById } from '../anime.model';
 
 @Component({
   selector: 'app-anime-item',
@@ -17,9 +17,10 @@ import { IAnime } from '../anime.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnimeItemComponent implements OnInit {
+  public isLoading: boolean = false;
   private _id: string = '';
 
-  public anime: IAnime | null = null;
+  public anime: IAnimeById | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -41,11 +42,14 @@ export class AnimeItemComponent implements OnInit {
   }
 
   private _getAnime(): void {
+    this.isLoading = true;
+    this._cdr.markForCheck()
     this._animeService
       .getAnimeById(this._id)
       .pipe(take(1))
       .subscribe((res) => {
         this.anime = res.anime;
+        this.isLoading = false;
         this._cdr.markForCheck();
       });
   }

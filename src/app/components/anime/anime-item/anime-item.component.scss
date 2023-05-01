@@ -1,7 +1,12 @@
-.error-message {
-  margin: 40px 0 0 40px;
+.anime-by-id {
+  margin: 40px auto 0 auto;
+  padding: 40px;
+  border: 1px solid black;
+  border-radius: 4px;
+  max-width: 400px;
+}
 
-  h2 {
-    color: red;
-  }
+.spinner {
+  display: block;
+  margin: 40px auto 0 auto;
 }

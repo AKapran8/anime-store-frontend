@@ -1,3 +1,35 @@
-<h1 *ngIf="anime?.id">
-  {{ anime | json }}
-</h1>
+<mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+<p *ngIf="!anime && !isLoading">Not found</p>
+<div *ngIf="anime?.id" class="anime-by-id">
+  <p>ID: {{ anime?.id }}</p>
+  <p>name: {{ anime?.name }}</p>
+  <p>nameUA: {{ anime?.nameUA }}</p>
+  <p>stars: {{ anime?.stars }}</p>
+  <p>status: {{ anime?.status }}</p>
+  <p>time: {{ anime?.time }}</p>
+  <p>userId: {{ anime?.userId }}</p>
+  HEROES:
+  <ul>
+    <li *ngFor="let hero of anime?.heroes">
+      <img [src]="hero.imageUrl" [alt]="hero.name" width="150" />
+      {{ hero.name }}
+      <div *ngIf="hero?.quotes?.length">
+        Quotes:
+        <p *ngFor="let quote of hero?.quotes">
+          {{
+            "Season " +
+              quote.season +
+              " episode " +
+              quote.episode +
+              " time " +
+              quote.time +
+              ":" +
+              quote.text
+          }}
+        </p>
+      </div>
+      <br />
+      <br />
+    </li>
+  </ul>
+</div>
