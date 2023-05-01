@@ -3,6 +3,7 @@ const Hero = require("./../models/hero.model");
 const Quote = require("./../models/quote.model");
 
 const imgHelpers = require("./../helpers/image");
+const animeHelpers = require("./../helpers/anime");
 
 const getAnime = async (req, res, next) => {
   const pageSize = req.body.utilsData.pageSize;
@@ -192,30 +193,7 @@ const getAnimeById = async (req, res, next) => {
       quotesList = await Quote.find({ _id: { $in: quotesIds } });
     }
 
-    const heroes =
-      heroesList?.map((h) => {
-        h.id = h._id;
-        const quotes =
-          quotesList
-            ?.filter((q) => q?.author?.id === h.id)
-            ?.map((q) => {
-              const quote = {
-                text: q.text,
-                season: q.season,
-                episode: q.episode,
-                time: q.time,
-              };
-              return quote;
-            }) || [];
-
-        return {
-          id: h.id,
-          name: h.name,
-          animeId: h.animeId,
-          imageUrl: h.imageUrl,
-          quotes,
-        };
-      }) || [];
+    const heroes = animeHelpers.getAnimeHeroesWithQuotes(heroesList, quotesList);
 
     const anime = {
       id: findedAnime._id,
