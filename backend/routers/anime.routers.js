@@ -11,5 +11,6 @@ router.get("/:id", checkAuth, animeController.getAnimeById);
 router.post("/add", checkAuth, animeController.addNewAnime);
 router.put("/:id", checkAuth, animeController.editAnime);
 router.delete("/:id", checkAuth, animeController.deleteAnime);
+router.post("/copy", checkAuth, animeController.copyAnime);
 
 module.exports = router;

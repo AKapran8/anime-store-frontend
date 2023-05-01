@@ -58,4 +58,8 @@ export class AnimeService {
   public getAnimeListNames(): Observable<IGetAnimeNamesListResponse> {
     return this._http.get<IGetAnimeNamesListResponse>(`${this._url}/names`);
   }
+
+  public copyAnime(id: string): Observable<{ message: string }> {
+    return this._http.post<{ message: string }>(`${this._url}/copy`, { id });
+  }
 }

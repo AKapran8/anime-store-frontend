@@ -91,6 +91,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   private _getAnime(): void {
+    this._anime = [];
+    this.expansionPanelData = [];
     this.isListFetching = true;
     this.isListFetched = false;
 
@@ -194,7 +196,12 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   public copyAnime(id: string): void {
-    console.log(id);
+    this._animeService
+      .copyAnime(id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this._getAnime();
+      });
   }
 
   public stopPropaganation(event: MouseEvent): void {

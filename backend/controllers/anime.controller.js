@@ -79,9 +79,7 @@ const addNewAnime = async (req, res, next) => {
 
   try {
     const createdAnime = await newAnime.save();
-    res
-      .status(201)
-      .json({ message: "Anime was added successfully", anime: createdAnime });
+    res.status(201).json({ message: "Anime was added successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to add anime" });
   }
@@ -155,7 +153,6 @@ const editAnime = async (req, res, next) => {
 
     res.json({
       message: "Anime updated successfully",
-      anime: updatedAnime,
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to edit anime" });
@@ -196,12 +193,12 @@ const getAnimeById = async (req, res, next) => {
     }
 
     const heroes =
-      heroesList.map((h) => {
+      heroesList?.map((h) => {
         h.id = h._id;
         const quotes =
           quotesList
-            .filter((q) => q?.author?.id === h.id)
-            .map((q) => {
+            ?.filter((q) => q?.author?.id === h.id)
+            ?.map((q) => {
               const quote = {
                 text: q.text,
                 season: q.season,
@@ -238,6 +235,36 @@ const getAnimeById = async (req, res, next) => {
   }
 };
 
+const copyAnime = async (req, res, next) => {
+  const animeId = req.body.id;
+  const userId = req.userData.userId;
+  if (!userId) res.status(401).json({ message: "Unauthorized access" });
+
+  try {
+    const anime = await Anime.findOne({ _id: animeId });
+    const userAnimeList = await Anime.find({ userId: userId }).select("name");
+    const isExisted = !!userAnimeList.find((a) => a.name === anime.name);
+    if (isExisted) return res.status(401).json({ message: "Anime name exist" });
+
+    const duplicatedAnime = new Anime({
+      name: anime.name,
+      nameUA: anime.nameUA,
+      userId,
+      stars: anime.stars,
+      status: anime.status,
+      time: anime.time,
+      heroes: [],
+      genres: anime.genres || "",
+    });
+
+    await duplicatedAnime.save();
+
+    res.status(201).json({ message: "Success" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAnime,
   addNewAnime,
@@ -245,4 +272,5 @@ module.exports = {
   editAnime,
   getAnimeById,
   getAnimeNames,
+  copyAnime,
 };
