@@ -149,7 +149,7 @@ const getHeroNames = async (req, res, next) => {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-    const list = await Hero.find({ userId: userId }).select("name animeId");
+    const list = await Hero.find({ userId: userId }).select("name");
     const heroesList = list.map((el) => {
       return { id: el.id, text: el.name };
     });

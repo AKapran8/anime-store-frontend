@@ -78,7 +78,7 @@ const addNewAnime = async (req, res, next) => {
   });
 
   try {
-    const createdAnime = await newAnime.save();
+    await newAnime.save();
     res.status(201).json({ message: "Anime was added successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to add anime" });
@@ -237,10 +237,10 @@ const getAnimeById = async (req, res, next) => {
 
 const copyAnime = async (req, res, next) => {
   const animeId = req.body.id;
-  const userId = req.userData.userId;
-  if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
   try {
+    const userId = req.userData.userId;
+    if (!userId) res.status(401).json({ message: "Unauthorized access" });
     const anime = await Anime.findOne({ _id: animeId });
     const userAnimeList = await Anime.find({ userId: userId }).select("name");
     const isExisted = !!userAnimeList.find((a) => a.name === anime.name);
