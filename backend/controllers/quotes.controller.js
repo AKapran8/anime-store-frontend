@@ -30,7 +30,7 @@ const addNewQuote = async (req, res, next) => {
     const createdQuote = await newQuote.save();
 
     const hero = await Hero.findById(newQuote.author.id);
-    if (!hero) throw new Error("Hero not found");
+    if (!hero) return res.status(404).json({ message: 'Hero not found' });
 
     hero.quotes.push(createdQuote._id);
     await hero.save();
@@ -51,7 +51,7 @@ const deleteQuote = async (req, res, next) => {
     if (!quote) return res.status(404).json({ message: "Quote not found" });
 
     const hero = await Hero.findById(quote.author.id);
-    if (!hero) throw new Error("Hero not found");
+    if (!hero) return res.status(404).json({ message: 'Hero not found' });
 
     hero.quotes = hero.quotes.filter((q) => q !== quoteId);
     await hero.save();
@@ -81,8 +81,8 @@ const editQuote = async (req, res, next) => {
       const prevHero = await Hero.findById(quote.author.id);
       const newHero = await Hero.findById(reqBody.author.id);
 
-      if (!prevHero) throw new Error("Previous hero not found");
-      if (!newHero) throw new Error("New hero not found");
+      if (!prevHero) return res.status(404).json({ message: 'Previous hero not found' });
+      if (!newHero) return res.status(404).json({ message: 'New hero not found' });
 
       prevHero.quotes = prevHero.quotes.filter((q) => q !== quote.id);
       newHero.quotes.push(quote.id);

@@ -21,17 +21,6 @@ const addNewHero = async (req, res, next) => {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-    const existedHero = await Hero.findOne({
-      animeId: reqBody.animeId,
-      userId: userId,
-      name: reqBody.name.trim(),
-    });
-    if (existedHero) {
-      return res
-        .status(400)
-        .json({ message: "This hero name exist in current anime" });
-    }
-
     const imageUrl = `${url}/images/${reqBody.imageUrl}`;
 
     const newHero = new Hero({
@@ -51,7 +40,7 @@ const addNewHero = async (req, res, next) => {
     };
 
     const anime = await Anime.findById(createdHero.animeId);
-    if (!anime) throw new Error("Anime not found");
+    if (!anime) return res.status(404).json({ message: 'Anime not found' });
     anime.heroes.push(newAnimeHero);
     await anime.save();
 
@@ -73,7 +62,7 @@ const deleteHero = async (req, res, next) => {
     }
 
     const anime = await Anime.findById(hero.animeId);
-    if (!anime) throw new Error("Anime not found");
+    if (!anime) return res.status(404).json({ message: 'Anime not found' });
 
     anime.heroes = anime.heroes.filter((h) => h.id !== hero.id);
 
@@ -101,7 +90,6 @@ const editHero = async (req, res, next) => {
     const hero = await Hero.findById(heroId);
     if (!hero) return res.status(404).json({ message: "Hero not found" });
 
-
     const existedHero = await Hero.findOne({
       animeId: reqBody.animeId,
       userId: userId,
@@ -112,7 +100,6 @@ const editHero = async (req, res, next) => {
         .status(400)
         .json({ message: "This hero name exist in current anime" });
     }
-
 
     const prevImageUrl = hero.imageUrl;
     const nameForImage = reqBody.name.replace(/\s/g, "").toLowerCase();
@@ -130,8 +117,8 @@ const editHero = async (req, res, next) => {
       const prevAnime = await Anime.findById(hero.animeId);
       const newAnime = await Anime.findById(reqBody.animeId);
 
-      if (!prevAnime) throw new Error("Previous hero anime not found");
-      if (!newAnime) throw new Error("New hero anime not found");
+      if (!prevAnime) return res.status(404).json({ message: 'Previous hero anime not found' });
+      if (!newAnime) return res.status(404).json({ message: 'New hero anime not found' });
 
       if (prevAnime && newAnime) {
         prevAnime.heroes = prevAnime.heroes.filter((h) => h.id !== heroId);
@@ -141,7 +128,7 @@ const editHero = async (req, res, next) => {
       }
     } else {
       const currentAnime = await Anime.findById(reqBody.animeId);
-      if (!currentAnime) throw new Error("Hero anime not found");
+      if (!currentAnime) return res.status(404).json({ message: 'Hero anime not found' });
       currentAnime.heroes = currentAnime.heroes.map((hero) => {
         if (hero.id === newHero.id) return newHero;
         return hero;
