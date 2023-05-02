@@ -32,7 +32,7 @@ export class AddEditHeroComponent implements OnInit {
     private _dialogRef: MatDialogRef<AddEditHeroComponent>,
     private _animeService: AnimeService,
     private _heroesService: HeroesService,
-    private _snackbarService: SnackbarService,
+    private _snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -124,10 +124,15 @@ export class AddEditHeroComponent implements OnInit {
     this._heroesService
       .addHero(body)
       .pipe(take(1))
-      .subscribe((res) => {
-        this.isSaving = false;
-        this._dialogRef.close(res.hero);
-        this._snackbarService.createSuccessSnackbar('Hero was added');
+      .subscribe({
+        next: (res) => {
+          this.isSaving = false;
+          this._dialogRef.close(res.hero);
+          this._snackbarService.createSuccessSnackbar('Hero was added');
+        },
+        error: (err) => {
+          this.isSaving = false;
+        },
       });
   }
 
@@ -137,10 +142,15 @@ export class AddEditHeroComponent implements OnInit {
     this._heroesService
       .editHero(requiestBody, id)
       .pipe(take(1))
-      .subscribe((res) => {
-        this.isSaving = false;
-        this._dialogRef.close(res.hero);
-        this._snackbarService.createSuccessSnackbar('Hero was edited');
+      .subscribe({
+        next: (res) => {
+          this.isSaving = false;
+          this._dialogRef.close(res.hero);
+          this._snackbarService.createSuccessSnackbar('Hero was edited');
+        },
+        error: (err) => {
+          this.isSaving = false;
+        },
       });
   }
 

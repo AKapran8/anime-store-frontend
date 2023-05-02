@@ -58,13 +58,13 @@ const addNewAnime = async (req, res, next) => {
 
   if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-  const existingAnime = await Anime.findOne({
+  const existedAnime = await Anime.findOne({
     name: reqBody.name.trim(),
     userId: userId,
   });
 
-  if (existingAnime) {
-    return res.status(400).json({ message: "Anime name already exists" });
+  if (existedAnime) {
+    return res.status(400).json({ message: "Anime name already exist" });
   }
 
   const newAnime = new Anime({

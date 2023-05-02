@@ -5,12 +5,8 @@
         <img width="100px" [src]="hero.imageUrl" [alt]="hero.name" />
         <div>
           <h4>Name: {{ hero.name }}</h4>
-          <p *ngIf="hero?.quotes?.length">
-            Total Quotes {{ hero.quotes.length }}
-          </p>
-          <p>
-            Your: {{hero.userId === userId ? "YES" : "NO"}}
-          </p>
+          <p>Quotes: {{ hero.quotes.length }}</p>
+          <p>Your: {{ hero.userId === userId ? "YES" : "NO" }}</p>
         </div>
         <div class="actions-block">
           <button
