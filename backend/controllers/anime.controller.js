@@ -166,7 +166,7 @@ const editAnime = async (req, res, next) => {
       return res.status(404).json({ message: "Anime not found" });
     }
 
-    res.json({
+    res.status(201).json({
       message: "Anime updated successfully",
     });
   } catch (err) {
@@ -237,10 +237,16 @@ const copyAnime = async (req, res, next) => {
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized access" });
     }
+
     const copiedAnime = await Anime.findOne({ _id: animeId });
-    const userAnimeList = await Anime.find({ userId: userId }).select("name");
-    const isExisted = !!userAnimeList.find((a) => a.name === copiedAnime.name);
-    if (isExisted) return res.status(401).json({ message: "Anime name exist" });
+
+    const nameRegex = { $regex: copiedAnime.name, $options: "i" };
+    const existed = await Anime.findOne({
+      name: nameRegex,
+      userId: userId,
+    });
+
+    if (existed) return res.status(400).json({ message: "The name existed" });
 
     const anime = new Anime({
       name: copiedAnime.name,

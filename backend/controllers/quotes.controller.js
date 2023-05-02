@@ -100,7 +100,7 @@ const editQuote = async (req, res, next) => {
     quote.author = reqBody.author;
 
     await quote.save();
-    res.json({
+    res.status(201).json({
       message: "The quote was updated successfully",
       quote,
     });

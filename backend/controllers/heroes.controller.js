@@ -169,7 +169,7 @@ const editHero = async (req, res, next) => {
 
     await hero.save();
 
-    res.json({
+    res.status(201).json({
       message: "The Hero was updated successfully",
       hero,
     });

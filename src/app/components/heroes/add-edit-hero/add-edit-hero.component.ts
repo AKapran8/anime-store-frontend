@@ -28,7 +28,7 @@ export class AddEditHeroComponent implements OnInit {
   public animeList: IAnimeForHero[] = [];
   public imagePreviewUrl: string = '';
   public isSaving: boolean = false;
-  public existedErrorMessage: string = ''
+  public existedErrorMessage: string = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditHeroDialogData,
@@ -110,8 +110,10 @@ export class AddEditHeroComponent implements OnInit {
   public saveHandler(): void {
     if (!this.form?.valid) return;
     const existed: boolean = this._getExistedHeroNameStatus();
-    this._snackbarService.createErrorSnackbar(this.existedErrorMessage);
-    if (existed) return;
+    if (existed) {
+      this._snackbarService.createErrorSnackbar(this.existedErrorMessage);
+      return;
+    }
 
     this.isSaving = true;
     const imageUrl: string =
