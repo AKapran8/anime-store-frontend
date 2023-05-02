@@ -108,7 +108,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res) {
-            console.log(res)
             this._anime = cloneDeep(res.data.animeList);
             this.isListFetching = false;
             this.isListFetched = true;
