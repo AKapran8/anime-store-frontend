@@ -3,6 +3,7 @@ const Hero = require("./../models/hero.model");
 const Quote = require("./../models/quote.model");
 
 const imgHelpers = require("./../helpers/image");
+const animeHelpers = require("./../helpers/anime");
 
 const getAnime = async (req, res, next) => {
   const pageSize = req.body.utilsData.pageSize;
@@ -192,30 +193,7 @@ const getAnimeById = async (req, res, next) => {
       quotesList = await Quote.find({ _id: { $in: quotesIds } });
     }
 
-    const heroes =
-      heroesList?.map((h) => {
-        h.id = h._id;
-        const quotes =
-          quotesList
-            ?.filter((q) => q?.author?.id === h.id)
-            ?.map((q) => {
-              const quote = {
-                text: q.text,
-                season: q.season,
-                episode: q.episode,
-                time: q.time,
-              };
-              return quote;
-            }) || [];
-
-        return {
-          id: h.id,
-          name: h.name,
-          animeId: h.animeId,
-          imageUrl: h.imageUrl,
-          quotes,
-        };
-      }) || [];
+    const heroes = animeHelpers.getHeroWithQuotes(heroesList, quotesList);
 
     const anime = {
       id: findedAnime._id,
@@ -241,23 +219,33 @@ const copyAnime = async (req, res, next) => {
   try {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
-    const anime = await Anime.findOne({ _id: animeId });
+    const copiedAnime = await Anime.findOne({ _id: animeId });
     const userAnimeList = await Anime.find({ userId: userId }).select("name");
-    const isExisted = !!userAnimeList.find((a) => a.name === anime.name);
+    const isExisted = !!userAnimeList.find((a) => a.name === copiedAnime.name);
     if (isExisted) return res.status(401).json({ message: "Anime name exist" });
 
-    const duplicatedAnime = new Anime({
-      name: anime.name,
-      nameUA: anime.nameUA,
+    const anime = new Anime({
+      name: copiedAnime.name,
+      nameUA: copiedAnime.nameUA,
       userId,
-      stars: anime.stars,
-      status: anime.status,
-      time: anime.time,
+      stars: copiedAnime.stars,
+      status: copiedAnime.status,
+      time: copiedAnime.time,
       heroes: [],
-      genres: anime.genres || "",
+      genres: copiedAnime.genres || "",
     });
 
-    await duplicatedAnime.save();
+    const duplicatedAnime = await anime.save();
+
+    if (copiedAnime?.heroes?.length) {
+      duplicatedAnime.heroes = animeHelpers.copyAnimeHeroes(
+        copiedAnime,
+        duplicatedAnime,
+        userId
+      );
+
+      await duplicatedAnime.save();
+    }
 
     res.status(201).json({ message: "Success" });
   } catch (err) {

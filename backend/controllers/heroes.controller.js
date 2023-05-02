@@ -37,7 +37,6 @@ const addNewHero = async (req, res, next) => {
       id: createdHero._id,
       heroName: createdHero.name,
       imageUrl: createdHero.imageUrl,
-      quotes: [],
     };
 
     const anime = await Anime.findById(createdHero.animeId);
