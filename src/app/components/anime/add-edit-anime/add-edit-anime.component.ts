@@ -84,10 +84,16 @@ export class AddAnimeComponent implements OnInit {
     this._animeService
       .editAnime(requestBody, id)
       .pipe(take(1))
-      .subscribe(() => {
-        this._dialogRef.close(true);
-        this.isSaving = false;
-        this._snackbarService.createSuccessSnackbar('Anime was edited');
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this._dialogRef.close(true);
+          this._snackbarService.createSuccessSnackbar('Anime was edited');
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this._cdr.markForCheck();
+        },
       });
   }
 
@@ -95,10 +101,16 @@ export class AddAnimeComponent implements OnInit {
     this._animeService
       .addAnime(requestBody)
       .pipe(take(1))
-      .subscribe(() => {
-        this.isSaving = false;
-        this._dialogRef.close(true);
-        this._snackbarService.createSuccessSnackbar('Anime was added');
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this._dialogRef.close(true);
+          this._snackbarService.createSuccessSnackbar('Anime was added');
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this._cdr.markForCheck();
+        },
       });
   }
 }

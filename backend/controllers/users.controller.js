@@ -9,7 +9,7 @@ const signUpUser = async (req, res, next) => {
   try {
     const hashedPassword = await bcryptJS.hash(password, 10);
     if (!hashedPassword) {
-      res.status(500).json({ message: "Server Error" });
+      return res.status(500).json({ message: "Server Error" });
     }
 
     const newUser = new User({

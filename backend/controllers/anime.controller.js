@@ -40,7 +40,9 @@ const getAnime = async (req, res, next) => {
 const getAnimeNames = async (req, res, next) => {
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
 
     const list = await Anime.find({ userId: userId }).select("name heroes");
     const animeList = list.map((el) => {
@@ -57,17 +59,14 @@ const addNewAnime = async (req, res, next) => {
   const reqBody = req.body;
   const userId = req.userData.userId;
 
-  if (!userId) res.status(401).json({ message: "Unauthorized access" });
+  if (!userId) return res.status(401).json({ message: "Unauthorized access" });
 
-  const nameRegex = new RegExp(reqBody.name.trim(), "i");
-  const existedAnime = await Anime.findOne({
+  const nameRegex = { $regex: reqBody.name.trim(), $options: "i" };
+  const existedName = await Anime.findOne({
     name: nameRegex,
     userId: userId,
   });
-
-  if (existedAnime) {
-    return res.status(400).json({ message: "Anime name already exist" });
-  }
+  if (existedName) return res.status(400).json({ message: "The name existed" });
 
   const newAnime = new Anime({
     name: reqBody.name.trim(),
@@ -93,7 +92,9 @@ const deleteAnime = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
 
     const anime = await Anime.findOneAndRemove({ _id: id, userId: userId });
     let quotesIds;
@@ -136,7 +137,18 @@ const editAnime = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
+
+    const nameRegex = { $regex: reqBody.name.trim(), $options: "i" };
+    const existedName = await Anime.findOne({
+      name: nameRegex,
+      userId: userId,
+    });
+    if (existedName) {
+      return res.status(400).json({ message: "The name existed" });
+    }
 
     const updatedAnime = await Anime.findOneAndUpdate(
       { _id: animeId, userId: userId },
@@ -167,7 +179,9 @@ const getAnimeById = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
 
     const findedAnime = await Anime.findOne({ _id: id, userId: userId });
     if (!findedAnime) {
@@ -220,7 +234,9 @@ const copyAnime = async (req, res, next) => {
 
   try {
     const userId = req.userData.userId;
-    if (!userId) res.status(401).json({ message: "Unauthorized access" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
     const copiedAnime = await Anime.findOne({ _id: animeId });
     const userAnimeList = await Anime.find({ userId: userId }).select("name");
     const isExisted = !!userAnimeList.find((a) => a.name === copiedAnime.name);
