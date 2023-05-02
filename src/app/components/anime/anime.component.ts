@@ -29,6 +29,7 @@ import {
 
 import { AnimeService } from './service/anime.service';
 import { AuthService } from '../auth/service/auth.service';
+import { SnackbarService } from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-anime',
@@ -61,9 +62,10 @@ export class AnimeComponent implements OnInit, OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _cdr: ChangeDetectorRef,
-    private _animeService: AnimeService,
     private _router: Router,
-    private _authService: AuthService
+    private _animeService: AnimeService,
+    private _authService: AuthService,
+    private _snackbarService: SnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -106,6 +108,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res) {
+            console.log(res)
             this._anime = cloneDeep(res.data.animeList);
             this.isListFetching = false;
             this.isListFetched = true;
@@ -200,6 +203,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .copyAnime(id)
       .pipe(take(1))
       .subscribe((res) => {
+        this._snackbarService.createSuccessSnackbar(res.message)
         this._getAnime();
       });
   }

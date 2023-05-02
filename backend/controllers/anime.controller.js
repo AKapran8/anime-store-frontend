@@ -238,7 +238,7 @@ const copyAnime = async (req, res, next) => {
     const duplicatedAnime = await anime.save();
 
     if (copiedAnime?.heroes?.length) {
-      duplicatedAnime.heroes = animeHelpers.copyAnimeHeroes(
+      duplicatedAnime.heroes = await animeHelpers.copyAnimeHeroes(
         copiedAnime,
         duplicatedAnime,
         userId

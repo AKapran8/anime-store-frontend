@@ -23,13 +23,11 @@ const copyAnimeHeroes = async (copiedAnime, duplicatedAnime, userId) => {
   });
 
   const duplicatedHeroes = await Hero.create(heroes);
-
   const duplicatedAnimeHeroes = duplicatedHeroes.map((h) => {
     return { heroName: h.name, id: h._id, imageUrl: h.imageUrl };
   });
 
   return duplicatedAnimeHeroes;
-  return;
 };
 
 const getHeroWithQuotes = (heroesList, quotesList) => {
