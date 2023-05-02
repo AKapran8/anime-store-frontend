@@ -97,7 +97,7 @@ const deleteAnime = async (req, res, next) => {
     let quotesIds;
     if (anime?.heroes?.length > 0) {
       const heroIds = anime.heroes.map((hero) => {
-        imgHelpers.removeImage(hero.imageUrl); //remove hero img from storage
+        if (hero.imageUrl) imgHelpers.removeImage(hero.imageUrl); //remove hero img from storage
         return hero.id;
       });
 

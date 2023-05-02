@@ -83,7 +83,7 @@ const deleteHero = async (req, res, next) => {
     await anime.save();
 
     await Hero.deleteOne({ _id: id });
-    imgHelpers.removeImage(hero.imageUrl); //remove img from storage
+    if (hero.imageUrl) imgHelpers.removeImage(hero.imageUrl); //remove img from storage
 
     res.status(200).json({ message: "The Hero was removed successfully!" });
   } catch (err) {
@@ -155,7 +155,9 @@ const editHero = async (req, res, next) => {
     hero.animeId = reqBody.animeId;
     hero.imageUrl = newImgUrl;
 
-    imgHelpers.changeImageName(prevImageUrl, newImgUrl); // change current image name in storage
+    if (prevImageUrl && newImgUrl) {
+      imgHelpers.changeImageName(prevImageUrl, newImgUrl); // change current image name in storage
+    }
 
     await hero.save();
 

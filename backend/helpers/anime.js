@@ -12,7 +12,7 @@ const copyAnimeHeroes = async (copiedAnime, duplicatedAnime, userId) => {
       h.name,
       duplicatedAnime._id
     );
-    imgHelpers.createNewImage(h.imageUrl, imageUrl);
+    if (h.imageUrl && imageUrl) imgHelpers.createNewImage(h.imageUrl, imageUrl);
     return {
       name: h.name,
       animeId: duplicatedAnime._id,
