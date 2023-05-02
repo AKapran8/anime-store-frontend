@@ -42,9 +42,10 @@ const getAnimeNames = async (req, res, next) => {
     const userId = req.userData.userId;
     if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
-    const list = await Anime.find({ userId: userId }).select("name");
+    const list = await Anime.find({ userId: userId }).select("name heroes");
     const animeList = list.map((el) => {
-      return { id: el._id, text: el.name };
+      const existedHeroes = el.heroes.map((h) => h.heroName) || [];
+      return { id: el._id, text: el.name, existedHeroes };
     });
     res.status(200).json({ message: "Success", animeList });
   } catch (err) {
@@ -58,8 +59,9 @@ const addNewAnime = async (req, res, next) => {
 
   if (!userId) res.status(401).json({ message: "Unauthorized access" });
 
+  const nameRegex = new RegExp(reqBody.name.trim(), "i");
   const existedAnime = await Anime.findOne({
-    name: reqBody.name.trim(),
+    name: nameRegex,
     userId: userId,
   });
 

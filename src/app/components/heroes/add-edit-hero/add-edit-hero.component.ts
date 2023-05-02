@@ -11,6 +11,8 @@ import {
   IAddEditHeroDialogData,
   IAddEditHero,
 } from 'src/app/components/heroes/hero.model';
+import { IAnimeForHero } from '../../anime/anime.model';
+
 import { SnackbarService } from '../../snackbar/snackbar.service';
 
 @Component({
@@ -23,9 +25,10 @@ export class AddEditHeroComponent implements OnInit {
   public title: string = '';
   public imagePriview: string = '';
   public areAnimeListFetching: boolean = false;
-  public animeList: { id: string; text: string }[] = [];
+  public animeList: IAnimeForHero[] = [];
   public imagePreviewUrl: string = '';
   public isSaving: boolean = false;
+  public existedErrorMessage: string = ''
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditHeroDialogData,
@@ -44,9 +47,11 @@ export class AddEditHeroComponent implements OnInit {
   private _initComponent(): void {
     if (this.data.type === 'add') {
       this.title = 'Add New Hero';
+      this.existedErrorMessage = `You can't create a hero with the same name`;
     } else {
       this.title = 'Edit Hero';
       this.imagePriview = this.data.initialValue?.imageUrl || '';
+      this.existedErrorMessage = `This name has already existed`;
     }
   }
 
@@ -104,6 +109,9 @@ export class AddEditHeroComponent implements OnInit {
 
   public saveHandler(): void {
     if (!this.form?.valid) return;
+    const existed: boolean = this._getExistedHeroNameStatus();
+    this._snackbarService.createErrorSnackbar(this.existedErrorMessage);
+    if (existed) return;
 
     this.isSaving = true;
     const imageUrl: string =
@@ -118,6 +126,19 @@ export class AddEditHeroComponent implements OnInit {
 
     if (this.data.type === 'add') this._save(requiestBody);
     if (this.data.type === 'edit') this._edit(requiestBody);
+  }
+
+  private _getExistedHeroNameStatus(): boolean {
+    const heroName: string = this.form?.value.name.trim().toLowerCase();
+    const animeId: string = this.form?.value.anime;
+
+    const heroesList =
+      this.animeList.find((a) => a.id === animeId)?.existedHeroes || [];
+
+    const existedName: boolean =
+      !!heroesList.find((h) => h.toLowerCase() === heroName) || false;
+
+    return existedName;
   }
 
   private _save(body: IAddEditHero): void {

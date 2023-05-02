@@ -53,9 +53,10 @@ export interface IExpansionPanelData extends IAnime {
   starsDescr: string;
 }
 
-export interface IAnimeForHeroAndQuote {
+export interface IAnimeForHero {
   text: string;
   id: string;
+  existedHeroes: string[] | [];
 }
 
 export interface IGetAnimeListResponse {
@@ -68,7 +69,7 @@ export interface IGetAnimeListResponse {
 
 export interface IGetAnimeNamesListResponse {
   message: string;
-  animeList: IAnimeForHeroAndQuote[];
+  animeList: IAnimeForHero[];
 }
 
 export interface IAddEditAnimeResponse {
