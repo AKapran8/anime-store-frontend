@@ -5,7 +5,7 @@ const animeController = require("./../controllers/anime.controller");
 
 const checkAuth = require("./../middleware/check-auth");
 
-router.post("", checkAuth, animeController.getAnime);
+router.post("", animeController.getAnime);
 router.get("/names", checkAuth, animeController.getAnimeNames);
 router.get("/:id", checkAuth, animeController.getAnimeById);
 router.post("/add", checkAuth, animeController.addNewAnime);

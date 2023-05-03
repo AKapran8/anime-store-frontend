@@ -22,7 +22,7 @@ const signUpUser = async (req, res, next) => {
 
     res.status(201).json({ message: "User was created" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to add user" });
+    res.status(500).json({ message: "Email  was existed" });
   }
 };
 

@@ -78,12 +78,12 @@
             Get more
           </button>
 
-             <button
+          <button
             class="get-more-button"
             mat-stroked-button
             color="warn"
             (click)="copyAnime(anime.id)"
-            *ngIf="anime.userId !== userId"
+            *ngIf="anime.userId !== userId && userId"
           >
             Copy to your list
           </button>
