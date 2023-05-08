@@ -151,7 +151,7 @@ export class AddEditHeroComponent implements OnInit {
         next: (res) => {
           this.isSaving = false;
           this._dialogRef.close(res.hero);
-          this._snackbarService.createSuccessSnackbar(`Hero was added`);
+          this._snackbarService.createSuccessSnackbar('Hero was added');
         },
         error: (err) => {
           this.isSaving = false;
@@ -169,7 +169,7 @@ export class AddEditHeroComponent implements OnInit {
         next: (res) => {
           this.isSaving = false;
           this._dialogRef.close(res.hero);
-          this._snackbarService.createSuccessSnackbar(`Hero was edited`);
+          this._snackbarService.createSuccessSnackbar('Hero was edited');
         },
         error: (err) => {
           this.isSaving = false;

@@ -13,7 +13,7 @@ import { take, debounceTime } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
-import { convertTimeToText, ratingDescriptionEnum } from './custom.pipes';
+import { convertTimeToText, startDescriptionEnum } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -39,6 +39,8 @@ import { SnackbarService } from '../snackbar/snackbar.service';
 })
 export class AnimeComponent implements OnInit, OnDestroy {
   public totalAnimeCount: number | null = null;
+  public pageSizeOptions: number[] = [];
+  public pageSize: number | null = null;
   public searchControl: FormControl | null = null;
   public expansionPanelData: IExpansionPanelData[] = [];
   public isListFetching: boolean = false;
@@ -46,9 +48,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isLoggedIn: boolean = false;
   public invalidUser: boolean = false;
   public userId: string = '';
-  public pageSize: number = 0;
-  public pageIndex: number = 0;
-  public pageSizeOptions: number[] = [];
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -66,7 +65,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _animeService: AnimeService,
     private _authService: AuthService,
-    private _snackbarService: SnackbarService
+    private _snackbarService: SnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -101,8 +100,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     this._animeService
       .getAnimeList(
-        this.pageSize,
-        this.pageIndex,
+        this._paginationConfig.pageSize,
+        this._paginationConfig.pageIndex,
         this.searchControl?.value.trim()
       )
       .pipe(take(1))
@@ -129,12 +128,12 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const ratingDescr = ratingDescriptionEnum[a.rating - 1];
+      const starsDescr = startDescriptionEnum[a.stars - 1];
       const timeText = convertTimeToText(a.time);
 
       return {
         ...a,
-        ratingDescr,
+        starsDescr,
         timeText,
       };
     });
@@ -147,16 +146,14 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     this._searchValueChangesSub = this.searchControl?.valueChanges
       .pipe(debounceTime(1000))
-      .subscribe(() => {
+      .subscribe((inputValue: string) => {
         this._resetPagination();
         this._getAnime();
       });
   }
 
   public addAnime(): void {
-    const dialogRef = this._dialog.open(AddAnimeComponent, {
-      data: { type: 'add' },
-    });
+    const dialogRef = this._dialog.open(AddAnimeComponent);
     dialogRef.afterClosed().subscribe((isAdded: boolean) => {
       if (isAdded) this._getAnime();
     });
@@ -166,7 +163,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const editRow: IAddEditAnime = {
       name: row.name,
       nameUA: row.nameUA,
-      rating: row.rating,
+      stars: row.stars,
       time: row.time,
       genres: row.genres,
       status: row.status,
@@ -174,7 +171,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     };
 
     const dialogRef = this._dialog.open(AddAnimeComponent, {
-      data: { anime: editRow, type: 'edit' },
+      data: editRow,
     });
 
     dialogRef.afterClosed().subscribe((isEdited: boolean) => {
@@ -205,7 +202,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .copyAnime(id)
       .pipe(take(1))
       .subscribe((res) => {
-        this._snackbarService.createSuccessSnackbar(res.message);
+        this._snackbarService.createSuccessSnackbar(res.message)
         this._getAnime();
       });
   }
@@ -215,10 +212,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   public onPageChange(event: PageEvent) {
-    this._paginationConfig = event;
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
-
     this._paginationConfig = cloneDeep(event);
     this._getAnime();
   }

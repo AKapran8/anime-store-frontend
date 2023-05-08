@@ -18,15 +18,6 @@ import {
 import { AddEditQuoteComponent } from './add-edit-quote/add-edit-quote.component';
 import { AuthService } from '../auth/service/auth.service';
 
-interface ITableData {
-  text: string;
-  season: number;
-  episode: number;
-  timeline: string;
-  authorName: string;
-  authorId: string;
-  id: string;
-}
 @Component({
   selector: 'app-quotes',
   templateUrl: './quotes.component.html',
@@ -35,8 +26,7 @@ interface ITableData {
 })
 export class QuotesComponent implements OnInit {
   public userId: string = '';
-  private _quotes: IQuote[] = [];
-  public quotes: ITableData[] = [];
+  public quotes: IQuote[] = [];
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -60,27 +50,9 @@ export class QuotesComponent implements OnInit {
       .getQuotes()
       .pipe(take(1))
       .subscribe((res) => {
-        this._quotes = [...res.quotes];
-        this._modifyTableData();
+        this.quotes = res.quotes;
         this._cdr.markForCheck();
       });
-  }
-
-  private _modifyTableData(): void {
-    this.quotes = this._quotes.map((q) => {
-      const quote = {
-        text: q.text,
-        season: q.season,
-        episode: q.episode,
-        timeline: q.time,
-        authorName: q.author.authorName,
-        authorId: q.author.id,
-        id: q.id,
-      };
-
-      return quote;
-    });
-    this._cdr.markForCheck();
   }
 
   public addNewQuote(): void {
@@ -90,21 +62,21 @@ export class QuotesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((quote: IQuote) => {
       if (quote) {
-        this._quotes.push(quote);
-        this._modifyTableData();
+        this.quotes.push(quote);
+        this._cdr.markForCheck();
       }
     });
   }
 
-  public editQuote(quote: ITableData): void {
+  public editQuote(quote: IQuote): void {
     const editableQuote: IAddEditQuote = {
       text: quote.text,
       season: quote.season,
       episode: quote.episode,
-      time: quote.timeline,
+      time: quote.time,
       author: {
-        authorName: quote.authorName,
-        id: quote.authorId,
+        authorName: quote.author.authorName,
+        id: quote.author.id,
       },
     };
 
@@ -117,18 +89,18 @@ export class QuotesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((editableQuote: IQuote) => {
-      this._quotes = this._quotes.map((q: IQuote) => {
+      this.quotes = this.quotes.map((q: IQuote) => {
         if (q.id === editableQuote.id) return editableQuote;
         return q;
       });
-      this._modifyTableData();
+      this._cdr.markForCheck();
     });
   }
 
-  public deleteQuote(quote: ITableData): void {
+  public deleteQuote(quote: IQuote): void {
     const dialogRef = this._dialog.open(DeleteDialogComponent, {
       data: {
-        message: `Are you sure want to delete ${quote.authorName}'s quote?`,
+        message: `Are you sure want to delete ${quote.author.authorName}'s quote?`,
         type: 'QUOTE',
         id: quote.id,
       } as IDeleteDialogData,
@@ -136,8 +108,8 @@ export class QuotesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this._quotes = this._quotes.filter((q) => q.id !== quote.id);
-        this._modifyTableData();
+        this.quotes = this.quotes.filter((q) => q.id !== quote.id);
+        this._cdr.markForCheck();
       }
     });
   }

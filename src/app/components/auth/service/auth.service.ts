@@ -37,10 +37,6 @@ export class AuthService {
 
   constructor(private _http: HttpClient, private _router: Router) {}
 
-  public getAuthApi(): string {
-    return this._url;
-  }
-
   public getToken(): string | null {
     return this._token;
   }
@@ -120,10 +116,6 @@ export class AuthService {
           });
         },
       });
-  }
-
-  public deleteUser(id: string): Observable<{ message: string }> {
-    return this._http.delete<{ message: string }>(`${this._url}/${id}`);
   }
 
   public logout(): void {

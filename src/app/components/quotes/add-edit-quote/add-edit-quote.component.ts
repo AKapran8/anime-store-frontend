@@ -27,8 +27,6 @@ export class AddEditQuoteComponent implements OnInit {
   public heroesList: { id: string; text: string }[] = [];
   public isSaving: boolean = false;
 
-  private _quoteId: string = '';
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IAddEditQuoteDialogData,
     private _dialogRef: MatDialogRef<AddEditQuoteComponent>,
@@ -46,10 +44,9 @@ export class AddEditQuoteComponent implements OnInit {
 
   private _initComponent(): void {
     if (this.data.type === 'add') {
-      this.title = `Add New Quote`;
+      this.title = 'Add New Quote';
     } else {
-      this.title = `Edit Quote`;
-      this._quoteId = this.data.quoteId || '';
+      this.title = 'Edit Quote';
     }
     this._cdr.markForCheck();
   }
@@ -119,18 +116,20 @@ export class AddEditQuoteComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
-        this._snackbarService.createSuccessSnackbar(`Quote was added`);
+        this._snackbarService.createSuccessSnackbar('Quote was added');
       });
   }
 
-  private _edit(requiestBody: IAddEditQuote): void {
+  private _edit(requiestBody: any): void {
+    const id: string = this.data?.quoteId || '';
+
     this._quotesService
-      .editQuote(requiestBody, this._quoteId)
+      .editQuote(requiestBody, id)
       .pipe(take(1))
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
-        this._snackbarService.createSuccessSnackbar(`Quote was edited`);
+        this._snackbarService.createSuccessSnackbar('Quote was edited');
       });
   }
 }

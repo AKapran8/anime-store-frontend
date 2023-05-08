@@ -9,7 +9,7 @@ import {
   IAddEditAnimeResponse,
   IGetAnimeListResponse,
   IGetAnimeNamesListResponse,
-  IGetAnimeElementResponse,
+  IGetAnimeByIdResponst,
 } from 'src/app/components/anime/anime.model';
 
 @Injectable()
@@ -51,8 +51,8 @@ export class AnimeService {
     return this._http.delete<{ message: string }>(`${this._url}/${id}`);
   }
 
-  public getAnimeById(id: string): Observable<IGetAnimeElementResponse> {
-    return this._http.get<IGetAnimeElementResponse>(`${this._url}/${id}`);
+  public getAnimeById(id: string): Observable<IGetAnimeByIdResponst> {
+    return this._http.get<IGetAnimeByIdResponst>(`${this._url}/${id}`);
   }
 
   public getAnimeListNames(): Observable<IGetAnimeNamesListResponse> {

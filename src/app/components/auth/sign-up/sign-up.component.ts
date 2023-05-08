@@ -6,10 +6,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
 import { AuthService } from '../service/auth.service';
+import { take } from 'rxjs/operators';
 import { ISignUpUser } from '../user.model';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',

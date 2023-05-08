@@ -9,42 +9,33 @@
       <li routerLinkActive="active" routerLink="quotes">Quotes</li>
     </ul>
     <div class="auth-options">
-      <button
-        mat-button
+      <mat-icon
         *ngIf="!isAuthorized"
-        class="auth-action-btn"
+        class="auth-btn"
+        matTooltip="Login"
         routerLink="login"
-        routerLinkActive="action-active"
+        routerLinkActive="icon-active"
+        >perm_identity</mat-icon
       >
-        Login
-      </button>
-      <button
-        mat-button
+      <mat-icon
         *ngIf="!isAuthorized"
-        class="auth-action-btn"
+        class="auth-btn"
+        matTooltip="Sign Up"
         routerLink="signup"
-        routerLinkActive="action-active"
+        routerLinkActive="icon-active"
+        >add_circle_outline</mat-icon
       >
-        Sign Up
-      </button>
-
       <button
-        class="auth-action-btn"
-        mat-button
         *ngIf="isAuthorized"
         (click)="logoutHandler()"
+        mat-raised-button
+        color="warn"
       >
         Logout
       </button>
-
-      <button
-        class="auth-action-btn"
-        mat-button
-        *ngIf="isAuthorized"
-        (click)="deleteUser()"
-      >
-        Delete User
-      </button>
+      <span class="user-name" *ngIf="userName">
+        Welcome {{ userName }}
+      </span>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

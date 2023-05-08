@@ -54,8 +54,8 @@
         <div class="content">
           <p>Time: {{ anime.timeText }}</p>
           <p class="start-text">
-            <span> Rating: </span>
-            <app-stars-icons [count]="anime.rating"></app-stars-icons>
+            <span> Stars: </span>
+            <app-stars-icons [count]="anime.stars"></app-stars-icons>
           </p>
           <div *ngIf="anime?.heroes?.length">
             Heroes:
@@ -90,15 +90,12 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-
     <mat-paginator
       *ngIf="expansionPanelData.length"
-      (page)="onPageChange($event)"
       [length]="totalAnimeCount"
       [pageSize]="pageSize"
-      [showFirstLastButtons]="true"
       [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageIndex"
+      (page)="onPageChange($event)"
     >
     </mat-paginator>
   </div>
