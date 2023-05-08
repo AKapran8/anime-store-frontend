@@ -145,6 +145,7 @@ const editAnime = async (req, res, next) => {
     const existedName = await Anime.findOne({
       name: nameRegex,
       userId: userId,
+      _id: { $ne: animeId },
     });
     if (existedName) {
       return res.status(400).json({ message: "The name existed" });

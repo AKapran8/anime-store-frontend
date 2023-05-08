@@ -111,11 +111,10 @@ export class AddAnimeComponent implements OnInit {
           this._dialogRef.close(true);
           this._snackbarService.createSuccessSnackbar(`Anime was edited`);
         },
-        error: (err) => {},
-        complete: () => {
+        error: (err) => {
           this.isSaving = false;
           this._cdr.markForCheck();
-        },
+        }
       });
   }
 
@@ -128,11 +127,10 @@ export class AddAnimeComponent implements OnInit {
           this._dialogRef.close(true);
           this._snackbarService.createSuccessSnackbar(`Anime was added`);
         },
-        error: (err) => {},
-        complete: () => {
+        error: (err) => {
           this.isSaving = false;
           this._cdr.markForCheck();
-        },
+        }
       });
   }
 }

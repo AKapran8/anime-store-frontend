@@ -54,9 +54,10 @@ export class AnimeItemComponent implements OnInit {
             ...res.anime,
             startDescr: ratingDescriptionEnum[res.anime.rating - 1],
           };
+          this.isLoading = false;
+          this._cdr.markForCheck();
         },
-        error: (err) => {},
-        complete: () => {
+        error: (err) => {
           this.isLoading = false;
           this._cdr.markForCheck();
         },
