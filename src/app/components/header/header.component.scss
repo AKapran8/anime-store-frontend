@@ -35,12 +35,17 @@
   border-bottom: 4px #fff solid;
 }
 
-.icon-active {
-  color: red;
+.auth-action-btn {
+  cursor: pointer;
+  color: #fff !important;
+
+  &:hover {
+    color: #ff4081 !important;
+  }
 }
 
-.auth-btn {
-  cursor: pointer;
+.action-active {
+  color: #ff4081 !important;
 }
 
 .auth-options {
@@ -76,4 +81,3 @@
     }
   }
 }
-

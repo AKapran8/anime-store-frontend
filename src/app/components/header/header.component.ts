@@ -7,6 +7,11 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/service/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  DeleteDialogComponent,
+  IDeleteDialogData,
+} from '../delete-dialog/delete-dialog.component';
 
 interface IUserAuthData {
   isAuth: boolean;
@@ -28,7 +33,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +62,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public deleteUser(): void {
-    this._authService.deleteUser(this._userId);
+    const dialogRef = this._dialog.open(DeleteDialogComponent, {
+      data: {
+        message: `Are you sure want to delete ${this.userName}?`,
+        type: 'USER',
+        id: this._userId,
+      } as IDeleteDialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((isDeleted: boolean) => {
+      if (isDeleted) this._authService.logout();
+    });
   }
 
   ngOnDestroy(): void {

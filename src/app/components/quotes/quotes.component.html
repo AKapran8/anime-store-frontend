@@ -1,32 +1,34 @@
-<div style="margin: 40px">
-  <button
-    mat-stroked-button
-    color="warn"
-    *ngIf="userId"
-    (click)="addNewQuote()"
-  >
-    Add New Quote
-  </button>
-</div>
+<div class="wrapper">
+  <div class="add-new-quote">
+    <button
+      mat-raised-button
+      color="accent"
+      *ngIf="userId"
+      (click)="addNewQuote()"
+    >
+      Add New Quote
+    </button>
+  </div>
 
-<div class="quotes-container">
-  <div class="quote" *ngFor="let quote of quotes">
-    <div class="quote-header">
-      <h4 class="quote-text">
-        {{ quote.text }}
-      </h4>
-      <div class="actions">
-        <mat-icon (click)="deleteQuote(quote)">delete</mat-icon>
-        <mat-icon (click)="editQuote(quote)">edit</mat-icon>
+  <div class="quotes-list">
+    <div class="quote" *ngFor="let quote of quotes">
+      <div class="quote-header">
+        <h4 class="quote-text">
+          {{ quote.text }}
+        </h4>
+        <div class="actions">
+          <mat-icon (click)="deleteQuote(quote)">delete</mat-icon>
+          <mat-icon (click)="editQuote(quote)">edit</mat-icon>
+        </div>
       </div>
-    </div>
-    <div class="quote-details">
-      <p class="quote-author">{{ quote.authorName }}</p>
-      <p class="quote-separator">|</p>
-      <p class="quote-season">S. {{ quote.season }}</p>
-      <p class="quote-episode">Ep. {{ quote.episode }}</p>
-      <p class="quote-separator">|</p>
-      <p class="quote-timeline">{{ quote.timeline }}</p>
+      <div class="quote-details">
+        <p class="quote-author">{{ quote.authorName }}</p>
+        <p class="quote-separator">|</p>
+        <p class="quote-season">S. {{ quote.season }}</p>
+        <p class="quote-episode">Ep. {{ quote.episode }}</p>
+        <p class="quote-separator">|</p>
+        <p class="quote-timeline">{{ quote.timeline }}</p>
+      </div>
     </div>
   </div>
 </div>

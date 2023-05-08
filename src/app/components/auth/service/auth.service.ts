@@ -118,13 +118,8 @@ export class AuthService {
       });
   }
 
-  public deleteUser(id: string): void {
-    this._http
-      .delete(`${this._url}/${id}`)
-      .pipe(take(1))
-      .subscribe((res) => {
-        this.logout();
-      });
+  public deleteUser(id: string): Observable<{ message: string }> {
+    return this._http.delete<{ message: string }>(`${this._url}/${id}`);
   }
 
   public logout(): void {

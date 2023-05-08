@@ -4,9 +4,20 @@ $info-color: #34e4ff;
 $warning-color: #ffc107;
 $light-color: #f8f9fa;
 $orange-color: #f58220;
+$dark-color: #5f6062;
 $dark-orange-color: #c74e00;
 
-.quotes-container {
+.wrapper {
+  padding: 40px;
+  background-color: $dark-color;
+  height: 100vh;
+}
+
+.add-new-quote {
+  margin: 0 0 40px 0;
+}
+
+.quotes-list {
   display: flex;
   justify-content: start;
   gap: 24px;
@@ -19,6 +30,10 @@ $dark-orange-color: #c74e00;
     background-color: $light-color;
     max-width: 700px;
     min-width: 200px;
+
+    &:hover {
+      border-color: $info-color;
+    }
 
     .quote-header {
       display: flex;
@@ -35,7 +50,7 @@ $dark-orange-color: #c74e00;
         color: $primary-color;
 
         &:hover {
-          color: $warning-color;
+          color: $dark-orange-color;
         }
       }
     }

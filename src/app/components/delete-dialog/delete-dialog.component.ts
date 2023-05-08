@@ -11,11 +11,12 @@ import { take } from 'rxjs/operators';
 import { AnimeService } from '../anime/service/anime.service';
 import { HeroesService } from '../heroes/service/heroes.service';
 import { QuotesService } from '../quotes/service/quotes.service';
+import { AuthService } from '../auth/service/auth.service';
 import { SnackbarService } from '../snackbar/snackbar.service';
 
 export interface IDeleteDialogData {
   message: string;
-  type: 'ANIME' | 'HERO' | 'QUOTE';
+  type: 'ANIME' | 'HERO' | 'QUOTE' | 'USER';
   id: string;
 }
 
@@ -38,6 +39,7 @@ export class DeleteDialogComponent implements OnInit {
     private _animeService: AnimeService,
     private _heroesService: HeroesService,
     private _quotesService: QuotesService,
+    private _authService: AuthService,
     private _snackbarService: SnackbarService,
     private _cdr: ChangeDetectorRef
   ) {}
@@ -70,6 +72,10 @@ export class DeleteDialogComponent implements OnInit {
         this._deleteQuote();
         break;
       }
+      case 'USER': {
+        this._deleteUser();
+        break;
+      }
       default: {
         this.isDeleting = false;
         this._cdr.markForCheck();
@@ -97,6 +103,7 @@ export class DeleteDialogComponent implements OnInit {
         this.isDeleting = false;
         this._dialogRef.close(true);
         this._snackbarService.createSuccessSnackbar('Hero was deleted');
+        this._cdr.markForCheck();
       });
   }
 
@@ -108,6 +115,19 @@ export class DeleteDialogComponent implements OnInit {
         this.isDeleting = false;
         this._dialogRef.close(true);
         this._snackbarService.createSuccessSnackbar('Quote was deleted');
+        this._cdr.markForCheck();
+      });
+  }
+
+  private _deleteUser(): void {
+    this._authService
+      .deleteUser(this._id)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.isDeleting = false;
+        this._dialogRef.close(true);
+        this._snackbarService.createSuccessSnackbar('User was deleted');
+        this._cdr.markForCheck();
       });
   }
 }
