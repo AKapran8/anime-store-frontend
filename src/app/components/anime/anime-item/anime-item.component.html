@@ -11,7 +11,7 @@
   <div *ngIf="anime?.heroes?.length">
     HEROES:
     <ul>
-      <li *ngFor="let hero of anime?.heroes">
+      <li *ngFor="let hero of anime?.heroesList">
         <img [src]="hero.imageUrl" [alt]="hero.name" width="150" />
         {{ hero.name }}
         <div *ngIf="hero?.quotes?.length">

@@ -13,7 +13,7 @@ import { take, debounceTime } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { cloneDeep } from 'lodash';
 
-import { convertTimeToText, startDescriptionEnum } from './custom.pipes';
+import { convertTimeToText, ratingDescriptionEnum } from './custom.pipes';
 
 import {
   DeleteDialogComponent,
@@ -46,6 +46,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
   public isLoggedIn: boolean = false;
   public invalidUser: boolean = false;
   public userId: string = '';
+  public pageSize: number = 0;
+  public pageIndex: number = 0;
+  public pageSizeOptions: number[] = [];
 
   private _anime: IAnime[] = [];
   private _paginationConfig: PageEvent = {
@@ -54,9 +57,6 @@ export class AnimeComponent implements OnInit, OnDestroy {
     pageSize: 0,
     previousPageIndex: 0,
   };
-  public pageSize: number = 0;
-  public pageIndex: number = 0;
-  public pageSizeOptions: number[] = [];
 
   private _searchValueChangesSub: Subscription | null = null;
 
@@ -101,8 +101,8 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     this._animeService
       .getAnimeList(
-        this._paginationConfig.pageSize,
-        this._paginationConfig.pageIndex,
+        this.pageSize,
+        this.pageIndex,
         this.searchControl?.value.trim()
       )
       .pipe(take(1))
@@ -129,12 +129,12 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const starsDescr = startDescriptionEnum[a.stars - 1];
+      const ratingDescr = ratingDescriptionEnum[a.stars - 1];
       const timeText = convertTimeToText(a.time);
 
       return {
         ...a,
-        starsDescr,
+        ratingDescr,
         timeText,
       };
     });
@@ -147,14 +147,16 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
     this._searchValueChangesSub = this.searchControl?.valueChanges
       .pipe(debounceTime(1000))
-      .subscribe((inputValue: string) => {
+      .subscribe(() => {
         this._resetPagination();
         this._getAnime();
       });
   }
 
   public addAnime(): void {
-    const dialogRef = this._dialog.open(AddAnimeComponent);
+    const dialogRef = this._dialog.open(AddAnimeComponent, {
+      data: { type: 'add' },
+    });
     dialogRef.afterClosed().subscribe((isAdded: boolean) => {
       if (isAdded) this._getAnime();
     });
@@ -172,7 +174,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     };
 
     const dialogRef = this._dialog.open(AddAnimeComponent, {
-      data: editRow,
+      data: { anime: editRow, type: 'edit' },
     });
 
     dialogRef.afterClosed().subscribe((isEdited: boolean) => {
