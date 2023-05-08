@@ -90,12 +90,15 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
+
     <mat-paginator
       *ngIf="expansionPanelData.length"
+      (page)="onPageChange($event)"
       [length]="totalAnimeCount"
       [pageSize]="pageSize"
+      [showFirstLastButtons]="true"
       [pageSizeOptions]="pageSizeOptions"
-      (page)="onPageChange($event)"
+      [pageIndex]="pageIndex"
     >
     </mat-paginator>
   </div>

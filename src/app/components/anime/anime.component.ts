@@ -39,8 +39,6 @@ import { SnackbarService } from '../snackbar/snackbar.service';
 })
 export class AnimeComponent implements OnInit, OnDestroy {
   public totalAnimeCount: number | null = null;
-  public pageSizeOptions: number[] = [];
-  public pageSize: number | null = null;
   public searchControl: FormControl | null = null;
   public expansionPanelData: IExpansionPanelData[] = [];
   public isListFetching: boolean = false;
@@ -56,6 +54,9 @@ export class AnimeComponent implements OnInit, OnDestroy {
     pageSize: 0,
     previousPageIndex: 0,
   };
+  public pageSize: number = 0;
+  public pageIndex: number = 0;
+  public pageSizeOptions: number[] = [];
 
   private _searchValueChangesSub: Subscription | null = null;
 
@@ -65,7 +66,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _animeService: AnimeService,
     private _authService: AuthService,
-    private _snackbarService: SnackbarService,
+    private _snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -202,7 +203,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
       .copyAnime(id)
       .pipe(take(1))
       .subscribe((res) => {
-        this._snackbarService.createSuccessSnackbar(res.message)
+        this._snackbarService.createSuccessSnackbar(res.message);
         this._getAnime();
       });
   }
@@ -212,6 +213,10 @@ export class AnimeComponent implements OnInit, OnDestroy {
   }
 
   public onPageChange(event: PageEvent) {
+    this._paginationConfig = event;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+
     this._paginationConfig = cloneDeep(event);
     this._getAnime();
   }
