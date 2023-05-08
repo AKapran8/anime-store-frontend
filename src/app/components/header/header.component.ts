@@ -8,6 +8,11 @@ import {
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/service/auth.service';
 
+interface IUserAuthData {
+  isAuth: boolean;
+  userName: string;
+  userId: string;
+}
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -17,6 +22,7 @@ import { AuthService } from '../auth/service/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   public isAuthorized: boolean = false;
   public userName: string = '';
+  private _userId: string = '';
 
   private _authInfoSub: Subscription | null = null;
 
@@ -30,22 +36,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private _getAuthStatus(): void {
-    const authData: { isAuth: boolean; userName: string } =
-      this._authService.getUserAuth();
+    const authData: IUserAuthData = this._authService.getUserAuth();
 
     this.isAuthorized = authData.isAuth;
     this.userName = authData.userName;
+    this._userId = authData.userId;
     this._authInfoSub = this._authService
       .authInfoStream()
-      .subscribe((authStreamData: { isAuth: boolean; userName: string }) => {
+      .subscribe((authStreamData: IUserAuthData) => {
         this.isAuthorized = authStreamData.isAuth;
         this.userName = authStreamData.userName;
+        this._userId = authStreamData.userId;
         this._cdr.markForCheck();
       });
   }
 
   public logoutHandler(): void {
     this._authService.logout();
+  }
+
+  public deleteUser(): void {
+    this._authService.deleteUser(this._userId);
   }
 
   ngOnDestroy(): void {

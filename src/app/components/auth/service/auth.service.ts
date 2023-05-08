@@ -118,6 +118,15 @@ export class AuthService {
       });
   }
 
+  public deleteUser(id: string): void {
+    this._http
+      .delete(`${this._url}/${id}`)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.logout();
+      });
+  }
+
   public logout(): void {
     this._token = null;
     this._authStatusListener.next({ isAuth: false, userName: '', userId: '' });

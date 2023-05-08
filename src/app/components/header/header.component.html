@@ -36,6 +36,14 @@
       <span class="user-name" *ngIf="userName">
         Welcome {{ userName }}
       </span>
+      <button
+        *ngIf="isAuthorized"
+        (click)="deleteUser()"
+        mat-raised-button
+        color="warn"
+      >
+        Delete User
+      </button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
