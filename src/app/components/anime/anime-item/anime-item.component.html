@@ -4,14 +4,14 @@
   <p>ID: {{ anime?.id }}</p>
   <p>name: {{ anime?.name }}</p>
   <p>nameUA: {{ anime?.nameUA }}</p>
-  <p>stars: {{ anime?.stars + " " + anime?.startDescr }}</p>
+  <p>Rating: {{ anime?.rating + " " + anime?.startDescr }}</p>
   <p>status: {{ anime?.status }}</p>
   <p>time: {{ anime?.time }}</p>
   <p>userId: {{ anime?.userId }}</p>
   <div *ngIf="anime?.heroes?.length">
     HEROES:
     <ul>
-      <li *ngFor="let hero of anime?.heroes">
+      <li *ngFor="let hero of anime?.heroesList">
         <img [src]="hero.imageUrl" [alt]="hero.name" width="150" />
         {{ hero.name }}
         <div *ngIf="hero?.quotes?.length">

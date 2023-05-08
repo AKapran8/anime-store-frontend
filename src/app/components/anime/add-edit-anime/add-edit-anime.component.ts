@@ -14,6 +14,10 @@ import { IAddEditAnime } from 'src/app/components/anime/anime.model';
 import { AnimeService } from '../service/anime.service';
 import { SnackbarService } from '../../snackbar/snackbar.service';
 
+interface IAddEditAnimeDialogData {
+  anime: IAddEditAnime;
+  type: 'add' | 'edit';
+}
 @Component({
   selector: 'app-add-edit-anime',
   templateUrl: './add-edit-anime.component.html',
@@ -22,12 +26,13 @@ import { SnackbarService } from '../../snackbar/snackbar.service';
 })
 export class AddAnimeComponent implements OnInit {
   public form: FormGroup | null = null;
-  public starsError: string = '';
+  public ratingError: string = '';
   public isSaving: boolean = false;
   public statusesList: string[] = ['watched', 'progress', 'feature'];
+  public title: string = '';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: IAddEditAnime,
+    @Inject(MAT_DIALOG_DATA) public data: IAddEditAnimeDialogData,
     private _dialogRef: MatDialogRef<AddAnimeComponent>,
     private _cdr: ChangeDetectorRef,
     private _animeService: AnimeService,
@@ -35,24 +40,40 @@ export class AddAnimeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this._initComponent();
     this._initForm();
+  }
+
+  private _initComponent(): void {
+    if (this.data.type === 'add') {
+      this.title = `Add new Anime`;
+    } else {
+      this.title = `Edit Anime`;
+    }
+    this._cdr.markForCheck();
   }
 
   private _initForm(): void {
     this.form = new FormGroup({
-      name: new FormControl(this?.data?.name || '', Validators.required),
-      nameUa: new FormControl(this?.data?.nameUA || '', Validators.required),
-      starsCount: new FormControl(this?.data?.stars || null, [
+      name: new FormControl(this.data?.anime.name || '', Validators.required),
+      nameUa: new FormControl(
+        this.data?.anime.nameUA || '',
+        Validators.required
+      ),
+      rating: new FormControl(this.data?.anime.rating || null, [
         Validators.required,
         Validators.max(10),
         Validators.min(1),
       ]),
-      minutes: new FormControl(this?.data?.time || null, [
+      minutes: new FormControl(this.data?.anime.time || null, [
         Validators.required,
         Validators.min(1),
       ]),
-      genres: new FormControl(this?.data?.genres || ''),
-      status: new FormControl(this?.data?.status || '', Validators.required),
+      genres: new FormControl(this.data?.anime.genres || ''),
+      status: new FormControl(
+        this.data?.anime.status || '',
+        Validators.required
+      ),
     });
   }
 
@@ -66,14 +87,14 @@ export class AddAnimeComponent implements OnInit {
     let requestBody: IAddEditAnime = {
       name: formValues.name.trim(),
       nameUA: formValues?.nameUa.trim(),
-      stars: formValues?.starsCount,
+      rating: formValues?.rating,
       status: formValues?.status,
       genres: formValues?.genres.trim(),
       time: formValues?.minutes,
     };
 
-    if (this?.data?.id) {
-      const id: string = this.data.id;
+    if (this.data?.anime.id) {
+      const id: string = this.data.anime.id;
       this._edit(requestBody, id);
     } else {
       this._save(requestBody);
@@ -88,12 +109,12 @@ export class AddAnimeComponent implements OnInit {
         next: () => {
           this.isSaving = false;
           this._dialogRef.close(true);
-          this._snackbarService.createSuccessSnackbar('Anime was edited');
+          this._snackbarService.createSuccessSnackbar(`Anime was edited`);
         },
         error: (err) => {
           this.isSaving = false;
           this._cdr.markForCheck();
-        },
+        }
       });
   }
 
@@ -103,14 +124,13 @@ export class AddAnimeComponent implements OnInit {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.isSaving = false;
           this._dialogRef.close(true);
-          this._snackbarService.createSuccessSnackbar('Anime was added');
+          this._snackbarService.createSuccessSnackbar(`Anime was added`);
         },
         error: (err) => {
           this.isSaving = false;
           this._cdr.markForCheck();
-        },
+        }
       });
   }
 }

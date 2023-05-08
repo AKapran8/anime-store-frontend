@@ -8,8 +8,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { AnimeService } from '../service/anime.service';
-import { IAnimeById } from '../anime.model';
-import { startDescriptionEnum } from '../custom.pipes';
+import { IAnimeElement } from '../anime.model';
+import { ratingDescriptionEnum } from '../custom.pipes';
 
 @Component({
   selector: 'app-anime-item',
@@ -21,7 +21,7 @@ export class AnimeItemComponent implements OnInit {
   public isLoading: boolean = false;
   private _id: string = '';
 
-  public anime: IAnimeById | null = null;
+  public anime: IAnimeElement | null = null;
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -48,13 +48,19 @@ export class AnimeItemComponent implements OnInit {
     this._animeService
       .getAnimeById(this._id)
       .pipe(take(1))
-      .subscribe((res) => {
-        this.anime = {
-          ...res.anime,
-          startDescr: startDescriptionEnum[res.anime.stars - 1],
-        };
-        this.isLoading = false;
-        this._cdr.markForCheck();
+      .subscribe({
+        next: (res) => {
+          this.anime = {
+            ...res.anime,
+            startDescr: ratingDescriptionEnum[res.anime.rating - 1],
+          };
+          this.isLoading = false;
+          this._cdr.markForCheck();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this._cdr.markForCheck();
+        },
       });
   }
 }
