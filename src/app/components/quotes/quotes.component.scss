@@ -19,7 +19,7 @@ $dark-orange-color: #c74e00;
 
 .quotes-list {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 24px;
 
   .quote {
