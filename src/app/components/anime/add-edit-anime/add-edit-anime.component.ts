@@ -26,7 +26,7 @@ interface IAddEditAnimeDialogData {
 })
 export class AddAnimeComponent implements OnInit {
   public form: FormGroup | null = null;
-  public starsError: string = '';
+  public ratingError: string = '';
   public isSaving: boolean = false;
   public statusesList: string[] = ['watched', 'progress', 'feature'];
   public title: string = '';
@@ -60,7 +60,7 @@ export class AddAnimeComponent implements OnInit {
         this.data?.anime.nameUA || '',
         Validators.required
       ),
-      starsCount: new FormControl(this.data?.anime.stars || null, [
+      rating: new FormControl(this.data?.anime.rating || null, [
         Validators.required,
         Validators.max(10),
         Validators.min(1),
@@ -87,7 +87,7 @@ export class AddAnimeComponent implements OnInit {
     let requestBody: IAddEditAnime = {
       name: formValues.name.trim(),
       nameUA: formValues?.nameUa.trim(),
-      stars: formValues?.starsCount,
+      rating: formValues?.rating,
       status: formValues?.status,
       genres: formValues?.genres.trim(),
       time: formValues?.minutes,
@@ -109,7 +109,7 @@ export class AddAnimeComponent implements OnInit {
         next: () => {
           this.isSaving = false;
           this._dialogRef.close(true);
-          this._snackbarService.createSuccessSnackbar('Anime was edited');
+          this._snackbarService.createSuccessSnackbar(`Anime was edited`);
         },
         error: (err) => {},
         complete: () => {
@@ -126,7 +126,7 @@ export class AddAnimeComponent implements OnInit {
       .subscribe({
         next: () => {
           this._dialogRef.close(true);
-          this._snackbarService.createSuccessSnackbar('Anime was added');
+          this._snackbarService.createSuccessSnackbar(`Anime was added`);
         },
         error: (err) => {},
         complete: () => {

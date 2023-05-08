@@ -1,7 +1,7 @@
 export interface IAddEditAnime {
   name: string;
   nameUA: string;
-  stars: number;
+  rating: number;
   time: number;
   genres: string;
   status: string;
@@ -12,7 +12,7 @@ export interface IAnime {
   id: string;
   name: string;
   nameUA: string;
-  stars: number;
+  rating: number;
   time: number;
   genres: string;
   status: string;
@@ -22,7 +22,7 @@ export interface IAnime {
 
 export interface IAnimeElement extends IAnime {
   nameUA: string;
-  stars: number;
+  rating: number;
   startDescr?: string;
   time: number;
   heroesList: IAnimeElementHero[] | [];

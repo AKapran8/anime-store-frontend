@@ -52,7 +52,7 @@ export class AnimeItemComponent implements OnInit {
         next: (res) => {
           this.anime = {
             ...res.anime,
-            startDescr: ratingDescriptionEnum[res.anime.stars - 1],
+            startDescr: ratingDescriptionEnum[res.anime.rating - 1],
           };
         },
         error: (err) => {},

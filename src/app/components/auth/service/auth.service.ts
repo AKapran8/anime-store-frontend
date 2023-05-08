@@ -37,6 +37,10 @@ export class AuthService {
 
   constructor(private _http: HttpClient, private _router: Router) {}
 
+  public getAuthApi(): string {
+    return this._url;
+  }
+
   public getToken(): string | null {
     return this._token;
   }

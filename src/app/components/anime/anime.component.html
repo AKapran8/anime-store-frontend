@@ -54,8 +54,8 @@
         <div class="content">
           <p>Time: {{ anime.timeText }}</p>
           <p class="start-text">
-            <span> Stars: </span>
-            <app-stars-icons [count]="anime.stars"></app-stars-icons>
+            <span> Rating: </span>
+            <app-stars-icons [count]="anime.rating"></app-stars-icons>
           </p>
           <div *ngIf="anime?.heroes?.length">
             Heroes:

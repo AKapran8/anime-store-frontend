@@ -129,7 +129,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
 
   private _getExpansionPanelData(): void {
     this.expansionPanelData = this._anime.map((a) => {
-      const ratingDescr = ratingDescriptionEnum[a.stars - 1];
+      const ratingDescr = ratingDescriptionEnum[a.rating - 1];
       const timeText = convertTimeToText(a.time);
 
       return {
@@ -166,7 +166,7 @@ export class AnimeComponent implements OnInit, OnDestroy {
     const editRow: IAddEditAnime = {
       name: row.name,
       nameUA: row.nameUA,
-      stars: row.stars,
+      rating: row.rating,
       time: row.time,
       genres: row.genres,
       status: row.status,
