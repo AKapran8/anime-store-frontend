@@ -1,13 +1,95 @@
-.quotes-list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 0 20px;
-}
+$primary-color: #007bff;
+$success-color: #28a745;
+$info-color: #34e4ff;
+$warning-color: #ffc107;
+$light-color: #f8f9fa;
+$orange-color: #f58220;
+$dark-orange-color: #c74e00;
 
-.quote {
-  padding: 20px;
-  border: 1px solid black;
-  width: 400px;
+.quotes-container {
+  display: flex;
+  justify-content: start;
+  gap: 24px;
+
+  .quote {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid $light-color;
+    border-radius: 0.75rem;
+    background-color: $light-color;
+    max-width: 700px;
+    min-width: 200px;
+
+    .quote-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      .mat-icon {
+        cursor: pointer;
+        color: $primary-color;
+
+        &:hover {
+          color: $warning-color;
+        }
+      }
+    }
+
+    .quote-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: $dark-orange-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .quote-details {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+
+      .quote-author,
+      .quote-season,
+      .quote-episode,
+      .quote-timeline {
+        margin-right: 0.5rem;
+      }
+
+      .quote-separator {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .quote:nth-child(even) {
+    background-color: $light-color;
+  }
+
+  .quote:hover {
+    background-color: $info-color;
+  }
+
+  .quote-details {
+    .quote-author {
+      color: $primary-color;
+    }
+
+    .quote-season {
+      color: $success-color;
+    }
+
+    .quote-episode {
+      color: $orange-color;
+    }
+
+    .quote-timeline {
+      color: $dark-orange-color;
+    }
+  }
 }
