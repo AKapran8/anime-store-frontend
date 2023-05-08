@@ -46,9 +46,9 @@ export class AddEditQuoteComponent implements OnInit {
 
   private _initComponent(): void {
     if (this.data.type === 'add') {
-      this.title = 'Add New Quote';
+      this.title = `Add New Quote`;
     } else {
-      this.title = 'Edit Quote';
+      this.title = `Edit Quote`;
       this._quoteId = this.data.quoteId || '';
     }
     this._cdr.markForCheck();
@@ -119,7 +119,7 @@ export class AddEditQuoteComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
-        this._snackbarService.createSuccessSnackbar('Quote was added');
+        this._snackbarService.createSuccessSnackbar(`Quote was added`);
       });
   }
 
@@ -130,7 +130,7 @@ export class AddEditQuoteComponent implements OnInit {
       .subscribe((res) => {
         this.isSaving = false;
         this._dialogRef.close(res.quote);
-        this._snackbarService.createSuccessSnackbar('Quote was edited');
+        this._snackbarService.createSuccessSnackbar(`Quote was edited`);
       });
   }
 }

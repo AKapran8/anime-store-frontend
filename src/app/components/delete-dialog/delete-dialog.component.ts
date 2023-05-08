@@ -91,7 +91,7 @@ export class DeleteDialogComponent implements OnInit {
       .subscribe(() => {
         this.isDeleting = false;
         this._dialogRef.close(true);
-        this._snackbarService.createSuccessSnackbar('Anime was deleted');
+        this._snackbarService.createSuccessSnackbar(`Anime was deleted`);
       });
   }
 
@@ -114,7 +114,7 @@ export class DeleteDialogComponent implements OnInit {
       .subscribe(() => {
         this.isDeleting = false;
         this._dialogRef.close(true);
-        this._snackbarService.createSuccessSnackbar('Quote was deleted');
+        this._snackbarService.createSuccessSnackbar(`Quote was deleted`);
         this._cdr.markForCheck();
       });
   }
@@ -126,7 +126,7 @@ export class DeleteDialogComponent implements OnInit {
       .subscribe(() => {
         this.isDeleting = false;
         this._dialogRef.close(true);
-        this._snackbarService.createSuccessSnackbar('User was deleted');
+        this._snackbarService.createSuccessSnackbar(`User was deleted`);
         this._cdr.markForCheck();
       });
   }
