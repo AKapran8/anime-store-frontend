@@ -9,4 +9,5 @@ This repo is the part of my full stack application
 5. Download second part of application https://github.com/AKapran8/anime-store-backend
 
 # start
-use this command in your terminal `ng run start`
+1. Use this command in your terminal `npm run start`
+2. Don't forget to start backend part of the application (use `npm run start:server` )
