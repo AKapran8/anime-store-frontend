@@ -1,4 +1,4 @@
-# anime-store-backend
+# anime-store-frontend
 This repo is the part of my full stack application
 
 # init
